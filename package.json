@@ -9,7 +9,7 @@
     "url": ""
   },
   "scripts": {
-    "start": "run-s watch",
+    "start": "browser-sync start --port $PORT -s \"dist\"",
     "build": "run-s build:*",
     "serve": "browser-sync start -s \"dist\" -f \"dist\"",
     "build:assets": "copyfiles -u 1 \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" dist",
@@ -18,7 +18,8 @@
     "watch:tsc": "watchify --debug src/app.ts -p [ tsify ] -o dist/app.js",
     "watch:scss": "onchange \"src/**/*.scss\" -- run-s build:scss",
     "watch:assets": "onchange \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" -- run-s build:assets",
-    "watch": "run-p serve watch:*"
+    "watch": "run-p serve watch:*",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "browser-sync": "^2.24.7",
