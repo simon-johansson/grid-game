@@ -10,7 +10,7 @@ export interface IShapeOptions {
   radius?: number;
 }
 
-abstract class Shape implements Drawable, Animatable {
+abstract class Shape implements Drawable {
   public draw: (ctx: CanvasRenderingContext2D) => void;
   public animate: (options: IAnimateOptions, ctx: CanvasRenderingContext2D) => void;
   public shouldDraw: boolean = true;

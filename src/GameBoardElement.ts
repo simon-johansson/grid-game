@@ -32,12 +32,12 @@ export default class GameBoardElement extends Rectangle {
     super(shape);
     this.zIndex = this.type === "🔴" ? 2 : 1;
     this.isRemovable = this.type === "⚪️" ? true : false;
-    this.setAnimation({
-      originX: x + width / 2,
-      originY: y + height / 2,
-      rotate: [-3, 3],
-      pixelPerFrame: 1
-    }, ctx)
+    // this.setAnimation({
+    //   originX: x + width / 2,
+    //   originY: y + height / 2,
+    //   rotate: [-3, 3],
+    //   pixelPerFrame: 1
+    // }, ctx)
   }
 
   public setSelected(selection: Rectangle): void {
@@ -55,7 +55,7 @@ export default class GameBoardElement extends Rectangle {
     const { x, y, width, height } = this;
 
     const obligatoryMarking = new ObligatoryMarking(x + width / 2, y + height / 2, 10);
-    obligatoryMarking.draw(ctx);
+    // obligatoryMarking.draw(ctx);
   }
 
   public prepareStyling(ctx: CanvasRenderingContext2D): void {

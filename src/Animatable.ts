@@ -10,8 +10,8 @@ export default class Animatable {
   private target: number;
 
   public setAnimation(options: IAnimateOptions) {
-    ctx.translate(options.originX, options.originY);
-    ctx.rotate((this.state * Math.PI) / 180);
+    // ctx.translate(options.originX, options.originY);
+    // ctx.rotate((this.state * Math.PI) / 180);
   }
 
   public animate(options: IAnimateOptions, ctx: CanvasRenderingContext2D) {
