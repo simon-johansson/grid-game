@@ -32,10 +32,7 @@ export default class Selection extends Rectangle {
     this.shouldDraw = false;
   }
 
-  public prepareStyling(ctx: CanvasRenderingContext2D): void {
-    const { x, y, width, height } = this;
-
-    ctx.beginPath();
+  public setStyling(ctx: CanvasRenderingContext2D): void {
     ctx.strokeStyle = "#000000";
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     ctx.lineWidth = 5;

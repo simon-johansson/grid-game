@@ -1,7 +1,7 @@
 import GameBoardElement from "./GameBoardElement";
 import Selection from "./Selection";
 
-export type IGameBoardLayout = Array<Array<"⚪️" | "🔴">>;
+export type IGameBoardLayout = Array<Array<"r" | "f" | "b">>;
 
 interface ISettings {
   toggleOnOverlap: boolean;
@@ -28,7 +28,8 @@ export default class GameBoard {
     });
   }
 
-  public evaluateSelection(selection: Selection): 1 | 0 {
+  public evaluateSelection(selection: Selection): any {
+    // console.log(selection);
     const elementsToToggleDisable: GameBoardElement[] = [];
 
     const invalidSelection = this.elements.some(el => {
@@ -47,11 +48,23 @@ export default class GameBoard {
     });
 
     if (!invalidSelection) {
-      elementsToToggleDisable.forEach(el => (el.isDisabled = !el.isDisabled));
-      return 1;
-    } else {
-      return 0;
+      elementsToToggleDisable.forEach(el => {
+        el.isDisabled = !el.isDisabled;
+        el.type = el.isDisabled ? "f" : "r";
+      });
     }
+
+    const layout: any[] = [[], [], [], [], []];
+    this.elements.map(el => {
+      const row = el.gridPosition[0];
+      const col = el.gridPosition[1];
+      layout[row][col] = el.type;
+    });
+
+    return {
+      validMove: !invalidSelection,
+      layout
+    };
   }
 
   public setSelection(selection: Selection): void {
@@ -71,10 +84,10 @@ export default class GameBoard {
           height: elHeight
         };
         const type = this.boardLayout[row][col];
-        this.elements.push(new GameBoardElement(shape, type));
+        this.elements.push(new GameBoardElement(shape, type, [row, col]));
       }
     }
-    this.sortElements();
+    // this.sortElements();
   }
 
   private sortElements() {

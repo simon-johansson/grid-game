@@ -5,6 +5,7 @@ export default class Drawable {
   public draw(ctx: CanvasRenderingContext2D) {
     if (this.shouldDraw) {
       ctx.save();
+      ctx.beginPath();
       this.prepareDraw(ctx);
       ctx.fill();
       ctx.stroke();

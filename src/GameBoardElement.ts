@@ -5,33 +5,42 @@ export default class GameBoardElement extends Rectangle {
   public zIndex: number;
   public isSelected: boolean = false;
   public isDisabled: boolean = false;
-  public isRemovable: boolean;
+  public isRemovable: boolean = false;
   private animationCounter = 0;
   private animationTarget = -3;
   private styles = {
     default: {
-      fill: "#ffffff",
-      stroke: "#000000",
+      fill: "#EFEFEF",
+      stroke: "#ffffff",
       selected: {
-        fill: "#99cc33"
+        fill: "#D1F2D2"
       }
     },
     disabled: {
-      fill: "#e8e8e8",
-      stroke: "rgba(0, 0, 0, 0.2)"
+      fill: "#D1F2D2",
+      stroke: "#ffffff",
+      selected: {
+        fill: "#EFEFEF"
+      }
     },
     notRemovable: {
-      fill: "#ff9696",
+      fill: "#EECED1",
       selected: {
         fill: "#ff0000"
       }
     }
   };
 
-  constructor(shape: IRectOptions, private type: "⚪️" | "🔴") {
+  constructor(shape: IRectOptions, public type: "r" | "f" | "b", public gridPosition: [number, number]) {
     super(shape);
-    this.zIndex = this.type === "🔴" ? 2 : 1;
-    this.isRemovable = this.type === "⚪️" ? true : false;
+    this.zIndex = this.type === "b" ? 2 : 1;
+    if (this.type === "r") {
+      this.isRemovable = true;
+    }
+    if (this.type === "f") {
+      this.isRemovable = true;
+      this.isDisabled = true;
+    }
     // this.setAnimation({
     //   originX: x + width / 2,
     //   originY: y + height / 2,
@@ -58,11 +67,12 @@ export default class GameBoardElement extends Rectangle {
     // obligatoryMarking.draw(ctx);
   }
 
-  public prepareStyling(ctx: CanvasRenderingContext2D): void {
+  public setStyling(ctx: CanvasRenderingContext2D): void {
     const { x, y, width, height } = this;
 
     // ctx.beginPath();
-    ctx.lineWidth = 1;
+    // ctx.lineWidth = 1;
+    ctx.lineWidth = 5;
     ctx.fillStyle = this.styles.default.fill;
     ctx.strokeStyle = this.styles.default.stroke;
     if (this.isSelected) {
@@ -71,19 +81,22 @@ export default class GameBoardElement extends Rectangle {
     if (this.isDisabled) {
       ctx.fillStyle = this.styles.disabled.fill;
       ctx.strokeStyle = this.styles.disabled.stroke;
+      if (this.isSelected) {
+        ctx.fillStyle = this.styles.disabled.selected.fill;
+      }
     }
-    if (this.type === "🔴") {
+    if (!this.isRemovable) {
       ctx.fillStyle = this.styles.notRemovable.fill;
       // this.setCharacteristics({ x: -(width / 2), y: -(height / 2), width, height });
       if (this.isSelected) {
         ctx.fillStyle = this.styles.notRemovable.selected.fill;
-        this.animate({
-          originX: x + width / 2,
-          originY: y + height / 2,
-          rotate: [-3, 3],
-          pixelPerFrame: 1
-        }, ctx)
-        // ctx.translate(x + width / 2, y + height / 2);
+        // this.animate({
+        //   originX: x + width / 2,
+        //   originY: y + height / 2,
+        //   rotate: [-3, 3],
+        //   pixelPerFrame: 1
+        // }, ctx)
+        ctx.translate(x + width / 2, y + height / 2);
         this.incrementAnimation();
         ctx.rotate((this.animationCounter * Math.PI) / 180);
         // ctx.rect(-(width / 2), -(height / 2), width, height);
@@ -92,6 +105,18 @@ export default class GameBoardElement extends Rectangle {
       }
     }
     // ctx.rect(startX, startY, width, height);
+  }
+
+  public drawShape(ctx: CanvasRenderingContext2D): void {
+    const { x, y, width, height } = this;
+
+    if (!this.isRemovable && this.isSelected) {
+      ctx.rect(-(width / 2), -(height / 2), width, height);
+    } else {
+      ctx.rect(this.x, this.y, this.width, this.height);
+    }
+    ctx.fill();
+    ctx.stroke();
   }
 
   private incrementAnimation() {

@@ -1,6 +1,5 @@
 import Animatable, { IAnimateOptions } from "./Animatable";
 import applyMixins from "./applyMixins";
-import Drawable from "./Drawable";
 
 export interface IShapeOptions {
   x: number;
@@ -10,8 +9,7 @@ export interface IShapeOptions {
   radius?: number;
 }
 
-abstract class Shape implements Drawable {
-  public draw: (ctx: CanvasRenderingContext2D) => void;
+export default abstract class Shape {
   public animate: (options: IAnimateOptions, ctx: CanvasRenderingContext2D) => void;
   public shouldDraw: boolean = true;
   protected x: number;
@@ -24,7 +22,19 @@ abstract class Shape implements Drawable {
     this.setCharacteristics(options);
   }
 
-  public abstract prepareDraw(ctx: CanvasRenderingContext2D): void;
+  public draw(ctx: CanvasRenderingContext2D) {
+    if (this.shouldDraw) {
+      ctx.save();
+      ctx.beginPath();
+      this.setStyling(ctx);
+      this.drawShape(ctx);
+      ctx.restore();
+    }
+  }
+
+  public abstract setStyling(ctx: CanvasRenderingContext2D): void;
+
+  public abstract drawShape(ctx: CanvasRenderingContext2D): void;
 
   protected setCharacteristics(options: IShapeOptions) {
     this.x = options.x;
@@ -34,6 +44,3 @@ abstract class Shape implements Drawable {
     this.radius = options.radius;
   }
 }
-
-applyMixins(Shape, [Drawable, Animatable]);
-export default Shape;

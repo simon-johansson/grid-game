@@ -10,13 +10,19 @@ export default abstract class Circle extends Shape {
     })
   }
 
-  public prepareDraw(ctx: CanvasRenderingContext2D): void {
-    ctx.beginPath();
-    this.prepareStyling(ctx);
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+  public setStyling(ctx: CanvasRenderingContext2D): void {
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "salmon";
+    ctx.strokeStyle = "brown";
   };
 
-  public abstract prepareStyling(ctx: CanvasRenderingContext2D): void;
+  public drawShape(ctx: CanvasRenderingContext2D): void {
+    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+    ctx.fill();
+    ctx.stroke();
+  };
+
+  // public abstract prepareStyling(ctx: CanvasRenderingContext2D): void;
 }
 
 

@@ -31,11 +31,17 @@ export default abstract class Rectangle extends Shape {
     };
   }
 
-  public prepareDraw(ctx: CanvasRenderingContext2D): void {
-    ctx.beginPath();
-    this.prepareStyling(ctx);
-    ctx.rect(this.x, this.y, this.width, this.height);
+  public setStyling(ctx: CanvasRenderingContext2D): void {
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "salmon";
+    ctx.strokeStyle = "brown";
   };
 
-  public abstract prepareStyling(ctx: CanvasRenderingContext2D): void;
+  public drawShape(ctx: CanvasRenderingContext2D): void {
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fill();
+    ctx.stroke();
+  };
+
+  // public abstract prepareStyling(ctx: CanvasRenderingContext2D): void;
 }
