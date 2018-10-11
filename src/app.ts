@@ -101,6 +101,7 @@ class App {
   };
 
   private onTouchSelection = (method: (x: number, y: number) => void, e: TouchEvent): void => {
+    e.preventDefault();
     const offsetLeft = this.canvasProvider.offsetLeft;
     const offsetTop = this.canvasProvider.offsetTop;
     method(Math.floor(e.touches[0].clientX - offsetLeft), Math.floor(e.touches[0].clientY - offsetTop));
