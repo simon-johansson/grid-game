@@ -4,7 +4,11 @@
     "module": "commonjs",
     "sourceMap": true,
     "removeComments": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "lib": [
+      "es6",
+      "dom"
+    ]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]

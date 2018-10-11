@@ -1,5 +1,4 @@
 import Animatable, { IAnimateOptions } from "./Animatable";
-import applyMixins from "./applyMixins";
 
 export interface IShapeOptions {
   x: number;

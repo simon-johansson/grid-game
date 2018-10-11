@@ -1,7 +1,15 @@
-import ObligatoryMarking from "./ObligatoryMarking";
 import Rectangle, { IRectOptions } from "./Rectangle";
 
-export default class GameBoardElement extends Rectangle {
+export interface ITileStyle {
+  fill?: string,
+  stroke?: string,
+  selected?: {
+    fill?: string,
+    stroke?: string
+  }
+}
+
+export default class Tile extends Rectangle {
   public zIndex: number;
   public isSelected: boolean = false;
   public isDisabled: boolean = false;
@@ -63,7 +71,7 @@ export default class GameBoardElement extends Rectangle {
   public drawAdditionalDetails(ctx: CanvasRenderingContext2D) {
     const { x, y, width, height } = this;
 
-    const obligatoryMarking = new ObligatoryMarking(x + width / 2, y + height / 2, 10);
+    // const obligatoryMarking = new ObligatoryMarking(x + width / 2, y + height / 2, 10);
     // obligatoryMarking.draw(ctx);
   }
 

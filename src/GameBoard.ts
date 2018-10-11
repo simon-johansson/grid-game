@@ -1,5 +1,5 @@
-import GameBoardElement from "./GameBoardElement";
 import Selection from "./Selection";
+import Tile from "./Tile";
 
 export type IGameBoardLayout = Array<Array<"r" | "f" | "b">>;
 
@@ -8,7 +8,7 @@ interface ISettings {
 }
 
 export default class GameBoard {
-  private elements: GameBoardElement[] = [];
+  private tiles: Tile[] = [];
 
   constructor(
     private boardLayout: IGameBoardLayout,
@@ -22,23 +22,24 @@ export default class GameBoard {
   }
 
   public draw(ctx: CanvasRenderingContext2D): void {
-    this.elements.forEach(el => {
+    this.tiles.forEach(el => {
       el.draw(ctx);
-      el.drawAdditionalDetails(ctx);
+      // el.drawAdditionalDetails(ctx);
     });
   }
 
   public evaluateSelection(selection: Selection): any {
     // console.log(selection);
-    const elementsToToggleDisable: GameBoardElement[] = [];
+    const tilesToToggleFlip: Tile[] = [];
+    const newLayout: any[] = [[], [], [], [], []];
 
-    const invalidSelection = this.elements.some(el => {
+    const invalidSelection = this.tiles.some(el => {
       if (el.isSelected) {
         if (el.isRemovable) {
           if (this.settings.toggleOnOverlap) {
-            elementsToToggleDisable.push(el);
+            tilesToToggleFlip.push(el);
           } else if (!el.isDisabled) {
-            elementsToToggleDisable.push(el);
+            tilesToToggleFlip.push(el);
           }
         }
         if (!el.isRemovable) {
@@ -48,27 +49,26 @@ export default class GameBoard {
     });
 
     if (!invalidSelection) {
-      elementsToToggleDisable.forEach(el => {
+      tilesToToggleFlip.forEach(el => {
         el.isDisabled = !el.isDisabled;
         el.type = el.isDisabled ? "f" : "r";
       });
     }
 
-    const layout: any[] = [[], [], [], [], []];
-    this.elements.map(el => {
+    this.tiles.forEach(el => {
       const row = el.gridPosition[0];
       const col = el.gridPosition[1];
-      layout[row][col] = el.type;
+      newLayout[row][col] = el.type;
     });
 
     return {
       validMove: !invalidSelection,
-      layout
+      layout: newLayout
     };
   }
 
   public setSelection(selection: Selection): void {
-    this.elements.forEach(el => el.setSelected(selection));
+    // this.tiles.forEach(el => el.setSelected(selection));
   }
 
   private createElements(): void {
@@ -84,13 +84,13 @@ export default class GameBoard {
           height: elHeight
         };
         const type = this.boardLayout[row][col];
-        this.elements.push(new GameBoardElement(shape, type, [row, col]));
+        this.tiles.push(new Tile(shape, type, [row, col]));
       }
     }
     // this.sortElements();
   }
 
   private sortElements() {
-    this.elements.sort((el1, el2) => el1.zIndex - el2.zIndex);
+    this.tiles.sort((el1, el2) => el1.zIndex - el2.zIndex);
   }
 }

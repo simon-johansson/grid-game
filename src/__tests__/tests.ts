@@ -1,90 +1,158 @@
-import GameBoard from "../GameBoard";
-import Selection from "../Selection";
-import { gameBoardLayouts } from "../gameBoardSetup";
+// import GameBoard, { IGameBoardLayout } from "../Logic/GameBoard";
+// import GridPoint from "../Logic/GridPoint";
+// import Tile from "../Logic/Tile";
 
-const GAME_BOARD_ROWS = 5;
-const GAME_BOARD_COLS = 5;
-let selection: Selection;
-let gameBoard: GameBoard;
+// describe("game logic", () => {
+//   let gameBoard: GameBoard;
+//   const defaultLayout: IGameBoardLayout = [
+//     ["r", "r", "r", "r", "r"],
+//     ["r", "r", "r", "r", "r"],
+//     ["r", "r", "b", "r", "r"],
+//     ["r", "r", "r", "r", "r"],
+//     ["r", "r", "r", "r", "r"]
+//   ];
+//   const defaultSettings = {
+//     toggleOnOverlap: true
+//   };
 
-/**
- * @param {[number, number]}  startTile - [column, row]
- * @param {[number, number]}  endTile - [column, row]
- */
-const select = (startTile: [number, number], endTile: [number, number]) => {
-  const tileToPx = (tile: number) => tile * 100 - 50;
+//   beforeEach(() => {
+//     // gameBoard = new GameBoard(defaultLayout, defaultSettings);
+//   });
 
-  selection.start(tileToPx(startTile[0]), tileToPx(startTile[1]));
-  selection.move(tileToPx(endTile[0]), tileToPx(endTile[1]));
-  gameBoard.setSelection(selection);
-};
+//   describe("select tiles", () => {
+//     let selectionLayout: Array<Array<"X" | "O">>;
+//     const tileRender = {
+//       render: (tile: Tile) => {
+//         selectionLayout[tile.position.rowIndex][tile.position.colIndex] = tile.isSelected ? "X" : "O";
+//       }
+//     };
 
-const translateTiles = (layout: any[]) => {
-  const newLayout: any[] = [[], [], [], [], []];
-  for (let row = 0; row < 5; row++) {
-    for (let col = 0; col < 5; col++) {
-      // console.log(layout[row][col]);
-      switch (layout[row][col]) {
-        case "□":
-          newLayout[row][col] = "r";
-          break;
-        case "✔":
-          newLayout[row][col] = "f";
-          break;
-        case "■":
-          newLayout[row][col] = "b";
-          break;
-      }
-    }
-  }
-  return newLayout;
-};
+//     beforeEach(() => {
+//       selectionLayout = [[], [], [], [], []];
+//       gameBoard = new GameBoard(defaultLayout, defaultSettings, tileRender);
+//     });
 
-describe("", () => {
-  beforeEach(() => {
-    selection = new Selection();
-    gameBoard = new GameBoard(
-      [
-        ["r", "r", "r", "r", "r"],
-        ["r", "r", "r", "r", "r"],
-        ["r", "r", "b", "r", "r"],
-        ["r", "r", "r", "r", "r"],
-        ["r", "r", "r", "r", "r"]
-      ],
-      GAME_BOARD_ROWS,
-      GAME_BOARD_COLS,
-      500,
-      500,
-      {
-        toggleOnOverlap: true
-      }
-    );
-  });
-  test("select flippable tiles", () => {
-    select([1, 1], [5, 2]);
-    const move = gameBoard.evaluateSelection(selection);
-    const extectedLayout = translateTiles([
-      ["✔", "✔", "✔", "✔", "✔"],
-      ["✔", "✔", "✔", "✔", "✔"],
-      ["□", "□", "■", "□", "□"],
-      ["□", "□", "□", "□", "□"],
-      ["□", "□", "□", "□", "□"]
-    ]);
-    expect(move.validMove).toBeTruthy();
-    expect(move.layout).toEqual(extectedLayout);
-  });
+//     test("all tiles", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(4, 4)]);
+//       expect(selectionLayout).toEqual([
+//         ["X", "X", "X", "X", "X"],
+//         ["X", "X", "X", "X", "X"],
+//         ["X", "X", "X", "X", "X"],
+//         ["X", "X", "X", "X", "X"],
+//         ["X", "X", "X", "X", "X"]
+//       ]);
+//     });
+//     test("some tiles", () => {
+//       gameBoard.setSelection([new GridPoint(1, 1), new GridPoint(4, 2)]);
+//       expect(selectionLayout).toEqual([
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "X", "X", "O", "O"],
+//         ["O", "X", "X", "O", "O"],
+//         ["O", "X", "X", "O", "O"],
+//         ["O", "X", "X", "O", "O"]
+//       ]);
+//     });
+//     test("one tile", () => {
+//       gameBoard.setSelection([new GridPoint(1, 1), new GridPoint(1, 1)]);
+//       expect(selectionLayout).toEqual([
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "X", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"]
+//       ]);
+//     });
+//     test("new selection cancels previous selection", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(4, 4)]);
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(2, 2)]);
+//       expect(selectionLayout).toEqual([
+//         ["X", "X", "X", "O", "O"],
+//         ["X", "X", "X", "O", "O"],
+//         ["X", "X", "X", "O", "O"],
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"]
+//       ]);
+//     });
+//     test("selection canceled after evaluation", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(4, 4)]);
+//       gameBoard.evaluateSelection();
+//       expect(selectionLayout).toEqual([
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"],
+//         ["O", "O", "O", "O", "O"]
+//       ]);
+//     });
+//   });
 
-  test("invalidate move when selecting blocked tile", () => {
-    select([1, 1], [5, 5]);
-    const move = gameBoard.evaluateSelection(selection);
-    const extectedLayout = translateTiles([
-      ["□", "□", "□", "□", "□"],
-      ["□", "□", "□", "□", "□"],
-      ["□", "□", "■", "□", "□"],
-      ["□", "□", "□", "□", "□"],
-      ["□", "□", "□", "□", "□"]
-    ]);
-    expect(move.validMove).toBeFalsy();
-    expect(move.layout).toEqual(extectedLayout);
-  });
-});
+//   describe("evaluate selection", () => {
+//     let stateLayout: Array<Array<"■" | "✔" | "□">>;
+//     const tileRender = {
+//       render: (tile: Tile) => {
+//         const { rowIndex, colIndex } = tile.position;
+//         if (tile.isBlocker) {
+//           stateLayout[rowIndex][colIndex] = "■";
+//         } else if (tile.isFlipped) {
+//           stateLayout[rowIndex][colIndex] = "✔";
+//         } else {
+//           stateLayout[rowIndex][colIndex] = "□";
+//         }
+//       }
+//     };
+
+//     beforeEach(() => {
+//       stateLayout = [[], [], [], [], []];
+//       gameBoard = new GameBoard(defaultLayout, defaultSettings, tileRender);
+//     });
+
+//     test("can flip flippable tiles", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(1, 4)]);
+//       gameBoard.evaluateSelection();
+//       expect(stateLayout).toEqual([
+//         ["✔", "✔", "✔", "✔", "✔"],
+//         ["✔", "✔", "✔", "✔", "✔"],
+//         ["□", "□", "■", "□", "□"],
+//         ["□", "□", "□", "□", "□"],
+//         ["□", "□", "□", "□", "□"]
+//       ]);
+//     });
+//     test("can flip same tiles multiple times", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(1, 4)]);
+//       gameBoard.evaluateSelection();
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(1, 1)]);
+//       gameBoard.evaluateSelection();
+//       expect(stateLayout).toEqual([
+//         ["□", "□", "✔", "✔", "✔"],
+//         ["□", "□", "✔", "✔", "✔"],
+//         ["□", "□", "■", "□", "□"],
+//         ["□", "□", "□", "□", "□"],
+//         ["□", "□", "□", "□", "□"]
+//       ]);
+//     });
+//     test("can do multiple flips", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(1, 4)]);
+//       gameBoard.evaluateSelection();
+//       gameBoard.setSelection([new GridPoint(2, 0), new GridPoint(4, 1)]);
+//       gameBoard.evaluateSelection();
+//       expect(stateLayout).toEqual([
+//         ["✔", "✔", "✔", "✔", "✔"],
+//         ["✔", "✔", "✔", "✔", "✔"],
+//         ["✔", "✔", "■", "□", "□"],
+//         ["✔", "✔", "□", "□", "□"],
+//         ["✔", "✔", "□", "□", "□"]
+//       ]);
+//     });
+//     test("disqualifies selection of blocker", () => {
+//       gameBoard.setSelection([new GridPoint(0, 0), new GridPoint(4, 4)]);
+//       gameBoard.evaluateSelection();
+//       expect(stateLayout).toEqual([
+//         ["□", "□", "□", "□", "□"],
+//         ["□", "□", "□", "□", "□"],
+//         ["□", "□", "■", "□", "□"],
+//         ["□", "□", "□", "□", "□"],
+//         ["□", "□", "□", "□", "□"]
+//       ]);
+//     });
+//   });
+// });
