@@ -1,12 +1,13 @@
+import { IGameLevel } from "./Logic/boundaries";
+
 // r = regular
 // f = flipped
 // b = block
 
-export const gameBoardLayouts: any = [
+export const gameBoardLayouts: IGameLevel[] = [
   {
-    optimalMoves: 1,
+    numberOfSelections: 1,
     layout: [
-      ["r", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -15,7 +16,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 2,
+    numberOfSelections: 2,
     layout: [
       ["r", "r", "b", "r", "r"],
       ["r", "r", "b", "r", "r"],
@@ -25,7 +26,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["b", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -35,7 +36,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["b", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -45,7 +46,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["r", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -55,7 +56,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["r", "r", "b", "r", "b"],
       ["r", "r", "b", "r", "b"],
@@ -65,7 +66,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 7,
+    numberOfSelections: 7,
     layout: [
       ["r", "r", "r", "r", "r"],
       ["r", "r", "b", "r", "r"],
@@ -75,7 +76,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["f", "r", "r", "r", "r"],
       ["r", "f", "r", "r", "r"],
@@ -85,7 +86,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 6,
+    numberOfSelections: 6,
     layout: [
       ["r", "f", "r", "f", "r"],
       ["r", "r", "b", "r", "b"],
@@ -95,7 +96,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 6,
+    numberOfSelections: 6,
     layout: [
       ["r", "f", "r", "f", "r"],
       ["r", "r", "b", "r", "r"],
@@ -105,7 +106,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["r", "b", "r", "r", "r"],
       ["f", "r", "f", "f", "f"],
@@ -115,7 +116,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["r", "r", "f", "r", "r"],
       ["f", "f", "r", "f", "r"],
@@ -125,7 +126,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["r", "r", "r", "r", "b"],
       ["f", "r", "f", "f", "r"],
@@ -135,7 +136,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 5,
+    numberOfSelections: 5,
     layout: [
       ["r", "b", "r", "r", "r"],
       ["f", "r", "f", "f", "f"],
@@ -145,7 +146,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["r", "f", "f", "r", "f"],
       ["r", "r", "r", "f", "r"],
@@ -155,7 +156,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["r", "f", "f", "r", "r"],
       ["r", "f", "f", "r", "r"],
@@ -165,7 +166,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 4,
+    numberOfSelections: 4,
     layout: [
       ["r", "r", "f", "r", "r"],
       ["f", "f", "r", "f", "r"],
@@ -175,7 +176,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["b", "r", "r", "b", "b"],
       ["b", "r", "f", "r", "r"],
@@ -185,7 +186,7 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["r", "r", "f", "f", "r"],
       ["b", "b", "r", "r", "r"],
@@ -195,13 +196,39 @@ export const gameBoardLayouts: any = [
     ]
   },
   {
-    optimalMoves: 3,
+    numberOfSelections: 3,
     layout: [
       ["r", "r", "r", "b", "b"],
       ["r", "r", "r", "b", "b"],
       ["r", "f", "r", "f", "r"],
       ["r", "r", "f", "r", "b"],
       ["b", "b", "r", "r", "b"]
+    ]
+  },
+  {
+    numberOfSelections: 9,
+    rules: {
+      minSelection: 4
+    },
+    layout: [
+      ["r", "r", "b", "b", "b"],
+      ["r", "r", "r", "r", "b"],
+      ["b", "r", "r", "r", "b"],
+      ["b", "r", "r", "r", "r"],
+      ["b", "b", "b", "r", "r"]
+    ]
+  },
+  {
+    numberOfSelections: 3,
+    rules: {
+      minSelection: 4
+    },
+    layout: [
+      ["r", "r", "r", "b", "b"],
+      ["r", "r", "r", "b", "b"],
+      ["r", "r", "r", "r", "r"],
+      ["b", "b", "r", "r", "r"],
+      ["b", "b", "r", "r", "r"]
     ]
   }
 ];

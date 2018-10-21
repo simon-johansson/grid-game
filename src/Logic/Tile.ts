@@ -1,38 +1,31 @@
-import { IRules } from "./GameBoard";
-import GridPoint from "./GridPoint";
-
-// type IInitialState = "r" | "f" | "b";
-
-export interface ITilePresenterConstructor {
-  new (): ITilePresenter;
-}
-
-export interface ITilePresenter {
-  render: (tile: Tile) => void;
-}
+import { IGameRules, ITilePresenter, ITilePresenterConstructor } from "./boundaries";
+import GridPoint, { IGridSpan } from "./GridPoint";
 
 export interface IInitState {
   blocker?: true;
   flipped?: true;
+  flippesNeeded?: number;
 }
 
 interface IState {
   selected: boolean;
   blocker: boolean;
   flipped: boolean;
+  flippesNeeded: number;
 }
 
 export default class Tile {
   private state: IState = {
     selected: false,
     blocker: false,
-    flipped: false
+    flipped: false,
+    flippesNeeded: 1
   };
 
   constructor(
     initState: IInitState,
     public position: GridPoint,
-    private rules: IRules,
+    private rules: IGameRules,
     private presenter: ITilePresenter
   ) {
     Object.assign(this.state, initState);
@@ -48,11 +41,18 @@ export default class Tile {
   public get isFlipped(): boolean {
     return this.state.flipped;
   }
+  public get flippesLeft(): number {
+    return this.state.flippesNeeded;
+  }
 
   public flip() {
     if (this.isFlippable) {
-      this.state.flipped = !this.isFlipped;
-      this.presenter.render(this);
+      if (this.state.flippesNeeded > 1) {
+        this.state.flippesNeeded--;
+      } else {
+        this.state.flipped = !this.isFlipped;
+        this.presenter.render(this);
+      }
     }
   }
 
@@ -77,11 +77,11 @@ export default class Tile {
     return this.isBlocker;
   }
 
-  public setSelected(selection: [GridPoint, GridPoint]): void {
+  public setSelected(selection: IGridSpan): void {
     const prevState = this.isSelected;
     const { rowIndex, colIndex } = this.position;
-    const rowIntersect = selection[0].rowIndex <= rowIndex && selection[1].rowIndex >= rowIndex;
-    const colIntersect = selection[0].colIndex <= colIndex && selection[1].colIndex >= colIndex;
+    const rowIntersect = selection.startTile.rowIndex <= rowIndex && selection.endTile.rowIndex >= rowIndex;
+    const colIntersect = selection.startTile.colIndex <= colIndex && selection.endTile.colIndex >= colIndex;
     this.state.selected = rowIntersect && colIntersect;
 
     if (prevState !== this.isSelected) {

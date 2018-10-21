@@ -1,6 +1,6 @@
 // import GridPoint from "../Logic/GridPoint";
+import Selection from "../Logic/Selection";
 import CanvasProvider from "../Presentation/CanvasProvider";
-import Selection from "../Selection";
 
 interface IPrevRect {
   x: number;
@@ -18,7 +18,7 @@ export default class SelectionPresenter {
     this.clear();
     this.ctx.save();
     this.ctx.beginPath();
-    this.setStyling();
+    this.setStyling(selection.isValid);
     this.drawRect(selection);
     this.ctx.restore();
   }
@@ -26,25 +26,27 @@ export default class SelectionPresenter {
   public clear() {
     if (this.prevRect) {
       const { x, y, width, height } = this.prevRect;
-      this.ctx.clearRect(x - 10, y   - 10, width + 20, height + 20);
+      this.ctx.clearRect(x - 10, y - 10, width + 20, height + 20);
     }
   }
 
-  private setStyling() {
+  private setStyling(isValid: boolean) {
     this.ctx.lineWidth = 5;
-    this.ctx.strokeStyle = "#000000";
+    if (!isValid) {
+      this.ctx.strokeStyle = "#EECED1";
+    } else {
+      this.ctx.strokeStyle = "#000000";
+    }
     this.ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
     this.ctx.lineJoin = "round";
   }
 
   private drawRect(selection: Selection): void {
-    const [startPoint, endPoint] = selection.getGridSpan();
-    // console.log(startPoint);
-    // console.log(endPoint);
-    const startXPx = startPoint.colIndex * this.tileSize;
-    const startYPx = startPoint.rowIndex * this.tileSize;
-    const width = endPoint.colIndex * this.tileSize - startXPx + this.tileSize;
-    const height = endPoint.rowIndex * this.tileSize - startYPx + this.tileSize;
+    const { startTile, endTile } = selection.gridSpan;
+    const startXPx = startTile.colIndex * this.tileSize;
+    const startYPx = startTile.rowIndex * this.tileSize;
+    const width = endTile.colIndex * this.tileSize - startXPx + this.tileSize;
+    const height = endTile.rowIndex * this.tileSize - startYPx + this.tileSize;
 
     this.prevRect = {
       x: startXPx,

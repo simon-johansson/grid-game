@@ -1,5 +1,5 @@
-// import GridPoint from "../Logic/GridPoint";
-import Tile, { ITilePresenter } from "../Logic/Tile";
+import { ITilePresenter } from "../Logic/boundaries";
+import Tile from "../Logic/Tile";
 import CanvasProvider from "../Presentation/CanvasProvider";
 
 export default abstract class TilePresenter implements ITilePresenter {
@@ -12,6 +12,7 @@ export default abstract class TilePresenter implements ITilePresenter {
     this.setCommonStyling(tile);
     this.setStyling(tile);
     this.drawRect(tile);
+    this.drawAdditionalDetails(tile);
     this.ctx.restore();
   }
 
@@ -29,4 +30,6 @@ export default abstract class TilePresenter implements ITilePresenter {
     this.ctx.fill();
     this.ctx.stroke();
   }
+
+  protected drawAdditionalDetails(tile: Tile): void {}
 }
