@@ -26,7 +26,7 @@ export default class Grid {
       if (tile.disqualifiesSelection) {
         return true;
       } else {
-        if (tile.isFlippable) {
+        if (tile.isClearable) {
           tilesToToggleFlip.push(tile);
         }
       }
@@ -35,7 +35,7 @@ export default class Grid {
     invalidSelection = invalidSelection || this.notEnoughTilesSelected(selectedTiles.length);
 
     if (!invalidSelection) {
-      tilesToToggleFlip.forEach(el => el.flip());
+      tilesToToggleFlip.forEach(el => el.clear());
     }
 
     this.deselectTiles();
@@ -59,7 +59,7 @@ export default class Grid {
     this.tilesLeftToClear = 0;
 
     this.tiles.forEach(tile => {
-      if (tile.isFlippable && !tile.isFlipped) {
+      if (tile.isClearable && !tile.isCleared) {
         this.tilesLeftToClear++;
       }
     });

@@ -19,7 +19,7 @@ export default class TileFlippablePresenter extends TilePresenter {
   };
 
   protected setStyling(tile: Tile): void {
-    if (!tile.isFlipped) {
+    if (!tile.isCleared) {
       this.styleDefault(tile);
     } else {
       this.styleFlipped(tile);

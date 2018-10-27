@@ -18,18 +18,18 @@ export default class GameInteractor {
     private tileMultiFlipPresenter: ITilePresenterConstructor
   ) {}
 
-  public create(gameLevel: IGameLevel, rules: IGameRules): void {
-    this.state = new GameState(gameLevel, rules);
+  public startLevel(gameLevel: IGameLevel): void {
+    this.state = new GameState(gameLevel);
     this.createGrid();
     this.createSelection();
   }
 
-  public startSelection(gridOffsetX: number, gridOffsetY: number): void {
+  public setSelectionStart(gridOffsetX: number, gridOffsetY: number): void {
     this.selection.setStartPoint(gridOffsetX, gridOffsetY);
     this.supplySelectionToGrid();
   }
 
-  public changeSelectionSize(gridOffsetX: number, gridOffsetY: number): void {
+  public setSelectionEnd(gridOffsetX: number, gridOffsetY: number): void {
     this.selection.setEndPoint(gridOffsetX, gridOffsetY);
     this.supplySelectionToGrid();
   }

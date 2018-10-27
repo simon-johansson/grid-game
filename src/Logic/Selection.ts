@@ -1,4 +1,4 @@
-import { IGameRules, ISelectionPresenter } from "./boundaries";
+import { IGameRules, ISelection, ISelectionPresenter } from "./boundaries";
 import GridPoint, { IGridSpan } from "./GridPoint";
 
 export interface IPoint {
@@ -10,7 +10,7 @@ interface ISize {
   height: number;
 }
 
-export default class Selection {
+export default class Selection implements ISelection {
   public gridSpan: IGridSpan;
   public isValid: boolean;
   public tileSize: number;

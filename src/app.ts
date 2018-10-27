@@ -26,10 +26,7 @@ class App {
     TileBlockerPresenter,
     TileMultiFlipPresenter
   );
-  private rules = {
-    toggleOnOverlap: true,
-    minSelection: 1
-  };
+  private defaultRules: IGameRules = {};
   private mouseIsDown: boolean = false;
   private queryStringParams: any = getQueryStringParams(window.location.search);
   private queryStringLayout: IGridLayout;
@@ -83,21 +80,20 @@ class App {
     } catch (error) {}
 
     try {
-      this.rules.toggleOnOverlap = JSON.parse(this.queryStringParams.toggleOnOverlap) as boolean;
+      this.defaultRules.toggleOnOverlap = JSON.parse(this.queryStringParams.toggleOnOverlap) as boolean;
     } catch (error) {}
 
     try {
-      this.rules.minSelection = JSON.parse(this.queryStringParams.minSelection) as number;
+      this.defaultRules.minSelection = JSON.parse(this.queryStringParams.minSelection) as number;
     } catch (error) {}
   };
 
   private createGame = (): void => {
     const level = this.getGameBoardLayout();
+    level.rules = level.rules || {};
+    Object.assign(level.rules, this.defaultRules);
 
-    if (level.rules) {
-      Object.assign(this.rules, level.rules);
-    }
-    this.gameInteractor.create(this.getGameBoardLayout(), this.rules);
+    this.gameInteractor.startLevel(level);
   };
 
   private setGameInfo = (): void => {
@@ -106,7 +102,7 @@ class App {
     }
 
     if (!!gameBoardLayouts[this.currentLevel] && !this.queryStringLayout) {
-      this.$elMovesLeft.textContent = `${gameBoardLayouts[this.currentLevel].numberOfSelections}`;
+      this.$elMovesLeft.textContent = `${gameBoardLayouts[this.currentLevel].moves}`;
       this.$elMovesMade.style.display = "none";
     } else {
       this.$elMovesLeft.style.display = "none";
@@ -114,7 +110,7 @@ class App {
   };
 
   private updateGameInfo = (gameState: any): void => {
-    if (typeof gameState.selectionsLeft === 'undefined') {
+    if (typeof gameState.selectionsLeft === "undefined") {
       this.$elMovesMade.textContent = `${gameState.selectionsMade.valid}`;
     } else {
       this.$elMovesLeft.textContent = `${gameState.selectionsLeft}`;
@@ -144,12 +140,12 @@ class App {
 
   private onSelectionStart = (x: number, y: number): void => {
     this.mouseIsDown = true;
-    this.gameInteractor.startSelection(x, y);
+    this.gameInteractor.setSelectionStart(x, y);
   };
 
   private onSelectionMove = (x: number, y: number): void => {
     if (this.mouseIsDown) {
-      this.gameInteractor.changeSelectionSize(x, y);
+      this.gameInteractor.setSelectionEnd(x, y);
     }
   };
 

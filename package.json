@@ -18,8 +18,9 @@
     "watch:tsc": "watchify --debug src/app.ts -p [ tsify ] -o dist/app.js",
     "watch:scss": "onchange \"src/**/*.scss\" -- run-s build:scss",
     "watch:assets": "onchange \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" -- run-s build:assets",
+    "watch:tests": "jest --watch",
     "watch": "run-p serve watch:*",
-    "test": "jest",
+    "test": "jest --coverage",
     "postinstall": "npm run build"
   },
   "devDependencies": {

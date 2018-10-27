@@ -33,7 +33,7 @@ export default class TileFactory {
 
       // f = flipped
       case "f":
-        state = { flipped: true };
+        state = { cleared: true };
         break;
 
       // b = blocker
@@ -42,18 +42,10 @@ export default class TileFactory {
         presenter = new this.blockerPresenter();
         break;
 
-        case "2":
-        state = { flippesNeeded: 2 };
-        presenter = new this.multiFlipPresenter();
-        break;
-
-        case "3":
-        state = { flippesNeeded: 3 };
-        presenter = new this.multiFlipPresenter();
-        break;
-
-        case "4":
-        state = { flippesNeeded: 4 };
+      case "2":
+      case "3":
+      case "4":
+        state = { clearsRequired: parseInt(initState, 10) };
         presenter = new this.multiFlipPresenter();
         break;
 

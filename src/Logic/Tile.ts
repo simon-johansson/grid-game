@@ -1,25 +1,19 @@
-import { IGameRules, ITilePresenter, ITilePresenterConstructor } from "./boundaries";
+import { IGameRules, ITile, ITilePresenter } from "./boundaries";
 import GridPoint, { IGridSpan } from "./GridPoint";
 
 export interface IInitState {
-  blocker?: true;
-  flipped?: true;
-  flippesNeeded?: number;
+  selected?: boolean;
+  blocker?: boolean;
+  cleared?: boolean;
+  clearsRequired?: number;
 }
 
-interface IState {
-  selected: boolean;
-  blocker: boolean;
-  flipped: boolean;
-  flippesNeeded: number;
-}
-
-export default class Tile {
-  private state: IState = {
+export default class Tile implements ITile {
+  private state: IInitState = {
     selected: false,
     blocker: false,
-    flipped: false,
-    flippesNeeded: 1
+    cleared: false,
+    clearsRequired: 1
   };
 
   constructor(
@@ -38,21 +32,21 @@ export default class Tile {
   public get isBlocker(): boolean {
     return this.state.blocker;
   }
-  public get isFlipped(): boolean {
-    return this.state.flipped;
+  public get isCleared(): boolean {
+    return this.state.cleared;
   }
-  public get flippesLeft(): number {
-    return this.state.flippesNeeded;
+  public get clearsRequired(): number {
+    return this.state.clearsRequired;
   }
 
-  public flip() {
-    if (this.isFlippable) {
-      if (this.state.flippesNeeded > 1) {
-        this.state.flippesNeeded--;
+  public clear() {
+    if (this.isClearable) {
+      if (this.state.clearsRequired > 1) {
+        this.state.clearsRequired--;
       } else {
-        this.state.flipped = !this.isFlipped;
-        this.presenter.render(this);
+        this.state.cleared = !this.state.cleared;
       }
+      this.presenter.render(this);
     }
   }
 
@@ -61,19 +55,19 @@ export default class Tile {
     this.presenter.render(this);
   }
 
-  public get isFlippable(): boolean {
+  public get isClearable(): boolean {
     if (!this.disqualifiesSelection) {
       if (this.rules.toggleOnOverlap) {
         return true;
-      } else if (!this.isFlipped) {
+      } else if (!this.isCleared) {
         return true;
       }
-    } else {
-      return false;
     }
+    return false;
   }
 
   public get disqualifiesSelection(): boolean {
+    // Might be onther cases in future
     return this.isBlocker;
   }
 

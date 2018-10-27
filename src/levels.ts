@@ -6,7 +6,7 @@ import { IGameLevel } from "./Logic/boundaries";
 
 export const gameBoardLayouts: IGameLevel[] = [
   {
-    numberOfSelections: 1,
+    moves: 1,
     layout: [
       ["r", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -16,7 +16,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 2,
+    moves: 2,
     layout: [
       ["r", "r", "b", "r", "r"],
       ["r", "r", "b", "r", "r"],
@@ -26,7 +26,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["b", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -36,7 +36,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["b", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -46,7 +46,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["r", "r", "r", "r", "r"],
       ["r", "r", "r", "r", "r"],
@@ -56,7 +56,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["r", "r", "b", "r", "b"],
       ["r", "r", "b", "r", "b"],
@@ -66,7 +66,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 7,
+    moves: 7,
     layout: [
       ["r", "r", "r", "r", "r"],
       ["r", "r", "b", "r", "r"],
@@ -76,7 +76,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["f", "r", "r", "r", "r"],
       ["r", "f", "r", "r", "r"],
@@ -86,7 +86,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 6,
+    moves: 6,
     layout: [
       ["r", "f", "r", "f", "r"],
       ["r", "r", "b", "r", "b"],
@@ -96,7 +96,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 6,
+    moves: 6,
     layout: [
       ["r", "f", "r", "f", "r"],
       ["r", "r", "b", "r", "r"],
@@ -106,7 +106,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["r", "b", "r", "r", "r"],
       ["f", "r", "f", "f", "f"],
@@ -116,7 +116,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["r", "r", "f", "r", "r"],
       ["f", "f", "r", "f", "r"],
@@ -126,7 +126,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["r", "r", "r", "r", "b"],
       ["f", "r", "f", "f", "r"],
@@ -136,7 +136,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 5,
+    moves: 5,
     layout: [
       ["r", "b", "r", "r", "r"],
       ["f", "r", "f", "f", "f"],
@@ -146,7 +146,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["r", "f", "f", "r", "f"],
       ["r", "r", "r", "f", "r"],
@@ -156,7 +156,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["r", "f", "f", "r", "r"],
       ["r", "f", "f", "r", "r"],
@@ -166,7 +166,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 4,
+    moves: 4,
     layout: [
       ["r", "r", "f", "r", "r"],
       ["f", "f", "r", "f", "r"],
@@ -176,7 +176,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["b", "r", "r", "b", "b"],
       ["b", "r", "f", "r", "r"],
@@ -186,7 +186,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["r", "r", "f", "f", "r"],
       ["b", "b", "r", "r", "r"],
@@ -196,7 +196,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     layout: [
       ["r", "r", "r", "b", "b"],
       ["r", "r", "r", "b", "b"],
@@ -206,7 +206,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 9,
+    moves: 9,
     rules: {
       minSelection: 4
     },
@@ -219,7 +219,7 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   },
   {
-    numberOfSelections: 3,
+    moves: 3,
     rules: {
       minSelection: 4
     },

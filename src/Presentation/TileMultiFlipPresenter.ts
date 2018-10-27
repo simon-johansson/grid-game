@@ -19,7 +19,7 @@ export default class TileMultiFlipPresenter extends TilePresenter {
   };
 
   protected setStyling(tile: Tile): void {
-    if (!tile.isFlipped) {
+    if (!tile.isCleared) {
       this.styleDefault(tile);
     } else {
       this.styleFlipped(tile);
@@ -27,13 +27,13 @@ export default class TileMultiFlipPresenter extends TilePresenter {
   }
 
   protected drawAdditionalDetails(tile: Tile): void {
-    if (tile.flippesLeft > 1) {
+    if (tile.clearsRequired > 1) {
       const x = (tile.position.colIndex * this.size) + (this.size / 2);
       const y = (tile.position.rowIndex * this.size) + (this.size / 2);
 
       this.ctx.fillStyle = "black";
       this.ctx.font = "30px Arial";
-      this.ctx.fillText(`${tile.flippesLeft}`, x, y);
+      this.ctx.fillText(`${tile.clearsRequired}`, x, y);
     }
   }
 
@@ -41,7 +41,7 @@ export default class TileMultiFlipPresenter extends TilePresenter {
     this.ctx.fillStyle = this.defaultStyles.fill;
     this.ctx.strokeStyle = this.defaultStyles.stroke;
 
-    if (tile.isSelected && tile.flippesLeft === 1) {
+    if (tile.isSelected && tile.clearsRequired === 1) {
       this.ctx.fillStyle = this.defaultStyles.selected.fill;
     }
   }

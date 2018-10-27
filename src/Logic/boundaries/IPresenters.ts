@@ -1,17 +1,17 @@
-import Selection from '../Selection';
-import Tile from '../Tile';
+import { ISelection } from "./ISelection";
+import { ITile } from "./ITile";
 
 export interface ITilePresenterConstructor {
-  new(): ITilePresenter;
+  new (): ITilePresenter;
 }
 export interface ITilePresenter {
-  render: (tile: Tile) => void;
+  render: (tile: ITile) => void;
 }
 
 export interface ISelectionPresenterConstructor {
-  new(): ISelectionPresenter;
+  new (): ISelectionPresenter;
 }
 export interface ISelectionPresenter {
-  render: (selection: Selection) => void;
+  render: (selection: ISelection) => void;
   clear: () => void;
 }
