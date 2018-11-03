@@ -1,10 +1,6 @@
-# Getting started
+# [![Build Status][travis-image]][travis-url] [![Dependency Status][dependencies-image]][dependencies-url] [![Dev dependency Status][devDependencies-image]][devDependencies-url] [![Coverage percentage][codecov-image]][codecov-url]
 
-Change into the cloned/extracted directory and install the dependencies
-```
-npm install
-```
-  
+
 ## Usage
 Start developing in the **src/** directory. The structure will be preserved and all files and compilations are copied to the output directory **bin/**.
 
@@ -29,7 +25,24 @@ Run a local server
 npm run serve
 ```
 
+### Things
+
+* require.js
+* Heroku
+* URL
+* vscode tasks for building and testing
+
 # Todo
-- uglify,
-- linting
-- testing
+- uglify
+
+[travis-image]: https://travis-ci.org/simon-johansson/grid-game.svg?branch=master
+[travis-url]: https://travis-ci.org/simon-johansson/grid-game
+
+[dependencies-image]: https://david-dm.org/simon-johansson/grid-game.svg?theme=shields.io
+[dependencies-url]: https://david-dm.org/simon-johansson/grid-game
+
+[devDependencies-image]: https://david-dm.org/simon-johansson/grid-game/dev-status.svg
+[devDependencies-url]: https://david-dm.org/simon-johansson/grid-game?type=dev
+
+[codecov-image]: https://codecov.io/gh/simon-johansson/grid-game/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/simon-johansson/grid-game

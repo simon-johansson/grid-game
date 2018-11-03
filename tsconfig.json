@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
-    "sourceMap": true,
+    "outFile": "./dist/app.js",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "amd",
     "removeComments": true,
     "noImplicitAny": true,
     "lib": [
@@ -10,6 +12,6 @@
       "dom"
     ]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "files": ["./src/delivery/app.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }

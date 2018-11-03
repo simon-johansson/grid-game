@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Grid Game</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/styles/styles.css">
+</head>
+
+<body>
+  <div id="app">
+    <h2>
+      Moves: <span id="moves-left">0</span> <span id="moves-made">0</span>
+    </h2>
+
+    <div class="canvas-container">
+      <canvas id="selection-canvas"></canvas>
+      <canvas id="tile-canvas"></canvas>
+    </div>
+
+    <div class="button-container">
+      <span onclick="location.reload();">
+        Reset 🔁
+      </span>
+      <span id="next">
+        Next ➡️
+      </span>
+    </div>
+  </div>
+
+  <script src="/vendor/require.js"></script>
+  <script src="/vendor/doorbell.js"></script>
+  <script>
+    // Ugly but needed for require.js to work
+    // app = file name of js
+    // delivery/app = path to main ts
+    require(['app'], function () {
+      require(['delivery/app']);
+    });
+  </script>
+</body>
+
+</html>

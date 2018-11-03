@@ -1,48 +1,42 @@
 {
-  "name": "",
+  "name": "grid-game",
   "version": "1.0.0",
   "description": "",
-  "author": "Simon Johansson",
-  "license": "MIT",
+  "author": "Simon Johansson <mail@simon-johansson.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/simon-johansson/grid-game"
   },
   "scripts": {
-    "start": "node index.js",
-    "build": "run-s build:*",
+    "start": "node server.js",
+    "build": "rm -rf ./dist && run-s build:*",
     "serve": "browser-sync start -s \"dist\" -f \"dist\"",
-    "build:assets": "copyfiles -u 1 \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" dist",
-    "build:scss": "node-sass --output-style compressed -r src -o dist",
-    "build:tsc": "browserify --debug src/app.ts -p [ tsify ] > dist/app.js",
-    "watch:tsc": "watchify --debug src/app.ts -p [ tsify ] -o dist/app.js",
-    "watch:scss": "onchange \"src/**/*.scss\" -- run-s build:scss",
-    "watch:assets": "onchange \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\" \"src/**/*.{png,jpg,gif}\" -- run-s build:assets",
-    "watch:tests": "jest --watch",
+    "build:assets": "copyfiles -u 2 \"src/delivery/**/*.js\" \"src/delivery/**/*.css\" \"src/delivery/**/*.html\" \"src/delivery/**/*.{png,jpg,gif}\" dist",
+    "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
+    "build:tsc": "tsc -p ./tsconfig.prod.json",
+    "watch:tsc": "tsc --watch",
+    "watch:scss": "onchange \"src/delivery/**/*.scss\" -- run-s build:scss",
+    "watch:assets": "onchange \"src/delivery/**/*.js\" \"src/delivery/**/*.css\" \"src/delivery/**/*.html\" \"src/delivery/**/*.{png,jpg,gif}\" -- run-s build:assets",
     "watch": "run-p serve watch:*",
-    "test": "jest --coverage",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-converage": "jest --coverage",
     "postinstall": "npm run build"
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
     "browser-sync": "^2.24.7",
-    "browserify": "^16.2.2",
     "copyfiles": "^2.1.0",
     "jest": "^23.6.0",
     "node-sass": "^4.9.3",
     "npm-run-all": "^4.1.3",
-    "onchange": "^4.1.0",
+    "onchange": "^5.0.2",
     "ts-jest": "^23.1.4",
-    "tsify": "^4.0.0",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.3",
-    "watchify": "^3.11.0"
+    "typescript": "^3.0.3"
   },
   "dependencies": {
     "node-static": "^0.7.10"
   }
 }
-
-
-
