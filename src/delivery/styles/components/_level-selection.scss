@@ -1,0 +1,67 @@
+#level-selection {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+
+  @include respond-above(sm) {
+    justify-content: space-evenly;
+  }
+
+  .prev,
+  .next {
+    &.disable {
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    @include respond-above(sm) {
+      // game canvas / 2, arrow height / 2, leftovers
+      top: calc(-250px + -32px + -65px);
+      position: absolute;
+    }
+    img {
+      width: 32px;
+      @include respond-above(sm) {
+        width: 64px;
+      }
+    }
+  }
+
+  .prev {
+    @include respond-above(sm) {
+      left: -150px;
+    }
+  }
+
+  .next {
+    @include respond-above(sm) {
+      right: -150px;
+    }
+
+    img {
+      transform: rotate(180deg);
+    }
+  }
+
+  .current-level {
+    @include respond-above(sm) {
+      font-size: 48px;
+    }
+  }
+
+  .restart {
+    img {
+      width: 40px;
+
+      @include respond-above(sm) {
+        width: 76px;
+      }
+    }
+  }
+
+  span {
+    display: inline-block;
+    cursor: pointer;
+  }
+}

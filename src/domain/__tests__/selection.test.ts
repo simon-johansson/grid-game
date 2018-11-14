@@ -3,12 +3,13 @@ import { ISelection, ITile } from "../boundaries/output";
 import GameInteractor from "../GameInteractor";
 
 import {
+  blockerLayout,
   defaultLayout,
   evaluatedLayout,
   getSelectionPresenter,
   getTilePresenter,
   ITileSelectionLayout,
-  setSelectionHelper
+  setSelectionHelper,
 } from "./testUtils";
 
 const level: IGameLevel = {
@@ -138,7 +139,14 @@ describe("selection for presenter", () => {
           minSelection: 4
         }
       });
-      setSelection(0, 0, 0, 1);
+      setSelection(0, 0, 0, 20);
+
+      expect(selection.isValid).toEqual(false);
+    });
+
+    test("false when selecting a disqualifying tile", () => {
+      game.startLevel({ layout: blockerLayout });
+      setSelection(0, 0, 100, 100);
 
       expect(selection.isValid).toEqual(false);
     });
@@ -146,12 +154,7 @@ describe("selection for presenter", () => {
 
   describe(".gridSpan", () => {
     test("one tile when selection has started", () => {
-      const gameGridSpan = new GameInteractor(
-        selectionPresenter,
-        tilePresenter,
-        tilePresenter,
-        tilePresenter
-      );
+      const gameGridSpan = new GameInteractor(selectionPresenter, tilePresenter, tilePresenter, tilePresenter);
       gameGridSpan.startLevel(level);
       gameGridSpan.setSelectionStart(0, 0);
 

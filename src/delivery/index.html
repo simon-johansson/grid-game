@@ -1,45 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Grid Game</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 
-<head>
-  <meta charset="utf-8">
-  <title>Grid Game</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="/styles/styles.css">
-</head>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="touch-icon-iphone.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png" />
 
-<body>
-  <div id="app">
-    <h2>
-      Moves: <span id="moves-left">0</span> <span id="moves-made">0</span>
-    </h2>
+    <link rel="stylesheet" href="/styles/styles.css" />
 
-    <div class="canvas-container">
-      <canvas id="selection-canvas"></canvas>
-      <canvas id="tile-canvas"></canvas>
+    <!-- Google Tag Manager -->
+    <script>
+      (function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js"
+        });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-5Z7SL7S");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <script>
+      //This is the service worker with the Cache-first network
+      //Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
+      if (navigator.serviceWorker.controller) {
+        console.log("[PWA Builder] active service worker found, no need to register");
+      } else {
+        //Register the ServiceWorker
+        navigator.serviceWorker
+          .register("/service-worker.js", {
+            scope: "/"
+          })
+          .then(function(reg) {
+            console.log("Service worker has been registered for scope:" + reg.scope);
+          });
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5Z7SL7S"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div id="app">
+      <div id="moves-counter"></div>
+
+      <div id="canvas-container">
+        <canvas id="selection-canvas"></canvas>
+        <canvas id="tile-canvas"></canvas>
+      </div>
+
+      <div id="level-selection"></div>
     </div>
 
-    <div class="button-container">
-      <span onclick="location.reload();">
-        Reset 🔁
-      </span>
-      <span id="next">
-        Next ➡️
-      </span>
-    </div>
-  </div>
-
-  <script src="/vendor/require.js"></script>
-  <script src="/vendor/doorbell.js"></script>
-  <script>
-    // Ugly but needed for require.js to work
-    // app = file name of js
-    // delivery/app = path to main ts
-    require(['app'], function () {
-      require(['delivery/app']);
-    });
-  </script>
-</body>
-
+    <script src="/vendor/require.js"></script>
+    <script src="/vendor/doorbell.js"></script>
+    <script>
+      // Ugly but needed for require.js to work
+      // app = file name of js
+      // delivery/app = path to main ts
+      require(["app"], function() {
+        require(["delivery/App"]);
+      });
+    </script>
+  </body>
 </html>

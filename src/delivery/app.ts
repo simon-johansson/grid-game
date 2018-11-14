@@ -1,19 +1,17 @@
-import {
-  IGameLevel,
-  IGameRules,
-  IGridLayout,
-  ISelectionPresenterConstructor,
-  ITilePresenterConstructor
-} from "../domain/boundaries/input";
+import { IGameLevel, IGameRules, IGridLayout } from "../domain/boundaries/input";
 import { IGameState } from "../domain/boundaries/output";
+import GameState from "../domain/entities/GameState";
 import GameInteractor from "../domain/GameInteractor";
-import MovesLeft from "./components/MovesLeft";
+import LevelSelector from "./components/LevelSelector";
+import MovesCounter from "./components/MovesCounter";
 import { gameBoardLayouts } from "./data/levels";
-import CanvasProvider from "./game_presenters/CanvasProvider";
-import SelectionPresenter from "./game_presenters/SelectionPresenter";
-import TileBlockerPresenter from "./game_presenters/TileBlockerPresenter";
-import TileFlippablePresenter from "./game_presenters/TileFlippablePresenter";
-import TileMultiFlipPresenter from "./game_presenters/TileMultiFlipPresenter";
+import {
+  CanvasProvider,
+  SelectionPresenter,
+  TileBlockerPresenter,
+  TileFlippablePresenter,
+  TileMultiFlipPresenter
+} from "./game_presenters/index";
 import { getQueryStringParams } from "./utils";
 
 class App {
@@ -35,12 +33,27 @@ class App {
   private $elNextBtn: HTMLElement = document.getElementById("next");
   private elApp: HTMLElement = document.getElementById("app");
 
+  // Components
+  private LevelSelectorComponent: LevelSelector;
+  private MovesCounterComponent: MovesCounter;
+
   public init = (): void => {
+    this.createComponents();
     this.bindEvents();
     this.analyseQueryString();
-    this.createGame();
-    this.setGameInfo();
+    const initState = this.createGame();
+    this.render(initState);
+    // this.setGameInfo();
   };
+
+  private createComponents() {
+    this.MovesCounterComponent = new MovesCounter();
+    this.LevelSelectorComponent = new LevelSelector(
+      this.goToPrevLevel.bind(this),
+      this.goToNextLevel.bind(this),
+      this.restartLevel.bind(this)
+    );
+  }
 
   private bindEvents = (): void => {
     const addCanvasListener = (eventType: string, onEventActionFn: any, proxyFn?: any) =>
@@ -53,12 +66,12 @@ class App {
     addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
     addCanvasListener("mousemove", this.onSelectionMove, this.onMouseSelection);
     addCanvasListener("mouseup", this.onSelectionEnd);
+    document.addEventListener("mouseup", this.onSelectionEnd, false);
 
     addCanvasListener("touchstart", this.onSelectionStart, this.onTouchSelection);
     addCanvasListener("touchmove", this.onSelectionMove, this.onTouchSelection);
     addCanvasListener("touchend", this.onSelectionEnd);
-
-    this.$elNextBtn.addEventListener("click", this.goTonextLevel, false);
+    document.addEventListener("touchend", this.onSelectionEnd, false);
   };
 
   private analyseQueryString = (): void => {
@@ -79,12 +92,11 @@ class App {
     } catch (error) {}
   };
 
-  private createGame = (): void => {
+  private createGame = (): GameState => {
     const level = this.getGameBoardLayout();
     level.rules = level.rules || {};
     Object.assign(level.rules, this.defaultRules);
-
-    this.gameInteractor.startLevel(level);
+    return this.gameInteractor.startLevel(level);
   };
 
   private setGameInfo = (): void => {
@@ -131,57 +143,66 @@ class App {
 
   private onSelectionStart = (x: number, y: number): void => {
     this.mouseIsDown = true;
-    this.gameInteractor.setSelectionStart(this.convertAbsoluteOffsetToProcent(x), this.convertAbsoluteOffsetToProcent(y));
+    this.gameInteractor.setSelectionStart(
+      this.convertAbsoluteOffsetToProcent(x),
+      this.convertAbsoluteOffsetToProcent(y)
+    );
   };
 
   private onSelectionMove = (x: number, y: number): void => {
     if (this.mouseIsDown) {
-      this.gameInteractor.setSelectionEnd(this.convertAbsoluteOffsetToProcent(x), this.convertAbsoluteOffsetToProcent(y));
+      this.gameInteractor.setSelectionEnd(
+        this.convertAbsoluteOffsetToProcent(x),
+        this.convertAbsoluteOffsetToProcent(y)
+      );
     }
   };
 
   private onSelectionEnd = (): void => {
-    this.mouseIsDown = false;
-    const gameState = this.gameInteractor.evaluateSelection();
-    // this.render(gameState);
+    if (this.mouseIsDown) {
+      this.mouseIsDown = false;
+      const gameState = this.gameInteractor.evaluateSelection();
+      this.render(gameState);
 
-    if (gameState.cleared && !(this.currentLevel >= gameBoardLayouts.length - 1) && !this.queryStringLayout) {
-      setTimeout(() => {
-        this.goTonextLevel();
-      }, 500);
-      return;
-    }
+      if (gameState.cleared && !(this.currentLevel >= gameBoardLayouts.length - 1) && !this.queryStringLayout) {
+        setTimeout(() => {
+          this.goToNextLevel();
+        }, 500);
+        return;
+      }
 
-    if (gameState.selectionsLeft === 0) {
-      setTimeout(() => {
-        location.reload();
-      }, 500);
-      return;
+      if (gameState.selectionsLeft === 0) {
+        setTimeout(() => {
+          location.reload();
+        }, 500);
+        return;
+      }
     }
   };
 
   private render(gameState: IGameState): void {
-    this.elApp.innerHTML = `
-      ${MovesLeft.render(gameState.selectionsLeft, gameState.selectionsMade.valid)}
-
-      <div class="canvas-container">
-        ${CanvasProvider.Instance.TILE_CANVAS}
-        ${CanvasProvider.Instance.SELECTION_CANVAS}
-      </div>
-
-      <div class="button-container">
-        <span onclick="location.reload();">
-          Reset 🔁
-        </span>
-        <span id="next">
-          Next ➡️
-        </span>
-      </div>
-    `;
+    // console.log("Render");
+    this.MovesCounterComponent.render({
+      selectionsLeft: gameState.selectionsLeft,
+      selectionsMade: gameState.selectionsMade.valid,
+      isLevelCleared: gameState.cleared,
+    });
+    this.LevelSelectorComponent.render({
+      currentLevel: this.currentLevel,
+      isLastLevel: this.currentLevel >= gameBoardLayouts.length - 1
+    });
   }
 
-  private goTonextLevel = (): void => {
+  private goToPrevLevel = (): void => {
+    window.location.href = `${window.location.origin}?level=${this.currentLevel - 1}`;
+  };
+
+  private goToNextLevel = (): void => {
     window.location.href = `${window.location.origin}?level=${this.currentLevel + 1}`;
+  };
+
+  private restartLevel = (): void => {
+    location.reload();
   };
 
   private convertAbsoluteOffsetToProcent = (position: number) =>

@@ -11,7 +11,7 @@ export default class CanvasProvider {
   }
 
   public get canvasSize() {
-    return this.TILE_CANVAS.width;
+    return this.SELECTION_CANVAS.width;
   }
 
   public get tileSize() {

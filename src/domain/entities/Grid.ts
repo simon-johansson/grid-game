@@ -18,24 +18,15 @@ export default class Grid {
     this.getTileStatus();
   }
 
+  public setSelection(selection: IGridSpan): void {
+    this.tiles.forEach(tile => tile.setSelected(selection));
+  }
+
   public evaluateSelection(): IEvaluateSelection {
-    const selectedTiles = this.getSelectedTiles();
-    const tilesToToggleFlip: Tile[] = [];
+    const selectionIsInvalid = this.selectionIsInvalid;
 
-    let invalidSelection = selectedTiles.some(tile => {
-      if (tile.disqualifiesSelection) {
-        return true;
-      } else {
-        if (tile.isClearable) {
-          tilesToToggleFlip.push(tile);
-        }
-      }
-    });
-
-    invalidSelection = invalidSelection || this.notEnoughTilesSelected(selectedTiles.length);
-
-    if (!invalidSelection) {
-      tilesToToggleFlip.forEach(el => el.clear());
+    if (!selectionIsInvalid) {
+      this.clearSelectedTiles();
     }
 
     this.deselectTiles();
@@ -43,16 +34,20 @@ export default class Grid {
 
     return {
       tilesLeftToClear: this.tilesLeftToClear,
-      selectionIsValid: !invalidSelection
-    }
+      selectionIsValid: !selectionIsInvalid
+    };
   }
 
-  public setSelection(selection: IGridSpan): void {
-    this.tiles.forEach(tile => tile.setSelected(selection));
+  public get selectionIsInvalid(): boolean {
+    return !this.isEnoughTilesSelected || this.isDisqualifyingTileSelected;
   }
 
   private deselectTiles(): void {
-    this.tiles.forEach(tile => tile.deselect());
+    this.selectedTiles.forEach(tile => tile.deselect());
+  }
+
+  private clearSelectedTiles(): void {
+    this.selectedTiles.forEach(tile => tile.clear());
   }
 
   private getTileStatus(): void {
@@ -65,11 +60,15 @@ export default class Grid {
     });
   }
 
-  private getSelectedTiles(): ISelectedTile[] {
+  private get selectedTiles(): ISelectedTile[] {
     return this.tiles.filter(t => t.isSelected) as ISelectedTile[];
   }
 
-  private notEnoughTilesSelected(selectedTiles: number): boolean {
-    return selectedTiles < this.rules.minSelection;
+  private get isEnoughTilesSelected(): boolean {
+    return this.selectedTiles.length >= this.rules.minSelection;
+  }
+
+  private get isDisqualifyingTileSelected(): boolean {
+    return this.selectedTiles.some(tile => tile.disqualifiesSelection);
   }
 }

@@ -13,24 +13,17 @@ interface ISize {
 
 export default class Selection implements ISelection {
   public gridSpan: IGridSpan;
-  public isValid: boolean;
 
   private startPoint: IPoint;
   private endPoint: IPoint;
+  private valid: boolean;
   private size: ISize;
 
-  constructor(
-    private rules: IGameRules,
-    private numberOfRows: number,
-    private numberOfCols: number,
-    private presenter: ISelectionPresenter
-  ) {
-  }
+  constructor(private numberOfRows: number, private numberOfCols: number, private presenter: ISelectionPresenter) {}
 
   public setStartPoint(x: number, y: number): void {
     this.startPoint = { x, y };
     this.setGridSpan(this.startPoint);
-    this.evaluate();
     this.presenter.render(this);
   }
 
@@ -38,12 +31,20 @@ export default class Selection implements ISelection {
     this.endPoint = { x, y };
     this.setSize();
     this.setGridSpan(this.startPoint, this.endPoint);
-    this.evaluate();
     this.presenter.render(this);
   }
 
   public clear(): void {
     this.presenter.clear();
+  }
+
+  public get isValid(): boolean {
+    return this.valid;
+  }
+
+  public set isValid(bool: boolean) {
+    this.valid = bool;
+    this.presenter.render(this);
   }
 
   private setSize(): void {
@@ -54,14 +55,6 @@ export default class Selection implements ISelection {
   }
 
   private setGridSpan(startPoint: IPoint, endPoint?: IPoint): void {
-    this.gridSpan = GridPoint.convertPxSpanToGridSpan(
-      startPoint,
-      endPoint || startPoint,
-      this.numberOfRows
-    );
-  }
-
-  private evaluate(): void {
-    this.isValid = this.rules.minSelection <= this.gridSpan.tilesSpanned ? true : false;
+    this.gridSpan = GridPoint.convertPxSpanToGridSpan(startPoint, endPoint || startPoint, this.numberOfRows);
   }
 }

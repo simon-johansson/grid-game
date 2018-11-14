@@ -1,0 +1,17 @@
+{
+  "name": "GridGame",
+  "short_name": "GridGame",
+  "start_url": ".",
+  "background_color": "white",
+  "theme_color": "white",
+  "description": "Clear the grid in as few moves possible",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon/fox-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait"
+}

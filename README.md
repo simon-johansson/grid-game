@@ -31,6 +31,7 @@ npm run serve
 * Heroku
 * URL
 * vscode tasks for building and testing
+* "Baypass for network" to work without service workers
 
 # Todo
 - uglify

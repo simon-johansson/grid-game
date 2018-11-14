@@ -1,5 +1,7 @@
 import { ISelection } from "../../domain/boundaries/output";
 import CanvasProvider from "./CanvasProvider";
+import { selection as styles } from "./presenterStyles";
+import { roundRect } from "./presenterUtils";
 
 interface IPrevRect {
   x: number;
@@ -16,9 +18,10 @@ export default class SelectionPresenter {
   public render(selection: ISelection): void {
     this.clear();
     this.ctx.save();
-    this.ctx.beginPath();
     this.setStyling(selection.isValid);
+    this.ctx.beginPath();
     this.drawRect(selection);
+    this.ctx.closePath();
     this.ctx.restore();
   }
 
@@ -30,22 +33,26 @@ export default class SelectionPresenter {
   }
 
   private setStyling(isValid: boolean) {
-    this.ctx.lineWidth = 5;
-    if (!isValid) {
-      this.ctx.strokeStyle = "#EECED1";
-    } else {
-      this.ctx.strokeStyle = "#000000";
-    }
-    this.ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+    this.ctx.lineWidth = 4;
+    this.ctx.fillStyle = styles.fill;
     this.ctx.lineJoin = "round";
+
+    if (isValid) {
+      this.ctx.strokeStyle = styles.valid.stroke;
+    } else {
+      this.ctx.strokeStyle = styles.invalid.stroke;
+    }
   }
 
   private drawRect(selection: ISelection): void {
     const { startTile, endTile } = selection.gridSpan;
-    const startXPx = startTile.colIndex * this.tileSize;
-    const startYPx = startTile.rowIndex * this.tileSize;
-    const width = endTile.colIndex * this.tileSize - startXPx + this.tileSize;
-    const height = endTile.rowIndex * this.tileSize - startYPx + this.tileSize;
+    const padding = 2;
+    const radius = 8;
+
+    const startXPx = startTile.colIndex * this.tileSize + padding;
+    const startYPx = startTile.rowIndex * this.tileSize + padding;
+    const width = endTile.colIndex * this.tileSize - startXPx + this.tileSize - padding;
+    const height = endTile.rowIndex * this.tileSize - startYPx + this.tileSize - padding;
 
     this.prevRect = {
       x: startXPx,
@@ -54,7 +61,8 @@ export default class SelectionPresenter {
       height
     };
 
-    this.ctx.rect(startXPx, startYPx, width, height);
+    roundRect(this.ctx, startXPx, startYPx, width, height, radius);
+
     this.ctx.fill();
     this.ctx.stroke();
   }

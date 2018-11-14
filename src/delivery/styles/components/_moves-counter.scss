@@ -1,0 +1,41 @@
+#moves-counter {
+  display: flex;
+  align-items: baseline;
+
+  @include respond-below(sm) {
+    margin-top: 13%;
+  }
+
+  .counter-number {
+    font-size: 64px;
+    display: inline-block;
+    width: 73px;
+    height: 73px;
+    line-height: 73px;
+    background-color: $lightGray;
+    text-align: center;
+    margin-right: 12px;
+    border-radius: 8px;
+
+    @include respond-above(sm) {
+      width: 96px;
+      height: 96px;
+      line-height: 96px;
+      font-size: 80px;
+    }
+
+    &.cleared {
+      background-color: $lightSage;
+    }
+
+    &.failed {
+      background-color: $red;
+    }
+  }
+
+  .counter-description {
+    @include respond-above(sm) {
+      font-size: 32px;
+    }
+  }
+}

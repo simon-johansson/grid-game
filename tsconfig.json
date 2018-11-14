@@ -7,11 +7,9 @@
     "module": "amd",
     "removeComments": true,
     "noImplicitAny": true,
-    "lib": [
-      "es6",
-      "dom"
-    ]
+    "lib": ["es6", "dom"]
   },
-  "files": ["./src/delivery/app.ts"],
+  "files": ["./src/delivery/App.ts"],
+  "include": ["./src"],
   "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }

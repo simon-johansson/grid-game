@@ -9,15 +9,11 @@ export interface IGridSpan {
 const convertPxToTile = (pxArea: number, numberOfTiles: number) => {
   // Need buffer because tile index starts at 0
   const buffer = 1;
-  return (px: number) => Math.floor((px / (pxArea + buffer)) * numberOfTiles);
+  return (px: number) => Math.max(Math.min(Math.floor((px / (pxArea + buffer)) * numberOfTiles), numberOfTiles - 1), 0);
 };
 
 export default class GridPoint {
-  public static convertPxSpanToGridSpan(
-    startPoint: IPoint,
-    endPoint: IPoint,
-    numberOfRows: number
-  ): IGridSpan {
+  public static convertPxSpanToGridSpan(startPoint: IPoint, endPoint: IPoint, numberOfRows: number): IGridSpan {
     const converter = convertPxToTile(100, numberOfRows);
     let { x: startX, y: startY } = startPoint;
     let { x: endX, y: endY } = endPoint;

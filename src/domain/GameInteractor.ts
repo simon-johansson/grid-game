@@ -16,10 +16,11 @@ export default class GameInteractor {
     private tileMultiFlipPresenter: ITilePresenterConstructor
   ) {}
 
-  public startLevel(gameLevel: IGameLevel): void {
+  public startLevel(gameLevel: IGameLevel): GameState {
     this.state = new GameState(gameLevel);
     this.createGrid();
     this.createSelection();
+    return this.state;
   }
 
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number): void {
@@ -51,7 +52,6 @@ export default class GameInteractor {
 
   private createSelection(): void {
     this.selection = new Selection(
-      this.state.rules,
       this.state.grid.numberOfRows,
       this.state.grid.numberOfCols,
       new this.selectionPresenter()
@@ -60,5 +60,6 @@ export default class GameInteractor {
 
   private supplySelectionToGrid(): void {
     this.currentGrid.setSelection(this.selection.gridSpan);
+    this.selection.isValid = !this.currentGrid.selectionIsInvalid;
   }
 }

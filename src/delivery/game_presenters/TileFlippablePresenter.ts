@@ -1,45 +1,21 @@
 import { ITile } from "../../domain/boundaries/output";
+import { tileFlippable as styles } from "./presenterStyles";
 import TilePresenter from "./TilePresenter";
 
 export default class TileFlippablePresenter extends TilePresenter {
-  private defaultStyles = {
-    fill: "#EFEFEF",
-    stroke: "#ffffff",
-    selected: {
-      fill: "#D1F2D2"
-    }
-  };
-  private fllippedStyles = {
-    fill: "#D1F2D2",
-    stroke: "#ffffff",
-    selected: {
-      fill: "#EFEFEF"
-    }
-  };
-
   protected setStyling(tile: ITile): void {
     if (!tile.isCleared) {
-      this.styleDefault(tile);
+      this.styleCommon(tile, styles.notCleared);
     } else {
-      this.styleFlipped(tile);
+      this.styleCommon(tile, styles.cleared);
     }
   }
 
-  private styleDefault(tile: ITile) {
-    this.ctx.fillStyle = this.defaultStyles.fill;
-    this.ctx.strokeStyle = this.defaultStyles.stroke;
+  private styleCommon(tile: ITile, style: any) {
+    this.ctx.fillStyle = style.fill;
 
     if (tile.isSelected) {
-      this.ctx.fillStyle = this.defaultStyles.selected.fill;
-    }
-  }
-
-  private styleFlipped(tile: ITile) {
-    this.ctx.fillStyle = this.fllippedStyles.fill;
-    this.ctx.strokeStyle = this.fllippedStyles.stroke;
-
-    if (tile.isSelected) {
-      this.ctx.fillStyle = this.fllippedStyles.selected.fill;
+      this.ctx.fillStyle = style.selected;
     }
   }
 }
