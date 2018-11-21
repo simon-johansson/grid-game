@@ -28,7 +28,14 @@ export default class GameState implements IGameState {
       numberOfCols: gameLevel.layout[0].length
     };
 
-    Object.assign(this.rules, gameLevel.rules);
+    // TODO: Skriv test för att man kan mata in konstiga query strings
+    // TODO: Gör snyggare
+    if (gameLevel.rules && gameLevel.rules.minSelection !== undefined) {
+      this.rules.minSelection = gameLevel.rules.minSelection
+    }
+    if (gameLevel.rules && gameLevel.rules.toggleOnOverlap !== undefined) {
+      this.rules.toggleOnOverlap = gameLevel.rules.toggleOnOverlap
+    }
   }
 
   public onSelectionMade(evaluatedSelection: IEvaluateSelection) {

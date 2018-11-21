@@ -1,41 +1,61 @@
 #moves-counter {
   display: flex;
-  align-items: baseline;
+  flex-grow: 2;
+  align-items: center;
 
-  @include respond-below(sm) {
-    margin-top: 13%;
-  }
+  .inner-wrapper {
+    display: flex;
+    align-items: baseline;
 
-  .counter-number {
-    font-size: 64px;
-    display: inline-block;
-    width: 73px;
-    height: 73px;
-    line-height: 73px;
-    background-color: $lightGray;
-    text-align: center;
-    margin-right: 12px;
-    border-radius: 8px;
+    .counter-number-wrapper {
+      display: inline-block;
+      position: relative;
+      width: 73px;
+      height: 73px;
+      line-height: 73px;
+      font-size: 64px;
+      background-color: $lightGray;
+      text-align: center;
+      margin-right: 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease-out;
 
-    @include respond-above(sm) {
-      width: 96px;
-      height: 96px;
-      line-height: 96px;
-      font-size: 80px;
+      @include respond-above(sm) {
+        width: 96px;
+        height: 96px;
+        line-height: 96px;
+        font-size: 80px;
+      }
+
+      &.cleared {
+        background-color: $lightSage;
+      }
+
+      &.failed {
+        background-color: $red;
+      }
+      .counter-number {
+        position: absolute;
+        left: 50%;
+        margin-left: -17px;
+        transition: opacity 0.2s ease-out;
+        opacity: 0;
+
+        @include respond-above(sm) {
+          margin-left: -22px;
+        }
+
+        &.new {
+          opacity: 1;
+          transition: opacity 0.2s ease-in;
+        }
+      }
     }
 
-    &.cleared {
-      background-color: $lightSage;
-    }
-
-    &.failed {
-      background-color: $red;
-    }
-  }
-
-  .counter-description {
-    @include respond-above(sm) {
-      font-size: 32px;
+    .counter-description {
+      @include respond-above(sm) {
+        font-size: 32px;
+      }
     }
   }
 }

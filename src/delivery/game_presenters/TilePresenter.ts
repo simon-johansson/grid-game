@@ -1,6 +1,6 @@
 import { ITilePresenter } from "../../domain/boundaries/input";
 import { ITile } from "../../domain/boundaries/output";
-import CanvasProvider from "./CanvasProvider";
+import CanvasProvider from "../components/CanvasProvider";
 import { roundRect } from "./presenterUtils";
 
 export default abstract class TilePresenter implements ITilePresenter {

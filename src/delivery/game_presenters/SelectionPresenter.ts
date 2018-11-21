@@ -1,5 +1,5 @@
 import { ISelection } from "../../domain/boundaries/output";
-import CanvasProvider from "./CanvasProvider";
+import CanvasProvider from "../components/CanvasProvider";
 import { selection as styles } from "./presenterStyles";
 import { roundRect } from "./presenterUtils";
 

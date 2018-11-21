@@ -10,10 +10,10 @@ body {
   height: 100%;
   user-select: none;
   overflow: hidden;
+  overscroll-behavior-x: none;
 }
 
 body {
-  overscroll-behavior: contain;
   font-family: $fontFamily;
   font-size: $gameDefaultFontSize;
   font-weight: bold;

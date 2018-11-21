@@ -6,3 +6,18 @@
   background: $black;
   font-family: $fontFamily;
 }
+
+#doorbell {
+  font-family: $fontFamily;
+
+  #doorbell-powered-by {
+    display: none;
+  }
+
+  .btn.btn-primary {
+    background: $lightSage;
+    border: none;
+    color: $black;
+    font-weight: bold;
+  }
+}

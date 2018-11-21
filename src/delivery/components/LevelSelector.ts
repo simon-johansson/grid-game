@@ -1,4 +1,4 @@
-import BaseComponent from "./BaseComponent";
+import Component from "./Component";
 
 const prevBtnClass = "prev";
 const nextBtnClass = "next";
@@ -10,43 +10,44 @@ export interface IProps {
   isLastLevel: boolean;
 }
 
-export default class LevelSelector extends BaseComponent {
+export default class LevelSelector extends Component<IProps> {
   protected wrapperElement: HTMLElement = document.getElementById("level-selection");
 
   constructor(private onPrevLevel: () => void, private onNextLevel: () => void, private onRestart: () => void) {
     super();
   }
 
-  public render(options: IProps): void {
-    this.wrapperElement.innerHTML = this.HTML(options);
-    this.bindEvents();
-  }
-
-  private HTML({ currentLevel, isLastLevel }: IProps): string {
-    const isFirstLevel = currentLevel === 0;
-
+  protected HTML(props: IProps): string {
     return `
-    <span class="${prevBtnClass} ${isFirstLevel && "disable"}">
+    <div class="inner-wrapper">
+      <span class="${prevBtnClass}">
       <img src="/assets/arrowThickLeft@3x.png" />
-    </span>
+      </span>
 
-    <span class="${currentLevelClass}">
-      Level ${currentLevel + 1}
-    </span>
+      <span class="${currentLevelClass}"></span>
 
-    <span class="${nextBtnClass} ${isLastLevel && "disable"}">
+      <span class="${nextBtnClass}">
       <img src="/assets/arrowThickLeft@3x.png" />
-    </span>
+      </span>
 
-    <span class="${restartBtnClass}">
+      <span class="${restartBtnClass}">
       <img src="/assets/reload@3x.png" />
-    </span>
+      </span>
+    </div>
   `;
   }
 
-  private bindEvents() {
+  protected componentDidMount() {
     this.bindEvent(prevBtnClass, this.onPrevLevel);
     this.bindEvent(nextBtnClass, this.onNextLevel);
     this.bindEvent(restartBtnClass, this.onRestart);
+  }
+
+  protected update({ currentLevel, isLastLevel }: IProps) {
+    const isFirstLevel = currentLevel === 0;
+
+    this.getEl(currentLevelClass).textContent = `Level ${currentLevel + 1}`;
+    this.getEl(prevBtnClass).className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
+    this.getEl(nextBtnClass).className = `${nextBtnClass} ${isLastLevel && "disable"}`;
   }
 }

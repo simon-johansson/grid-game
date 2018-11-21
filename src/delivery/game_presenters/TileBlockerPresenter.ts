@@ -1,5 +1,5 @@
 import { ITile } from "../../domain/boundaries/output";
-import CanvasProvider from "./CanvasProvider";
+import CanvasProvider from "../components/CanvasProvider";
 
 import TilePresenter from "./TilePresenter";
 

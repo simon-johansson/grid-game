@@ -1,10 +1,39 @@
-
 #canvas-container {
   position: relative;
 
-  #selection-canvas {
+  .inner-wrapper,
+  .inner-wrapper-old {
     position: absolute;
     top: 0px;
     left: 0px;
+    transition: all 0.3s;
+    transition-delay: 0.1s;
+    transform: translateX(0px);
+    opacity: 1;
+
+    &.fade-in-left,
+    &.fade-in-right {
+      opacity: 0;
+    }
+    &.fade-out-left,
+    &.fade-out-right {
+      opacity: 0;
+      transition-delay: 0s;
+    }
+    &.fade-in-left,
+    &.fade-out-left {
+      transform: translateX(-40px);
+    }
+    &.fade-in-right,
+    &.fade-out-right {
+      transform: translateX(40px);
+    }
+
+    .selection-canvas,
+    .selection-canvas-old {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
   }
 }

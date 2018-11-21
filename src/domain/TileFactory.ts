@@ -2,6 +2,10 @@ import { IGameRules, IGridLayout, ITilePresenterConstructor, ITileRawState } fro
 import GridPoint from "./entities/GridPoint";
 import Tile, { IInitState } from "./entities/Tile";
 
+function assertNever(state: never): never {
+  throw new Error("Unkown tile state supplied: " + state);
+}
+
 export default class TileFactory {
   constructor(
     private rules: IGameRules,
@@ -50,7 +54,7 @@ export default class TileFactory {
         break;
 
       default:
-        throw new Error("Unkown tile state supplied");
+        return assertNever(initState);
     }
 
     return new Tile(state, position, this.rules, presenter);

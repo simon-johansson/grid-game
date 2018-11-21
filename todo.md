@@ -10,3 +10,5 @@
 * Tester för utils (query string mm.)
 * hantera resize
 * responde above eller beolow?
+* Change query string to hash strig
+* Promise på animation till ny bana, bind inte events innan animationen är klar

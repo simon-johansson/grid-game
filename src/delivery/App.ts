@@ -2,11 +2,11 @@ import { IGameLevel, IGameRules, IGridLayout } from "../domain/boundaries/input"
 import { IGameState } from "../domain/boundaries/output";
 import GameState from "../domain/entities/GameState";
 import GameInteractor from "../domain/GameInteractor";
+import CanvasProvider from "./components/CanvasProvider";
 import LevelSelector from "./components/LevelSelector";
 import MovesCounter from "./components/MovesCounter";
 import { gameBoardLayouts } from "./data/levels";
 import {
-  CanvasProvider,
   SelectionPresenter,
   TileBlockerPresenter,
   TileFlippablePresenter,
@@ -15,25 +15,19 @@ import {
 import { getQueryStringParams } from "./utils";
 
 class App {
-  private gameInteractor: GameInteractor = new GameInteractor(
+  private gameInteractor = new GameInteractor(
     SelectionPresenter,
     TileFlippablePresenter,
     TileBlockerPresenter,
     TileMultiFlipPresenter
   );
-  private defaultRules: IGameRules = {};
-  private mouseIsDown: boolean = false;
-  private queryStringParams: any = getQueryStringParams(window.location.search);
+  private isSelecting: boolean = false;
+  private queryStringRules: IGameRules = {};
   private queryStringLayout: IGridLayout;
   private currentLevel: number = 0;
-  private movesMade: number = 0;
-  private canvasProvider: CanvasProvider = CanvasProvider.Instance;
-  private $elMovesLeft: HTMLElement = document.getElementById("moves-left");
-  private $elMovesMade: HTMLElement = document.getElementById("moves-made");
-  private $elNextBtn: HTMLElement = document.getElementById("next");
-  private elApp: HTMLElement = document.getElementById("app");
 
   // Components
+  private GameCanvasComponent: CanvasProvider;
   private LevelSelectorComponent: LevelSelector;
   private MovesCounterComponent: MovesCounter;
 
@@ -41,12 +35,14 @@ class App {
     this.createComponents();
     this.bindEvents();
     this.analyseQueryString();
+
+    // TODO: Lägg in render i createGame
     const initState = this.createGame();
     this.render(initState);
-    // this.setGameInfo();
   };
 
   private createComponents() {
+    this.GameCanvasComponent = CanvasProvider.Instance;
     this.MovesCounterComponent = new MovesCounter();
     this.LevelSelectorComponent = new LevelSelector(
       this.goToPrevLevel.bind(this),
@@ -55,9 +51,10 @@ class App {
     );
   }
 
+  // TODO: FLytta till CanvasProvidor
   private bindEvents = (): void => {
     const addCanvasListener = (eventType: string, onEventActionFn: any, proxyFn?: any) =>
-      this.canvasProvider.SELECTION_CANVAS.addEventListener(
+      this.GameCanvasComponent.SELECTION_CANVAS.addEventListener(
         eventType,
         proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn,
         false
@@ -75,74 +72,50 @@ class App {
   };
 
   private analyseQueryString = (): void => {
-    try {
-      this.queryStringLayout = JSON.parse(this.queryStringParams.layout) as IGridLayout;
-    } catch (error) {}
+    const queryStringParams = getQueryStringParams(window.location.search);
+    const getParam = <T>(param: string): T => {
+      try {
+        return JSON.parse(queryStringParams[param]) as T;
+      } catch (error) {}
+    };
 
-    try {
-      this.currentLevel = JSON.parse(this.queryStringParams.level) as number;
-    } catch (error) {}
-
-    try {
-      this.defaultRules.toggleOnOverlap = JSON.parse(this.queryStringParams.toggleOnOverlap) as boolean;
-    } catch (error) {}
-
-    try {
-      this.defaultRules.minSelection = JSON.parse(this.queryStringParams.minSelection) as number;
-    } catch (error) {}
+    this.queryStringLayout = getParam<IGridLayout>("layout");
+    this.currentLevel = getParam<number>("level") || 0;
+    this.queryStringRules.toggleOnOverlap = getParam<boolean>("toggleOnOverlap");
+    this.queryStringRules.minSelection = getParam<number>("minSelection");
   };
 
   private createGame = (): GameState => {
-    const level = this.getGameBoardLayout();
-    level.rules = level.rules || {};
-    Object.assign(level.rules, this.defaultRules);
+    const level = this.getLayout();
+    level.rules = this.getRules(level.rules);
     return this.gameInteractor.startLevel(level);
   };
 
-  private setGameInfo = (): void => {
-    if (this.currentLevel >= gameBoardLayouts.length - 1) {
-      this.$elNextBtn.style.display = "none";
-    }
-
-    if (!!gameBoardLayouts[this.currentLevel] && !this.queryStringLayout) {
-      this.$elMovesLeft.textContent = `${gameBoardLayouts[this.currentLevel].moves}`;
-      this.$elMovesMade.style.display = "none";
-    } else {
-      this.$elMovesLeft.style.display = "none";
-    }
+  private getLayout = (): IGameLevel => {
+    const layout = this.queryStringLayout;
+    return layout ? { layout } : gameBoardLayouts[this.currentLevel];
   };
 
-  private updateGameInfo = (gameState: any): void => {
-    if (typeof gameState.selectionsLeft === "undefined") {
-      this.$elMovesMade.textContent = `${gameState.selectionsMade.valid}`;
-    } else {
-      this.$elMovesLeft.textContent = `${gameState.selectionsLeft}`;
-    }
+  private getRules = (rules: IGameRules): IGameRules => {
+    rules = rules || {};
+    return Object.assign(rules, this.queryStringRules);
   };
 
-  private getGameBoardLayout = (): IGameLevel => {
-    if (this.queryStringLayout) {
-      return {
-        layout: this.queryStringLayout
-      };
-    } else {
-      return gameBoardLayouts[this.currentLevel];
-    }
-  };
-
+  // TODO: FLytta till CanvasProvidor
   private onMouseSelection = (method: (x: number, y: number) => void, e: MouseEvent): void => {
     method(e.offsetX, e.offsetY);
   };
 
+  // TODO: FLytta till CanvasProvidor
   private onTouchSelection = (method: (x: number, y: number) => void, e: TouchEvent): void => {
     e.preventDefault();
-    const offsetLeft = this.canvasProvider.offsetLeft;
-    const offsetTop = this.canvasProvider.offsetTop;
+    const offsetLeft = this.GameCanvasComponent.offsetLeft;
+    const offsetTop = this.GameCanvasComponent.offsetTop;
     method(Math.floor(e.touches[0].clientX - offsetLeft), Math.floor(e.touches[0].clientY - offsetTop));
   };
 
   private onSelectionStart = (x: number, y: number): void => {
-    this.mouseIsDown = true;
+    this.isSelecting = true;
     this.gameInteractor.setSelectionStart(
       this.convertAbsoluteOffsetToProcent(x),
       this.convertAbsoluteOffsetToProcent(y)
@@ -150,7 +123,7 @@ class App {
   };
 
   private onSelectionMove = (x: number, y: number): void => {
-    if (this.mouseIsDown) {
+    if (this.isSelecting) {
       this.gameInteractor.setSelectionEnd(
         this.convertAbsoluteOffsetToProcent(x),
         this.convertAbsoluteOffsetToProcent(y)
@@ -159,54 +132,72 @@ class App {
   };
 
   private onSelectionEnd = (): void => {
-    if (this.mouseIsDown) {
-      this.mouseIsDown = false;
+    if (this.isSelecting) {
+      this.isSelecting = false;
       const gameState = this.gameInteractor.evaluateSelection();
       this.render(gameState);
 
-      if (gameState.cleared && !(this.currentLevel >= gameBoardLayouts.length - 1) && !this.queryStringLayout) {
-        setTimeout(() => {
-          this.goToNextLevel();
-        }, 500);
+      // console.log(this.shouldProcedeToNextLevel(gameState));
+
+      if (this.shouldProcedeToNextLevel(gameState)) {
+        this.goToNextLevel();
+        // setTimeout(() => {
+        //   this.goToNextLevel();
+        // }, 500);
         return;
       }
 
       if (gameState.selectionsLeft === 0) {
-        setTimeout(() => {
-          location.reload();
-        }, 500);
+        const newState = this.createGame();
+        this.render(newState);
+        // setTimeout(() => {
+        //   location.reload();
+        // }, 500);
         return;
       }
     }
   };
 
   private render(gameState: IGameState): void {
-    // console.log("Render");
+    this.GameCanvasComponent.render({});
+
     this.MovesCounterComponent.render({
       selectionsLeft: gameState.selectionsLeft,
       selectionsMade: gameState.selectionsMade.valid,
-      isLevelCleared: gameState.cleared,
+      isLevelCleared: gameState.cleared
     });
+
     this.LevelSelectorComponent.render({
       currentLevel: this.currentLevel,
       isLastLevel: this.currentLevel >= gameBoardLayouts.length - 1
     });
   }
 
-  private goToPrevLevel = (): void => {
-    window.location.href = `${window.location.origin}?level=${this.currentLevel - 1}`;
+  private goToPrevLevel() {
+    this.currentLevel -= 1;
+    this.GameCanvasComponent.prepareNewLevel('prev');
+    const newState = this.createGame();
+    this.GameCanvasComponent.showNewLevel('prev');
+    this.bindEvents();
+    this.render(newState);
   };
 
-  private goToNextLevel = (): void => {
-    window.location.href = `${window.location.origin}?level=${this.currentLevel + 1}`;
-  };
+  private goToNextLevel() {
+    this.currentLevel += 1;
+    this.GameCanvasComponent.prepareNewLevel('next');
+    const newState = this.createGame();
+    this.GameCanvasComponent.showNewLevel('next');
+    this.bindEvents();
+    this.render(newState);
+  }
 
-  private restartLevel = (): void => {
-    location.reload();
-  };
+  private restartLevel = (): void => location.reload();
 
   private convertAbsoluteOffsetToProcent = (position: number) =>
     Math.floor((position / CanvasProvider.Instance.canvasSize) * 100);
+
+  private shouldProcedeToNextLevel = (state: GameState) =>
+    state.cleared && this.currentLevel <= gameBoardLayouts.length - 1 && !this.queryStringLayout;
 }
 
 const app = new App();

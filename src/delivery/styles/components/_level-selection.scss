@@ -2,66 +2,78 @@
   width: 100%;
   position: relative;
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+  flex-grow: 1;
+  align-items: flex-end;
+  justify-content: center;
 
-  @include respond-above(sm) {
-    justify-content: space-evenly;
-  }
+  .inner-wrapper {
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
 
-  .prev,
-  .next {
-    &.disable {
-      opacity: 0.2;
-      pointer-events: none;
+    @include respond-below(sm) {
+      max-width: 350px;
     }
+
     @include respond-above(sm) {
-      // game canvas / 2, arrow height / 2, leftovers
-      top: calc(-250px + -32px + -65px);
-      position: absolute;
+      justify-content: space-evenly;
     }
-    img {
-      width: 32px;
+
+    .prev,
+    .next {
+      &.disable {
+        opacity: 0.2;
+        pointer-events: none;
+      }
       @include respond-above(sm) {
-        width: 64px;
+        // game canvas / 2, arrow height / 2, leftovers
+        top: calc(-250px + -32px + -7px);
+        position: absolute;
+      }
+      img {
+        width: 32px;
+        @include respond-above(sm) {
+          width: 64px;
+        }
       }
     }
-  }
 
-  .prev {
-    @include respond-above(sm) {
-      left: -150px;
-    }
-  }
-
-  .next {
-    @include respond-above(sm) {
-      right: -150px;
-    }
-
-    img {
-      transform: rotate(180deg);
-    }
-  }
-
-  .current-level {
-    @include respond-above(sm) {
-      font-size: 48px;
-    }
-  }
-
-  .restart {
-    img {
-      width: 40px;
-
+    .prev {
       @include respond-above(sm) {
-        width: 76px;
+        left: -150px;
       }
     }
-  }
 
-  span {
-    display: inline-block;
-    cursor: pointer;
+    .next {
+      @include respond-above(sm) {
+        right: -150px;
+      }
+
+      img {
+        transform: rotate(180deg);
+      }
+    }
+
+    .current-level {
+      @include respond-above(sm) {
+        font-size: 48px;
+      }
+    }
+
+    .restart {
+      img {
+        width: 40px;
+
+        @include respond-above(sm) {
+          width: 76px;
+        }
+      }
+    }
+
+    span {
+      display: inline-block;
+      cursor: pointer;
+    }
   }
 }
