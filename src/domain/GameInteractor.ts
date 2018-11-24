@@ -18,7 +18,6 @@ export default class GameInteractor {
 
   public startLevel(gameLevel: IGameLevel): GameState {
     this.state = new GameState(gameLevel);
-    console.log(this.state);
     this.createGrid();
     this.createSelection();
     return this.state;

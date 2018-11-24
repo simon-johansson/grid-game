@@ -11,10 +11,12 @@
     transform: translateX(0px);
     opacity: 1;
 
+    &.fade-in,
     &.fade-in-left,
     &.fade-in-right {
       opacity: 0;
     }
+    &.fade-out,
     &.fade-out-left,
     &.fade-out-right {
       opacity: 0;

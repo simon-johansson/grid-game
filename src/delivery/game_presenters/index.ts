@@ -1,4 +1,4 @@
-export { default as SelectionPresenter } from "./SelectionPresenter";
-export { default as TileBlockerPresenter } from "./TileBlockerPresenter";
-export { default as TileFlippablePresenter } from "./TileFlippablePresenter";
-export { default as TileMultiFlipPresenter } from "./TileMultiFlipPresenter";
+export { default as getSelectionPresenter } from "./SelectionPresenter";
+export { default as getTileBlockerPresenter } from "./TileBlockerPresenter";
+export { default as getTileFlippablePresenter } from "./TileFlippablePresenter";
+export { default as getTileMultiFlipPresenter } from "./TileMultiFlipPresenter";

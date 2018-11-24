@@ -1,12 +1,15 @@
 import { ITilePresenter } from "../../domain/boundaries/input";
 import { ITile } from "../../domain/boundaries/output";
-import CanvasProvider from "../components/CanvasProvider";
+import CanvasProvider from "../components/GameBoard";
 import { roundRect } from "./presenterUtils";
 
 export default abstract class TilePresenter implements ITilePresenter {
-  protected ctx: CanvasRenderingContext2D = CanvasProvider.Instance.TILE_CANVAS_CONTEXT;
-  protected size: number = CanvasProvider.Instance.tileSize;
   protected padding: number = 10;
+
+  constructor(
+    protected context: () => CanvasRenderingContext2D,
+    protected size: number
+  ) {}
 
   public render(tile: ITile): void {
     this.ctx.save();
@@ -17,6 +20,10 @@ export default abstract class TilePresenter implements ITilePresenter {
     this.ctx.closePath();
     this.drawAdditionalDetails(tile);
     this.ctx.restore();
+  }
+
+  protected get ctx(): CanvasRenderingContext2D {
+    return this.context();
   }
 
   protected setCommonStyling(tile: ITile): void {
