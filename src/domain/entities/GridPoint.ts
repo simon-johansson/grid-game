@@ -14,6 +14,7 @@ const convertPxToTile = (pxArea: number, numberOfTiles: number) => {
 
 export default class GridPoint {
   public static convertPxSpanToGridSpan(startPoint: IPoint, endPoint: IPoint, numberOfRows: number): IGridSpan {
+    // TODO: Change name and refactor now that we take % and not px
     const converter = convertPxToTile(100, numberOfRows);
     let { x: startX, y: startY } = startPoint;
     let { x: endX, y: endY } = endPoint;
