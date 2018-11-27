@@ -1,4 +1,4 @@
-import { IGameLevel, IGameRules, IGridLayout } from "../../domain/boundaries/input";
+import { IGameLevel } from "../../domain/boundaries/input";
 import { IGameState } from "../../domain/boundaries/output";
 import GameInteractor from "../../domain/GameInteractor";
 import {
