@@ -15,7 +15,7 @@ function sslRedirect(environments) {
 
 app.set("port", process.env.PORT || 8080);
 
-app.use(sslRedirect());
+// app.use(sslRedirect());
 
 app.use(express.static(path.join(__dirname, "dist")));
 
