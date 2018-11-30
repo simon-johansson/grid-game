@@ -6,3 +6,4 @@
 * hantera resize
 * Change query string to hash strig
 * Små, små funktioner
+* sonar ts

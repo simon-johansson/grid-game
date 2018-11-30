@@ -22,6 +22,7 @@ export default class Grid {
     this.tiles.forEach(tile => tile.setSelected(selection));
   }
 
+  // TODO: Går att göra snyggare, lättare att läsa?
   public evaluateSelection(): IEvaluateSelection {
     const selectionIsInvalid = this.selectionIsInvalid;
 
