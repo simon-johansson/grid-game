@@ -14,12 +14,12 @@
     "start": "node server.js",
     "build": "rm -rf ./dist && run-s build:* service-worker",
     "serve": "browser-sync start -s \"dist\" -f \"dist\"",
-    "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,webmanifest,png,jpg,gif}\" dist",
+    "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
     "build:tsc": "tsc -p ./tsconfig.prod.json",
     "watch:tsc": "tsc --watch",
     "watch:scss": "onchange \"src/delivery/**/*.scss\" -- run-s build:scss",
-    "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,webmanifest,png,jpg,gif}\" -- run-s build:assets",
+    "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,json,png,jpg,gif}\" -- run-s build:assets",
     "watch": "rm -rf ./dist && run-s build:* && run-p serve watch:*",
     "test": "jest",
     "test-watch": "jest --watch",
@@ -41,6 +41,6 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
-    "express": "4.15.0"
+    "express": "^4.16.4"
   }
 }
