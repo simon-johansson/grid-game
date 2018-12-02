@@ -20,6 +20,7 @@ export interface IGameRules {
   minSelection?: number;
 }
 
+// TODO: Gör den här snyggare
 export type ITileRawState = "r" | "f" | "b" | "2" | "3" | "4";
 
 export type IGridLayout = ITileRawState[][];

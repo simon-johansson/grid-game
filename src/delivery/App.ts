@@ -4,34 +4,19 @@ import GameBoard from "./components/GameBoard";
 import LevelSelector from "./components/LevelSelector";
 import MovesCounter from "./components/MovesCounter";
 import { gameBoardLayouts } from "./data/levels";
-import { getQueryStringParams } from "./utils";
+import QueryStringHandler from "./utils/QueryStringHandler";
 
 class App {
-  private queryStringRules: IGameRules = {};
-  private queryStringLayout: IGridLayout;
-  private currentLevel: number = 0;
+  private currentLevel: number;
   private isTransitioningBetweenLevels: boolean = false;
   private GameBoardComponent: GameBoard;
   private LevelSelectorComponent: LevelSelector;
   private MovesCounterComponent: MovesCounter;
+  private queryString = new QueryStringHandler(window.location.search);
 
   public init = (): void => {
-    this.analyseQueryString();
+    this.currentLevel = this.queryString.level || 0;
     this.createComponents();
-  };
-
-  private analyseQueryString = (): void => {
-    const queryStringParams = getQueryStringParams(window.location.search);
-    const getParam = <T>(param: string): T => {
-      try {
-        return JSON.parse(queryStringParams[param]) as T;
-      } catch (error) {}
-    };
-
-    this.queryStringLayout = getParam<IGridLayout>("layout");
-    this.currentLevel = getParam<number>("level") || this.currentLevel;
-    this.queryStringRules.toggleOnOverlap = getParam<boolean>("toggleOnOverlap");
-    this.queryStringRules.minSelection = getParam<number>("minSelection");
   };
 
   private createComponents() {
@@ -45,19 +30,32 @@ class App {
   }
 
   private getLevel(): IGameLevel {
-    const level = this.getLayout();
-    level.rules = this.getRules(level.rules);
-    return level;
+    return {
+      layout: this.getLayout(),
+      rules: this.getRules(),
+      moves: this.getMoves()
+    };
   }
 
-  private getLayout = (): IGameLevel => {
-    const layout = this.queryStringLayout;
-    return layout ? { layout } : gameBoardLayouts[this.currentLevel];
+  private getLayout = (): IGridLayout => {
+    return this.queryString.layout || gameBoardLayouts[this.currentLevel].layout;
   };
 
-  private getRules = (rules: IGameRules = {}): IGameRules => {
-    return Object.assign(rules, this.queryStringRules);
+  private getRules = (): IGameRules => {
+    const rules = gameBoardLayouts[this.currentLevel].rules || {};
+    const { toggleOnOverlap, minSelection } = this.queryString;
+    if (toggleOnOverlap !== undefined) {
+      Object.assign(rules, { toggleOnOverlap });
+    }
+    if (minSelection !== undefined) {
+      Object.assign(rules, { minSelection });
+    }
+    return rules;
   };
+
+  private getMoves = (): number => {
+    return this.queryString.layout ? undefined : gameBoardLayouts[this.currentLevel].moves;
+  }
 
   private onGameStateUpdate(gameState: IGameState) {
     this.updateComponents(gameState);
@@ -78,7 +76,7 @@ class App {
   }
 
   private shouldProcedeToNextLevel(state: IGameState): boolean {
-    return state.cleared && this.currentLevel <= gameBoardLayouts.length - 1 && !this.queryStringLayout;
+    return state.cleared && this.currentLevel <= gameBoardLayouts.length - 1 && !this.queryString.layout;
   }
 
   private shouldRestartCurrentLevel(gameState: IGameState): boolean {
@@ -87,7 +85,6 @@ class App {
 
   private restartLevel() {
     if (!this.isTransitioningBetweenLevels) {
-      // TODO: this.GameBoardComponent.restartLevel
       this.isTransitioningBetweenLevels = true;
       this.GameBoardComponent.restartLevel(this.getLevel()).then(() => {
         this.isTransitioningBetweenLevels = false;
