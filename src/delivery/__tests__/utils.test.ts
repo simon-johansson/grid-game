@@ -1,10 +1,5 @@
+// import QueryStringHandler from "../utils/QueryStringHandler";
 
-
-// describe("getQueryStringParams", () => {
-//   const singleParamQS = "?level=5";
-
-//   test.skip("pick up query param", () => {
-//     const param = getQueryStringParams(singleParamQS);
-//     expect(param).toEqual(true);
-//   });
-// });
+describe.skip("QueryStringHandler", () => {
+  test.skip("should return ...")
+});
