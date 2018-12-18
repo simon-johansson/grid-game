@@ -24,7 +24,7 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "test-converage": "jest --coverage",
-    "service-worker": "copyfiles -u 2 \"src/delivery/**/service-worker.js\" dist && node sw-cache-bust.js",
+    "service-worker": "copyfiles -u 2 \"src/delivery/**/service-worker.js\" dist && node build_scripts/sw-cache-bust.js",
     "postinstall": "npm run build"
   },
   "devDependencies": {
