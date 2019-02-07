@@ -1,5 +1,6 @@
 import { IGameLevel, IGameRules, IGridLayout } from "../boundaries/input";
-import { IGameState } from "../boundaries/output";
+import { IGameState, ITile } from "../boundaries/output";
+import TileFactory from "../TileFactory";
 import { IEvaluateSelection } from "./Grid";
 
 export default class GameState implements IGameState {
@@ -31,15 +32,23 @@ export default class GameState implements IGameState {
     // TODO: Skriv test för att man kan mata in konstiga query strings
     // TODO: Gör snyggare
     if (gameLevel.rules && gameLevel.rules.minSelection !== undefined) {
-      this.rules.minSelection = gameLevel.rules.minSelection
+      this.rules.minSelection = gameLevel.rules.minSelection;
     }
     if (gameLevel.rules && gameLevel.rules.toggleOnOverlap !== undefined) {
-      this.rules.toggleOnOverlap = gameLevel.rules.toggleOnOverlap
+      this.rules.toggleOnOverlap = gameLevel.rules.toggleOnOverlap;
     }
   }
 
+  public setLevelRules(rules: IGameRules) {
+    this.rules = rules;
+  }
+
+  public setLevelMoves(moves: number) {
+    this.selectionsLeft = moves;
+  }
+
   public onSelectionMade(evaluatedSelection: IEvaluateSelection) {
-    if (evaluatedSelection.selectionIsValid) {
+    if (evaluatedSelection.isSelectionValid) {
       this.selectionsMade.valid++;
       if (this.selectionsLeft) {
         this.selectionsLeft--;
@@ -51,5 +60,18 @@ export default class GameState implements IGameState {
     if (evaluatedSelection.tilesLeftToClear === 0) {
       this.cleared = true;
     }
+
+    this.translateTilesToLayout(evaluatedSelection.tiles);
+  }
+
+  // TODO: Denna logik borde vara på samma ställa som där man översätter raw till parsed tilles
+  private translateTilesToLayout(tiles: ITile[]) {
+    const layout: IGridLayout = [];
+    tiles.forEach(tile => {
+      const { rowIndex, colIndex } = tile.position;
+      layout[rowIndex] = layout[rowIndex] || [];
+      layout[rowIndex][colIndex] = TileFactory.getRawTile(tile);
+    });
+    this.grid.layout = layout;
   }
 }

@@ -1,37 +1,87 @@
 import { IGridLayout } from "../../domain/boundaries/input";
 
-export const getQueryStringParams = (query: string): any => {
-  return query
-    ? (/^[?#]/.test(query) ? query.slice(1) : query).split("&").reduce((params: any, param) => {
-        const [key, value] = param.split("=");
-        params[key] = value ? decodeURIComponent(value.replace(/\+/g, " ")) : "";
-        return params;
-      }, {})
-    : {};
-};
+export interface IQueryStringOptions {
+  level?: number;
+  layout?: IGridLayout;
+  toggleOnOverlap?: boolean;
+  minSelection?: number;
+  edit?: boolean;
+  moves?: number;
+}
 
-// TODO: Skriv tester
-export default class QueryStringHandler {
-  public level: number | undefined;
-  public layout: IGridLayout | undefined;
-  public toggleOnOverlap: boolean | undefined;
-  public minSelection: number | undefined;
-  private queryStringParams: any;
+export default class QueryStringHandler implements IQueryStringOptions {
+  private queryString: string;
+  private params: URLSearchParams;
 
-  constructor(query: string) {
-    this.queryStringParams = getQueryStringParams(query);
-
-    this.level = this.getParam<number>('level');
-    this.layout = this.getParam<IGridLayout>('layout');
-    this.toggleOnOverlap = this.getParam<boolean>('toggleOnOverlap');
-    this.minSelection = this.getParam<number>('minSelection');
+  constructor() {
+    this.queryString = window.location.search;
+    this.params = new URLSearchParams(this.queryString);
   }
 
-  private getParam<T>(param: string): T | undefined {
+  public get level(): number | null {
+    return this.getParam<number>("level");
+  }
+
+  public set level(level: number | null) {
+    this.setParam("level", level);
+  }
+
+  public get layout(): IGridLayout | null {
+    return this.getParam<IGridLayout>("layout");
+  }
+
+  public set layout(layout: IGridLayout) {
+    this.setParam("layout", JSON.stringify(layout));
+  }
+
+  public get toggleOnOverlap(): boolean | null {
+    return this.getParam<boolean>("toggleOnOverlap");
+  }
+
+  public set toggleOnOverlap(bool: boolean) {
+    this.setParam("toggleOnOverlap", bool);
+  }
+
+  public get minSelection(): number | null {
+    return this.getParam<number>("minSelection");
+  }
+
+  public set minSelection(num: number) {
+    this.setParam("minSelection", num);
+  }
+
+  public get moves(): number | null {
+    return this.getParam<number>("moves");
+  }
+
+  public set moves(num: number) {
+    this.setParam("moves", num);
+  }
+
+  public get edit(): boolean | null {
+    return this.getParam<boolean>("edit");
+  }
+
+  public set edit(bool: boolean) {
+    this.setParam("edit", bool);
+  }
+
+  private getParam<T>(param: string): T | null {
     try {
-      return JSON.parse(this.queryStringParams[param]) as T;
+      return JSON.parse(this.params.get(param));
     } catch (error) {
-      return undefined;
+      // console.log(error);
+      return null;
     }
+  }
+
+  private setParam(name: string, value?: any) {
+    if (value === null) {
+      this.params.delete(name);
+    } else {
+      this.params.set(name, value);
+    }
+    const pathname = window.location.pathname;
+    window.history.pushState({}, "", decodeURIComponent(`${pathname}?${this.params}`));
   }
 }

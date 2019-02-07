@@ -1,4 +1,4 @@
-import { IGameRules, ITilePresenter } from "../boundaries/input";
+import { IGameRules, ITilePresenter, TileType } from "../boundaries/input";
 import { ITile } from "../boundaries/output";
 import GridPoint, { IGridSpan } from "./GridPoint";
 
@@ -18,8 +18,10 @@ export default class Tile implements ITile {
   };
 
   constructor(
+    public tileType: TileType,
     initState: IInitState,
     public position: GridPoint,
+    // TODO: Skicka inte med rules här
     private rules: IGameRules,
     private presenter: ITilePresenter
   ) {
@@ -72,15 +74,54 @@ export default class Tile implements ITile {
     return this.isBlocker;
   }
 
-  public setSelected(selection: IGridSpan): void {
-    const prevState = this.isSelected;
+  public checkIfSelected(selection: IGridSpan, tileType?: TileType): void {
+    const intersects = this.doesIntersectWithSelection(selection);
+    const shouldChangeTileType =  intersects && tileType;
+    const shouldChangeSelectionState =  this.isSelected !== intersects;
+
+    if (shouldChangeTileType) {
+      this.changeTileType(tileType);
+    } else if (shouldChangeSelectionState) {
+      this.changeSelectionState(intersects);
+    }
+  }
+
+  private doesIntersectWithSelection(selection: IGridSpan): boolean {
     const { rowIndex, colIndex } = this.position;
     const rowIntersect = selection.startTile.rowIndex <= rowIndex && selection.endTile.rowIndex >= rowIndex;
     const colIntersect = selection.startTile.colIndex <= colIndex && selection.endTile.colIndex >= colIndex;
-    this.state.selected = rowIntersect && colIntersect;
+    return rowIntersect && colIntersect;
+  }
 
-    if (prevState !== this.isSelected) {
-      this.presenter.render(this);
+  private changeTileType(tileType: TileType): void {
+    this.state.selected = false;
+    this.setTileType(tileType);
+    this.presenter.render(this);
+  }
+
+  private changeSelectionState(tileIntersects: boolean) {
+    this.state.selected = tileIntersects;
+    this.presenter.render(this);
+  }
+
+  private setTileType(tileType: TileType): void {
+    this.tileType = tileType;
+
+    switch (tileType) {
+      case TileType.Regular:
+        this.state.blocker = false;
+        this.state.cleared = false;
+        break;
+
+      case TileType.Cleared:
+        this.state.blocker = false;
+        this.state.cleared = true;
+        break;
+
+        case TileType.Blocker:
+        this.state.blocker = true;
+        this.state.cleared = false;
+        break;
     }
   }
 }

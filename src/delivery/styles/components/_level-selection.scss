@@ -6,6 +6,17 @@
   align-items: flex-end;
   justify-content: center;
 
+  .hide,
+  .disable {
+    pointer-events: none;
+  }
+  .hide {
+    display: none !important;
+  }
+  .disable {
+    opacity: 0;
+  }
+
   .inner-wrapper {
     width: 100%;
     flex-direction: row;
@@ -22,10 +33,6 @@
 
     .prev,
     .next {
-      &.disable {
-        opacity: 0.2;
-        pointer-events: none;
-      }
       @include respond-above(sm) {
         // game canvas / 2, arrow height / 2, leftovers
         top: calc(-250px + -32px + -7px);

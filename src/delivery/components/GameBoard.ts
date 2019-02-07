@@ -3,23 +3,22 @@ import { IGameState } from "../../domain/boundaries/output";
 import GameInteractor from "../../domain/GameInteractor";
 import {
   getSelectionPresenter,
-  getTileBlockerPresenter,
-  getTileFlippablePresenter,
-  getTileMultiFlipPresenter
+  getTilePresenter
 } from "../game_presenters/index";
 import Component from "./Component";
 
-const tileCanvasClass = "tile-canvas";
-const selectionCanvasClass = "selection-canvas";
-const innerWrapperClass = "inner-wrapper";
-
 // TODO: Ändra ordningen av metoderna, bör vara logiskt
-export default class CanvasProvider extends Component<{}> {
+// TODO: Vad är protecterd? Behöver det vara det?
+// TODO: Behöver jag unbind events? Memory leak?
+export default abstract class GameBoard extends Component<{}> {
   protected wrapperElement: HTMLElement = document.getElementById("canvas-container");
-  private isSelecting: boolean = false;
-  private gameInteractor: GameInteractor;
+  protected tileCanvasClass = "tile-canvas";
+  protected selectionCanvasClass = "selection-canvas";
+  protected innerWrapperClass = "inner-wrapper";
+  protected gameInteractor: GameInteractor;
+  protected isSelecting: boolean = false;
 
-  constructor(level: IGameLevel, private onGameStateUpdate: (state: IGameState) => void) {
+  constructor(level: IGameLevel, protected onGameStateUpdate: (state: IGameState) => void) {
     super();
     this.render({});
     this.setCanvasSize();
@@ -27,9 +26,7 @@ export default class CanvasProvider extends Component<{}> {
     this.gameInteractor = new GameInteractor(
       // TODO this.tileSize bör också vara en function, blir fel anars vid resize
       getSelectionPresenter(this.selectionCanvasContext.bind(this), this.tileSize),
-      getTileFlippablePresenter(this.tileCanvasContext.bind(this), this.tileSize),
-      getTileBlockerPresenter(this.tileCanvasContext.bind(this), this.tileSize),
-      getTileMultiFlipPresenter(this.tileCanvasContext.bind(this), this.tileSize)
+      getTilePresenter(this.tileCanvasContext.bind(this), this.tileSize),
     );
     this.onGameStateUpdate(this.gameInteractor.startLevel(level));
   }
@@ -58,27 +55,26 @@ export default class CanvasProvider extends Component<{}> {
     });
   }
 
-  protected HTML(props: {}): string {
-    return `
-      <div class="${innerWrapperClass}">
-        <canvas class="${selectionCanvasClass}"></canvas>
-        <canvas class="${tileCanvasClass}"></canvas>
-      </div>
-  `;
-  }
+  protected abstract HTML(props: {}): string;
 
   protected update(props: {}): void {
     // console.log('update');
   }
 
+  protected abstract processSelectionStart(x: number, y: number): void;
+  protected abstract processSelectionMove(x: number, y: number): void;
+  protected abstract processSelectionEnd(): void;
+
+  protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
+
   private get tileCanvas(): HTMLCanvasElement {
-    return this.getEl(tileCanvasClass) as HTMLCanvasElement;
+    return this.getEl(this.tileCanvasClass) as HTMLCanvasElement;
   }
   private tileCanvasContext(): CanvasRenderingContext2D {
     return this.tileCanvas.getContext("2d");
   }
   private get selectionCanvas(): HTMLCanvasElement {
-    return this.getEl(selectionCanvasClass) as HTMLCanvasElement;
+    return this.getEl(this.selectionCanvasClass) as HTMLCanvasElement;
   }
   private selectionCanvasContext(): CanvasRenderingContext2D {
     return this.selectionCanvas.getContext("2d");
@@ -94,16 +90,16 @@ export default class CanvasProvider extends Component<{}> {
   }
 
   private prepareNewLevel(direction: "prev" | "next" | "restart") {
-    this.getEl(innerWrapperClass).className = `${innerWrapperClass}-old`;
-    this.getEl(tileCanvasClass).className = `${tileCanvasClass}-old`;
-    this.getEl(selectionCanvasClass).className = `${selectionCanvasClass}-old`;
+    this.getEl(this.innerWrapperClass).className = `${this.innerWrapperClass}-old`;
+    this.getEl(this.tileCanvasClass).className = `${this.tileCanvasClass}-old`;
+    this.getEl(this.selectionCanvasClass).className = `${this.selectionCanvasClass}-old`;
     this.createWrapperAndCanvas(direction);
     this.setCanvasSize();
   }
 
   private showNewLevel(direction: "prev" | "next" | "restart"): Promise<void> {
-    const oldWrapper = this.getEl(`${innerWrapperClass}-old`);
-    const newWrapper = this.getEl(innerWrapperClass);
+    const oldWrapper = this.getEl(`${this.innerWrapperClass}-old`);
+    const newWrapper = this.getEl(this.innerWrapperClass);
 
     let directionOutClass = "fade-out";
     if (direction === "prev") {
@@ -131,13 +127,13 @@ export default class CanvasProvider extends Component<{}> {
     } else if (direction === "next") {
       directionInClass += "-right";
     }
-    wrapper.classList.add(innerWrapperClass, directionInClass);
+    wrapper.classList.add(this.innerWrapperClass, directionInClass);
 
     const tileCanvas = document.createElement("canvas");
-    tileCanvas.className = tileCanvasClass;
+    tileCanvas.className = this.tileCanvasClass;
 
     const selectionCanvas = document.createElement("canvas");
-    selectionCanvas.className = selectionCanvasClass;
+    selectionCanvas.className = this.selectionCanvasClass;
 
     wrapper.appendChild(tileCanvas);
     wrapper.appendChild(selectionCanvas);
@@ -165,11 +161,11 @@ export default class CanvasProvider extends Component<{}> {
     this.wrapperElement.style.height = `${boardSize}px`;
   }
 
-  private bindEvents = (): void => {
+  private bindEvents(): void {
     const addCanvasListener = (eventType: string, onEventActionFn: any, proxyFn?: any) =>
       this.wrapperElement.addEventListener(
         eventType,
-        proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn,
+        proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn.bind(this),
         false
       );
 
@@ -182,7 +178,7 @@ export default class CanvasProvider extends Component<{}> {
     addCanvasListener("touchmove", this.onSelectionMove, this.onTouchSelection);
     addCanvasListener("touchend", this.onSelectionEnd);
     document.addEventListener("touchend", this.onSelectionEnd, false);
-  };
+  }
 
   private onMouseSelection = (method: (x: number, y: number) => void, e: MouseEvent): void => {
     method(e.offsetX, e.offsetY);
@@ -197,27 +193,19 @@ export default class CanvasProvider extends Component<{}> {
 
   private onSelectionStart = (x: number, y: number): void => {
     this.isSelecting = true;
-    this.gameInteractor.setSelectionStart(
-      this.convertAbsoluteOffsetToProcent(x),
-      this.convertAbsoluteOffsetToProcent(y)
-    );
+    this.processSelectionStart(x, y);
   };
 
   private onSelectionMove = (x: number, y: number): void => {
     if (this.isSelecting) {
-      this.gameInteractor.setSelectionEnd(
-        this.convertAbsoluteOffsetToProcent(x),
-        this.convertAbsoluteOffsetToProcent(y)
-      );
+      this.processSelectionMove(x, y);
     }
   };
 
-  private onSelectionEnd = (): void => {
+  private onSelectionEnd(): void {
     if (this.isSelecting) {
       this.isSelecting = false;
-      this.onGameStateUpdate(this.gameInteractor.evaluateSelection());
+      this.processSelectionEnd();
     }
-  };
-
-  private convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
+  }
 }
