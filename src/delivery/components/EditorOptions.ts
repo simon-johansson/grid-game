@@ -30,8 +30,6 @@ export default class EditorOptions extends Component<{}> {
   constructor(private onNewOptionsSet: (options: ISelectedOptions) => void) {
     super();
     const { moves, minSelection, toggleOnOverlap } = this.queryString;
-    console.log(moves);
-
     if (moves !== null) {
       this.options.moves = moves;
     }
