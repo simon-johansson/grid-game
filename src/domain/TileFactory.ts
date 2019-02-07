@@ -1,4 +1,5 @@
-import { IGameRules, IGridLayout, ITilePresenterConstructor, ITileRawState } from "./boundaries/input";
+import { IGameRules, IGridLayout, ITilePresenterConstructor, ITileRawState, TileType } from "./boundaries/input";
+import { ITile } from "./boundaries/output";
 import GridPoint from "./entities/GridPoint";
 import Tile, { IInitState } from "./entities/Tile";
 
@@ -7,12 +8,20 @@ function assertNever(state: never): never {
 }
 
 export default class TileFactory {
-  constructor(
-    private rules: IGameRules,
-    private defaultPresenter: ITilePresenterConstructor,
-    private blockerPresenter?: ITilePresenterConstructor,
-    private multiFlipPresenter?: ITilePresenterConstructor
-  ) {}
+  public static getRawTile(tile: ITile): ITileRawState {
+    switch (tile.tileType) {
+      case TileType.Regular:
+        return "r";
+
+      case TileType.Cleared:
+        return "f";
+
+      case TileType.Blocker:
+        return "b";
+    }
+  }
+
+  constructor(private rules: IGameRules, private presenter: ITilePresenterConstructor) {}
 
   public parseRawTiles(initialBoardLayout: IGridLayout): Tile[] {
     const tiles: Tile[] = [];
@@ -26,37 +35,41 @@ export default class TileFactory {
     return tiles;
   }
 
+  // TODO: gör inte en switch här, låt Tile.ts sköta det
   private create(initState: ITileRawState, position: GridPoint): Tile {
     let state: IInitState = {};
-    let presenter = new this.defaultPresenter();
+    let tileType: TileType;
 
     switch (initState) {
       // r = regular
       case "r":
+        tileType = TileType.Regular;
         break;
 
       // f = flipped
+      // TODO: Borde inte vara f för flipped
       case "f":
+        tileType = TileType.Cleared;
         state = { cleared: true };
         break;
 
       // b = blocker
       case "b":
+        tileType = TileType.Blocker;
         state = { blocker: true };
-        presenter = new this.blockerPresenter();
         break;
 
       case "2":
       case "3":
       case "4":
         state = { clearsRequired: parseInt(initState, 10) };
-        presenter = new this.multiFlipPresenter();
         break;
 
       default:
         return assertNever(initState);
     }
 
-    return new Tile(state, position, this.rules, presenter);
+    // TODO: Ska inte behöva skicka in state när jag skickar in tileType
+    return new Tile(tileType, state, position, this.rules, new this.presenter());
   }
 }

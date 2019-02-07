@@ -1,7 +1,8 @@
 import GridPoint, { IGridSpan } from "../entities/GridPoint";
-import { IGameRules, IGridLayout } from "./input";
+import { IGameRules, IGridLayout, TileType } from "./input";
 
 export interface ITile {
+  tileType: TileType;
   position: GridPoint;
   isSelected: boolean;
   isBlocker: boolean;

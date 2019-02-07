@@ -20,8 +20,13 @@ export default abstract class Component<Props> {
     return;
   };
 
+  // TODO: byt till bindClickEvent
   protected bindEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
     this.wrapperElement.querySelector('.' + classSelector).addEventListener("click", callback);
+  }
+
+  protected bindChangeEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
+    this.wrapperElement.querySelector('.' + classSelector).addEventListener("change", callback);
   }
 
   protected getEl = (classSelector: string): HTMLElement => {

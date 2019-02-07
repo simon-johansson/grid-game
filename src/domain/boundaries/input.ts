@@ -23,6 +23,12 @@ export interface IGameRules {
 // TODO: Gör den här snyggare
 export type ITileRawState = "r" | "f" | "b" | "2" | "3" | "4";
 
+export enum TileType {
+  Blocker = "Blocker",
+  Regular = "Regular",
+  Cleared = "Cleared",
+}
+
 export type IGridLayout = ITileRawState[][];
 
 export interface IGameLevel {
@@ -30,3 +36,4 @@ export interface IGameLevel {
   moves?: number;
   rules?: IGameRules;
 }
+

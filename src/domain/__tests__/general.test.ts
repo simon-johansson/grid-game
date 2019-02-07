@@ -10,7 +10,7 @@ import {
 
 const selectionPresenter = getSelectionPresenter();
 const tilePresenter = getTilePresenter();
-const game = new GameInteractor(selectionPresenter, tilePresenter, tilePresenter, tilePresenter);
+const game = new GameInteractor(selectionPresenter, tilePresenter);
 
 describe("level", () => {
   test("level rules gets merged with default rules", () => {

@@ -22,7 +22,7 @@
     "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,json,png,jpg,gif}\" -- run-s build:assets",
     "watch": "rm -rf ./dist && run-s build:* && run-p serve watch:*",
     "test": "jest",
-    "test-watch": "jest --watch",
+    "test-watch": "jest --watchAll",
     "test-converage": "jest --coverage",
     "service-worker": "copyfiles -u 2 \"src/delivery/**/service-worker.js\" dist && node sw-cache-bust.js",
     "postinstall": "npm run build"

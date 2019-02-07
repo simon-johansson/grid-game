@@ -1,127 +1,135 @@
 import { IGameLevel, IGameRules, IGridLayout } from "../domain/boundaries/input";
 import { IGameState } from "../domain/boundaries/output";
-import GameBoard from "./components/GameBoard";
+import { ISelectedOptions } from "./components/EditorOptions";
+import GameBoardEdit from "./components/GameBoardEditor";
+import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";
 import MovesCounter from "./components/MovesCounter";
 import { gameBoardLayouts } from "./data/levels";
+import LevelManager from "./utils/LevelManager";
 import QueryStringHandler from "./utils/QueryStringHandler";
 
+// TODO: byt ordning på metoderna, skö följa en logisk ordning
 class App {
-  private currentLevel: number;
+  private isEditing: boolean;
   private isTransitioningBetweenLevels: boolean = false;
-  private GameBoardComponent: GameBoard;
+  private GameBoardPlaybaleComponent: GameBoardPlayable;
+  private GameBoardEditorComponent: GameBoardEdit;
   private LevelSelectorComponent: LevelSelector;
   private MovesCounterComponent: MovesCounter;
-  private queryString = new QueryStringHandler(window.location.search);
+  private queryString = new QueryStringHandler();
+  private levelManager = new LevelManager(gameBoardLayouts, this.queryString);
 
   public init = (): void => {
-    this.currentLevel = this.queryString.level || 0;
+    this.isEditing = this.queryString.edit;
     this.createComponents();
   };
 
   private createComponents() {
-    this.MovesCounterComponent = new MovesCounter();
     this.LevelSelectorComponent = new LevelSelector(
       this.goToPrevLevel.bind(this),
       this.goToNextLevel.bind(this),
-      this.restartLevel.bind(this)
+      this.restartLevel.bind(this),
+      this.reviewLevel.bind(this),
+      this.editLevel.bind(this),
+      this.isEditing,
+      !!this.queryString.layout
     );
-    this.GameBoardComponent = new GameBoard(this.getLevel(), this.onGameStateUpdate.bind(this));
-  }
-
-  private getLevel(): IGameLevel {
-    return {
-      layout: this.getLayout(),
-      rules: this.getRules(),
-      moves: this.getMoves()
-    };
-  }
-
-  private getLayout = (): IGridLayout => {
-    return this.queryString.layout || gameBoardLayouts[this.currentLevel].layout;
-  };
-
-  private getRules = (): IGameRules => {
-    const rules = gameBoardLayouts[this.currentLevel].rules || {};
-    const { toggleOnOverlap, minSelection } = this.queryString;
-    if (toggleOnOverlap !== undefined) {
-      Object.assign(rules, { toggleOnOverlap });
+    if (this.isEditing) {
+      // TODO: getLevel() borde returnera en "tom" bana för editorn
+      this.GameBoardEditorComponent = new GameBoardEdit(
+        this.levelManager.getCurrentLevel,
+        this.onEditStateUpdate.bind(this)
+      );
+    } else {
+      this.MovesCounterComponent = new MovesCounter();
+      this.GameBoardPlaybaleComponent = new GameBoardPlayable(
+        this.levelManager.getCurrentLevel,
+        this.onPlayStateUpdate.bind(this)
+      );
     }
-    if (minSelection !== undefined) {
-      Object.assign(rules, { minSelection });
-    }
-    return rules;
-  };
-
-  private getMoves = (): number => {
-    return this.queryString.layout ? undefined : gameBoardLayouts[this.currentLevel].moves;
   }
 
-  private onGameStateUpdate(gameState: IGameState) {
+  private onEditStateUpdate(gameState: IGameState) {
+    // console.log(gameState);
+    this.queryString.layout = gameState.grid.layout;
+    this.queryString.minSelection = gameState.rules.minSelection;
+    this.queryString.toggleOnOverlap = gameState.rules.toggleOnOverlap;
+    this.queryString.moves = gameState.selectionsLeft;
+  }
+
+  private onPlayStateUpdate(gameState: IGameState) {
+    // console.log(gameState);
+    const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
     this.updateComponents(gameState);
 
     if (this.shouldProcedeToNextLevel(gameState)) {
-      setTimeout(() => {
-        this.goToNextLevel();
-      }, 500);
+      timeout(this.goToNextLevel);
       return;
     }
 
     if (this.shouldRestartCurrentLevel(gameState)) {
-      setTimeout(() => {
-        this.restartLevel();
-      }, 500);
+      timeout(this.restartLevel);
       return;
     }
   }
 
   private shouldProcedeToNextLevel(state: IGameState): boolean {
-    return state.cleared && this.currentLevel <= gameBoardLayouts.length - 1 && !this.queryString.layout;
+    return state.cleared && this.levelManager.canProcedeToNextLevel;
+  }
+
+  private async restartLevel() {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      await this.GameBoardPlaybaleComponent.restartLevel(this.levelManager.getCurrentLevel);
+      this.isTransitioningBetweenLevels = false;
+    }
+  }
+
+  private async goToPrevLevel() {
+    if (!this.isTransitioningBetweenLevels) {
+      this.levelManager.decrementCurrentLevel();
+      this.isTransitioningBetweenLevels = true;
+      await this.GameBoardPlaybaleComponent.goToPrevLevel(this.levelManager.getCurrentLevel);
+      this.isTransitioningBetweenLevels = false;
+    }
+  }
+
+  private async goToNextLevel() {
+    if (!this.isTransitioningBetweenLevels) {
+      this.levelManager.incrementCurrentLevel();
+      this.isTransitioningBetweenLevels = true;
+      await this.GameBoardPlaybaleComponent.goToNextLevel(this.levelManager.getCurrentLevel);
+      this.isTransitioningBetweenLevels = false;
+    }
+  }
+
+  private reviewLevel() {
+    this.queryString.edit = false;
+    window.location.reload();
+  }
+
+  private editLevel() {
+    this.queryString.edit = true;
+    window.location.reload();
   }
 
   private shouldRestartCurrentLevel(gameState: IGameState): boolean {
     return gameState.selectionsLeft === 0;
   }
 
-  private restartLevel() {
-    if (!this.isTransitioningBetweenLevels) {
-      this.isTransitioningBetweenLevels = true;
-      this.GameBoardComponent.restartLevel(this.getLevel()).then(() => {
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
-  }
-
-  private goToPrevLevel() {
-    if (!this.isTransitioningBetweenLevels) {
-      this.currentLevel -= 1;
-      this.isTransitioningBetweenLevels = true;
-      this.GameBoardComponent.goToPrevLevel(this.getLevel()).then(() => {
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
-  }
-
-  private goToNextLevel() {
-    if (!this.isTransitioningBetweenLevels) {
-      this.currentLevel += 1;
-      this.isTransitioningBetweenLevels = true;
-      this.GameBoardComponent.goToNextLevel(this.getLevel()).then(() => {
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
-  }
-
   private updateComponents(gameState: IGameState): void {
-    this.MovesCounterComponent.render({
-      selectionsLeft: gameState.selectionsLeft,
-      selectionsMade: gameState.selectionsMade.valid,
-      isLevelCleared: gameState.cleared
-    });
+    if (!this.isEditing) {
+      this.MovesCounterComponent.render({
+        selectionsLeft: gameState.selectionsLeft,
+        selectionsMade: gameState.selectionsMade.valid,
+        isLevelCleared: gameState.cleared
+      });
+    }
 
     this.LevelSelectorComponent.render({
-      currentLevel: this.currentLevel,
-      isLastLevel: this.currentLevel >= gameBoardLayouts.length - 1
+      currentLevel: this.levelManager.getCurrentLevelNumber,
+      isLastLevel: this.levelManager.isLastLevel
     });
   }
 }

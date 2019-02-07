@@ -1,4 +1,10 @@
-import { IGameLevel, ISelectionPresenterConstructor, ITilePresenterConstructor } from "./boundaries/input";
+import {
+  IGameLevel,
+  IGameRules,
+  ISelectionPresenterConstructor,
+  ITilePresenterConstructor,
+  TileType,
+} from "./boundaries/input";
 import GameState from "./entities/GameState";
 import Grid from "./entities/Grid";
 import Selection from "./entities/Selection";
@@ -11,9 +17,7 @@ export default class GameInteractor {
 
   constructor(
     private selectionPresenter: ISelectionPresenterConstructor,
-    private tileFlippablePresenter: ITilePresenterConstructor,
-    private tileBlockerPresenter: ITilePresenterConstructor,
-    private tileMultiFlipPresenter: ITilePresenterConstructor
+    private tilePresenter: ITilePresenterConstructor
   ) {}
 
   public startLevel(gameLevel: IGameLevel): GameState {
@@ -23,29 +27,34 @@ export default class GameInteractor {
     return this.state;
   }
 
-  public setSelectionStart(gridOffsetX: number, gridOffsetY: number): void {
+  public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setStartPoint(gridOffsetX, gridOffsetY);
-    this.supplySelectionToGrid();
+    this.supplySelectionToGrid(tileState);
   }
 
-  public setSelectionEnd(gridOffsetX: number, gridOffsetY: number): void {
+  public setSelectionEnd(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setEndPoint(gridOffsetX, gridOffsetY);
-    this.supplySelectionToGrid();
+    this.supplySelectionToGrid(tileState);
   }
 
-  public evaluateSelection(): GameState {
-    this.state.onSelectionMade(this.currentGrid.evaluateSelection());
+  public evaluateSelection(isEditingGrid: boolean = false): GameState {
+    this.state.onSelectionMade(this.currentGrid.evaluateSelection(isEditingGrid));
     this.selection.clear();
     return this.state;
   }
 
+  public setLevelRules(rules: IGameRules): GameState {
+    this.state.setLevelRules(rules);
+    return this.state;
+  }
+
+  public setLevelMoves(moves: number): GameState {
+    this.state.setLevelMoves(moves);
+    return this.state;
+  }
+
   private createGrid(): void {
-    const tileFactory = new TileFactory(
-      this.state.rules,
-      this.tileFlippablePresenter,
-      this.tileBlockerPresenter,
-      this.tileMultiFlipPresenter
-    );
+    const tileFactory = new TileFactory(this.state.rules, this.tilePresenter);
     const tiles = tileFactory.parseRawTiles(this.state.grid.layout);
     this.currentGrid = new Grid(tiles, this.state.rules);
   }
@@ -58,8 +67,10 @@ export default class GameInteractor {
     );
   }
 
-  private supplySelectionToGrid(): void {
-    this.currentGrid.setSelection(this.selection.gridSpan);
-    this.selection.isValid = !this.currentGrid.selectionIsInvalid;
+  private supplySelectionToGrid(tileState?: TileType): void {
+    this.currentGrid.applySelection(this.selection.gridSpan, tileState);
+
+    // If in edit mode = always true
+    this.selection.isValid = tileState ? true : this.currentGrid.isSelectionValid;
   }
 }

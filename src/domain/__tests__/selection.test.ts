@@ -25,7 +25,7 @@ const tileSelectionLayout: ITileSelectionLayout = [[], [], [], [], []];
 const tilePresenter = getTilePresenter((tile: ITile) => {
   tileSelectionLayout[tile.position.rowIndex][tile.position.colIndex] = tile.isSelected ? "X" : "O";
 });
-const game = new GameInteractor(selectionPresenter, tilePresenter, tilePresenter, tilePresenter);
+const game = new GameInteractor(selectionPresenter, tilePresenter);
 const setSelection = setSelectionHelper(game);
 
 describe("tile selection", () => {
@@ -154,7 +154,7 @@ describe("selection for presenter", () => {
 
   describe(".gridSpan", () => {
     test("one tile when selection has started", () => {
-      const gameGridSpan = new GameInteractor(selectionPresenter, tilePresenter, tilePresenter, tilePresenter);
+      const gameGridSpan = new GameInteractor(selectionPresenter, tilePresenter);
       gameGridSpan.startLevel(level);
       gameGridSpan.setSelectionStart(0, 0);
 

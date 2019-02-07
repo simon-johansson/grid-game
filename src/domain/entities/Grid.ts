@@ -1,4 +1,4 @@
-import { IGameRules, ITilePresenter } from "../boundaries/input";
+import { IGameRules, ITilePresenter, TileType } from "../boundaries/input";
 import GridPoint, { IGridSpan } from "./GridPoint";
 import Tile from "./Tile";
 
@@ -8,7 +8,8 @@ interface ISelectedTile extends Tile {
 
 export interface IEvaluateSelection {
   tilesLeftToClear: number;
-  selectionIsValid: boolean;
+  isSelectionValid: boolean;
+  tiles: Tile[];
 }
 
 export default class Grid {
@@ -18,29 +19,35 @@ export default class Grid {
     this.getTileStatus();
   }
 
-  public setSelection(selection: IGridSpan): void {
-    this.tiles.forEach(tile => tile.setSelected(selection));
+  public applySelection(selection: IGridSpan, tileState?: TileType): void {
+    this.tiles.forEach(tile => tile.checkIfSelected(selection, tileState));
   }
 
   // TODO: Går att göra snyggare, lättare att läsa?
-  public evaluateSelection(): IEvaluateSelection {
-    const selectionIsInvalid = this.selectionIsInvalid;
+  public evaluateSelection(isEditingGrid: boolean): IEvaluateSelection {
+    const isSelectionValid = this.isSelectionValid;
 
-    if (!selectionIsInvalid) {
+    if (!isEditingGrid && isSelectionValid) {
       this.clearSelectedTiles();
     }
 
-    this.deselectTiles();
-    this.getTileStatus();
+    this.cancelSelection();
 
     return {
       tilesLeftToClear: this.tilesLeftToClear,
-      selectionIsValid: !selectionIsInvalid
+      isSelectionValid,
+      tiles: this.tiles
     };
   }
 
-  public get selectionIsInvalid(): boolean {
-    return !this.isEnoughTilesSelected || this.isDisqualifyingTileSelected;
+  public cancelSelection(): void {
+    this.deselectTiles();
+    this.getTileStatus();
+  }
+
+  public get isSelectionValid(): boolean {
+    // console.log(this.isEnoughTilesSelected, !this.isDisqualifyingTileSelected);
+    return this.isEnoughTilesSelected && !this.isDisqualifyingTileSelected;
   }
 
   private deselectTiles(): void {
