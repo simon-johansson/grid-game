@@ -1,40 +1,50 @@
-# [![Build Status][travis-image]][travis-url] [![Dependency Status][dependencies-image]][dependencies-url] [![Dev dependency Status][devDependencies-image]][devDependencies-url] [![Coverage percentage][codecov-image]][codecov-url]
+# GridGame
 
+[![Build Status][travis-image]][travis-url] [![Dependency Status][dependencies-image]][dependencies-url] [![Dev dependency Status][devDependencies-image]][devDependencies-url] [![Coverage percentage][codecov-image]][codecov-url]
 
-## Usage
-Start developing in the **src/** directory. The structure will be preserved and all files and compilations are copied to the output directory **bin/**.
+> A puzzel game. The objective is to make all the gray tiles green in the given amount of moves. Works on desktop and mobile.
 
-To start a local server and watch the *dist/* directory just call
+## **Play it at: [gridgame.net](https://gridgame.net/)**
+
+The game is built using [Typescript](https://www.typescriptlang.org/) and the HTML5 canvas element without the use of any front-end framework.
+
+## Development
+The `src/` folder is divided into separate concerns. 
+- `domain/` - game logic
+- `delivery/` - presentation layer
+- `infrastructure/` - database etc.
+
+To wath for file changes and compile as you go, run the following command:
+```bash
+$ npm run watch
 ```
-npm start
+If using VS Code the command is preferably run from there, `cmd+shift+b`. Then you will get Typescript errors printed in the "Problems" tab.
+
+### Debugging
+In the "Debug" tab in VS Code you can start a debugging instance of Google Canary. You can then place breakpoints in the code that will stop execution in the browser. Good stuff!
+
+### Service worker
+The site uses [service workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) for quicker load times and offline capabilities. The service worker script is not copied to the `dist/` folder when running `npm run watch` but if you want to bypass the service worker you can go to (in Chrome) `Dev console -> Application -> Service Workers` and check "Upload on reload" and "Bypass for network"
+
+### Testing deployment build
+Build everything and start node server
+```bash
+$ npm run build
+$ npm start
 ```
 
-### Scripts
-Watching all files
-```
-npm run watch:*
-```
+## Deployment
+Deployment is done automagically when a push to the remote `master` branch is detected. The site is deployed on Heroku. Heroku builds the site so the build folder does not need to be in the repo.
 
-Build all files
-```
-npm build
-```
+## Tests
+The tests are written in [Jest](https://jestjs.io/). Coverage report can be found [here](https://codecov.io/gh/simon-johansson/grid-game).
 
-Run a local server
+The following commands can be used to run tests.
+```bash
+$ npm run test # will run all tests once
+$ npm run test-watch # will run all tests and keep doing so on each file change
+$ npm run test-converage # will run all tests once and collect a coverage report
 ```
-npm run serve
-```
-
-### Things
-
-* require.js
-* Heroku
-* URL
-* vscode tasks for building and testing
-* "Baypass for network" to work without service workers
-
-# Todo
-- uglify
 
 [travis-image]: https://travis-ci.org/simon-johansson/grid-game.svg?branch=master
 [travis-url]: https://travis-ci.org/simon-johansson/grid-game

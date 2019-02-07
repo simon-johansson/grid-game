@@ -1,3 +1,7 @@
+// This script creates new cache IDs for the service worker so that
+// the service workers that are already in use knows to update when a
+// new version of the game has been deployed.
+
 var fs = require("fs");
 
 var REGEX = /REPLACE_IN_BUILD_STEP/g;
