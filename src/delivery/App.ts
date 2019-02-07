@@ -27,16 +27,13 @@ class App {
 
   private createComponents() {
     this.LevelSelectorComponent = new LevelSelector(
-      this.goToPrevLevel.bind(this),
-      this.goToNextLevel.bind(this),
+      this.prevLevel.bind(this),
+      this.nextLevel.bind(this),
       this.restartLevel.bind(this),
       this.reviewLevel.bind(this),
       this.editLevel.bind(this),
-      this.isEditing,
-      !!this.queryString.layout
     );
     if (this.isEditing) {
-      // TODO: getLevel() borde returnera en "tom" bana för editorn
       this.GameBoardEditorComponent = new GameBoardEdit(
         this.levelManager.getCurrentLevel,
         this.onEditStateUpdate.bind(this)
@@ -51,7 +48,7 @@ class App {
   }
 
   private onEditStateUpdate(gameState: IGameState) {
-    // console.log(gameState);
+    this.updateComponents(gameState);
     this.queryString.layout = gameState.grid.layout;
     this.queryString.minSelection = gameState.rules.minSelection;
     this.queryString.toggleOnOverlap = gameState.rules.toggleOnOverlap;
@@ -59,12 +56,11 @@ class App {
   }
 
   private onPlayStateUpdate(gameState: IGameState) {
-    // console.log(gameState);
     const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
     this.updateComponents(gameState);
 
     if (this.shouldProcedeToNextLevel(gameState)) {
-      timeout(this.goToNextLevel);
+      timeout(this.nextLevel);
       return;
     }
 
@@ -72,10 +68,6 @@ class App {
       timeout(this.restartLevel);
       return;
     }
-  }
-
-  private shouldProcedeToNextLevel(state: IGameState): boolean {
-    return state.cleared && this.levelManager.canProcedeToNextLevel;
   }
 
   private async restartLevel() {
@@ -86,7 +78,7 @@ class App {
     }
   }
 
-  private async goToPrevLevel() {
+  private async prevLevel() {
     if (!this.isTransitioningBetweenLevels) {
       this.levelManager.decrementCurrentLevel();
       this.isTransitioningBetweenLevels = true;
@@ -95,7 +87,7 @@ class App {
     }
   }
 
-  private async goToNextLevel() {
+  private async nextLevel() {
     if (!this.isTransitioningBetweenLevels) {
       this.levelManager.incrementCurrentLevel();
       this.isTransitioningBetweenLevels = true;
@@ -114,6 +106,10 @@ class App {
     window.location.reload();
   }
 
+  private shouldProcedeToNextLevel(gameState: IGameState): boolean {
+    return gameState.cleared && this.levelManager.canProcedeToNextLevel;
+  }
+
   private shouldRestartCurrentLevel(gameState: IGameState): boolean {
     return gameState.selectionsLeft === 0;
   }
@@ -129,7 +125,9 @@ class App {
 
     this.LevelSelectorComponent.render({
       currentLevel: this.levelManager.getCurrentLevelNumber,
-      isLastLevel: this.levelManager.isLastLevel
+      isLastLevel: this.levelManager.isLastLevel,
+      isEditing: this.isEditing,
+      isReviewing: !!this.queryString.layout && !this.isEditing
     });
   }
 }
