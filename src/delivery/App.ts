@@ -20,7 +20,7 @@ class App {
   private queryString = new QueryStringHandler();
   private levelManager = new LevelManager(gameBoardLayouts, this.queryString);
 
-  public init = (): void => {
+  constructor() {
     this.isEditing = this.queryString.edit;
     this.createComponents();
   };
@@ -133,4 +133,3 @@ class App {
 }
 
 const app = new App();
-app.init();
