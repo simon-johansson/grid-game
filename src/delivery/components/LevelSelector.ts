@@ -1,4 +1,3 @@
-import QueryStringHandler from "../utils/QueryStringHandler";
 import Component from "./Component";
 
 const prevBtnClass = "prev";
