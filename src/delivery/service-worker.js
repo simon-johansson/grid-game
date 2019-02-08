@@ -1,7 +1,7 @@
 const PRECACHE = "REPLACE_IN_BUILD_STEP";
 const RUNTIME = "REPLACE_IN_BUILD_STEP";
 
-self.addEventListener("install", function(e) {
+self.addEventListener("install", function(event) {
   event.waitUntil(
     caches
       .open(PRECACHE)
