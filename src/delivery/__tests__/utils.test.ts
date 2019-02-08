@@ -67,20 +67,44 @@ describe("QueryStringHandler", () => {
     expect(decodeURIComponent(window.location.search)).toEqual(`?${layoutQs}`);
   });
 
-  test("can get rules", () => {
+  test("can get rules object", () => {
+    setQueryString(rulesQs);
+    const expected = {
+      toggleOnOverlap: false,
+      minSelection: 4
+    };
+    const qs = new QueryStringHandler();
+    expect(qs.rules).toEqual(expected);
+  });
+
+  test("can get rules object with only one rule present", () => {
+    setQueryString("toggleOnOverlap=false");
+    const qs = new QueryStringHandler();
+    expect(qs.rules).toEqual({
+      toggleOnOverlap: false
+    });
+  });
+
+  test("can get rules object without any rule present", () => {
+    setQueryString("");
+    const qs = new QueryStringHandler();
+    expect(qs.rules).toEqual({});
+  });
+
+  test("can get seperate rules", () => {
     setQueryString(rulesQs);
     const qs = new QueryStringHandler();
     expect(qs.toggleOnOverlap).toEqual(false);
     expect(qs.minSelection).toEqual(4);
   });
 
-  test("rules are null if not set", () => {
+  test("seperate rules are null if not set", () => {
     const qs = new QueryStringHandler();
     expect(qs.toggleOnOverlap).toEqual(null);
     expect(qs.minSelection).toEqual(null);
   });
 
-  test("can set rules", () => {
+  test("can set seperate rules", () => {
     const qs = new QueryStringHandler();
     qs.toggleOnOverlap = true;
     qs.minSelection = 4;
@@ -156,6 +180,9 @@ describe("QueryStringHandler", () => {
 });
 
 describe("LevelManager", () => {
+  const emptyQueryString = {
+    rules: {}
+  };
   const defaultRules = {
     toggleOnOverlap: true,
     minSelection: 1
@@ -198,12 +225,12 @@ describe("LevelManager", () => {
   ];
 
   test("get initial level number", () => {
-    const levelManager = new LevelManager(levels, {});
+    const levelManager = new LevelManager(levels, emptyQueryString);
     expect(levelManager.getCurrentLevelNumber).toEqual(0);
   });
 
   test("get current level", () => {
-    const levelManager = new LevelManager(levels, {});
+    const levelManager = new LevelManager(levels, emptyQueryString);
     const expected = {
       ...levels[0]
     };
@@ -212,8 +239,10 @@ describe("LevelManager", () => {
 
   test("get current level with custom rules set in query string", () => {
     const levelManager = new LevelManager(levels, {
-      toggleOnOverlap: true,
-      minSelection: 4
+      rules: {
+        toggleOnOverlap: true,
+        minSelection: 4
+      }
     });
     const expected = {
       ...levels[0],
@@ -227,7 +256,8 @@ describe("LevelManager", () => {
 
   test("get current level with custom level number set in query string", () => {
     const levelManager = new LevelManager(levels, {
-      level: 2
+      level: 2,
+      rules: {}
     });
     const expected = {
       ...levels[2],
@@ -244,7 +274,7 @@ describe("LevelManager", () => {
       ["r", "f", "f", "f", "r"],
       ["r", "f", "f", "f", "r"]
     ];
-    const levelManager = new LevelManager(levels, { layout });
+    const levelManager = new LevelManager(levels, { layout, rules: {} });
     const expected: IGameLevel = {
       ...levels[0],
       layout,
@@ -256,14 +286,15 @@ describe("LevelManager", () => {
   describe(".decrementCurrentLevel", () => {
     test("can decrement if not on first level", () => {
       const levelManager = new LevelManager(levels, {
-        level: 2
+        level: 2,
+        rules: {}
       });
       levelManager.decrementCurrentLevel();
       expect(levelManager.getCurrentLevel.layout).toEqual(levels[1].layout);
     });
 
     test("can not decrement past first level", () => {
-      const levelManager = new LevelManager(levels, {});
+      const levelManager = new LevelManager(levels, emptyQueryString);
       levelManager.decrementCurrentLevel();
       levelManager.decrementCurrentLevel();
       expect(levelManager.getCurrentLevel.layout).toEqual(levels[0].layout);
@@ -272,13 +303,13 @@ describe("LevelManager", () => {
 
   describe(".incrementCurrentLevel", () => {
     test("can increment if not on last level", () => {
-      const levelManager = new LevelManager(levels, {});
+      const levelManager = new LevelManager(levels, emptyQueryString);
       levelManager.incrementCurrentLevel();
       expect(levelManager.getCurrentLevel.layout).toEqual(levels[1].layout);
     });
 
     test("can not increment past last level", () => {
-      const levelManager = new LevelManager(levels, {});
+      const levelManager = new LevelManager(levels, emptyQueryString);
       levelManager.incrementCurrentLevel();
       levelManager.incrementCurrentLevel();
       levelManager.incrementCurrentLevel();
@@ -289,20 +320,22 @@ describe("LevelManager", () => {
 
   describe(".canProcedeToNextLevel", () => {
     test("can procede if not on last level and no custom level set", () => {
-      const levelManager = new LevelManager(levels, {});
+      const levelManager = new LevelManager(levels, emptyQueryString);
       expect(levelManager.canProcedeToNextLevel).toEqual(true);
     });
 
     test("can not procede if on last level", () => {
       const levelManager = new LevelManager(levels, {
-        level: 2
+        level: 2,
+        rules: {}
       });
       expect(levelManager.canProcedeToNextLevel).toEqual(false);
     });
 
     test("can not procede if custom layout set", () => {
       const levelManager = new LevelManager(levels, {
-        layout: levels[2].layout
+        layout: levels[2].layout,
+        rules: {}
       });
       expect(levelManager.canProcedeToNextLevel).toEqual(false);
     });

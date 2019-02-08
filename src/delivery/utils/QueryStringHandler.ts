@@ -1,10 +1,11 @@
-import { IGridLayout } from "../../domain/boundaries/input";
+import { IGameRules, IGridLayout } from "../../domain/boundaries/input";
 
 export interface IQueryStringOptions {
   level?: number;
   layout?: IGridLayout;
   toggleOnOverlap?: boolean;
   minSelection?: number;
+  rules: IGameRules;
   edit?: boolean;
   moves?: number;
 }
@@ -48,6 +49,16 @@ export default class QueryStringHandler implements IQueryStringOptions {
 
   public set minSelection(num: number) {
     this.setParam("minSelection", num);
+  }
+
+  public get rules(): IGameRules {
+    const minSelection = this.minSelection;
+    const toggleOnOverlap = this.toggleOnOverlap;
+    const rules: IGameRules = Object.assign({},
+      minSelection === null ? null : { minSelection },
+      toggleOnOverlap === null ? null : { toggleOnOverlap },
+    );
+    return rules;
   }
 
   public get moves(): number | null {

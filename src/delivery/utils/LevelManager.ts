@@ -54,14 +54,7 @@ export default class LevelManager {
 
   private getRules = (): IGameRules => {
     const rules = this.levels[this.currentLevelIndex].rules || this.defaultRules;
-    const { toggleOnOverlap, minSelection } = this.queryStringOptions;
-
-    if (toggleOnOverlap !== undefined) {
-      Object.assign(rules, { toggleOnOverlap });
-    }
-    if (minSelection !== undefined) {
-      Object.assign(rules, { minSelection });
-    }
+    Object.assign(rules, this.queryStringOptions.rules);
     return rules;
   };
 
