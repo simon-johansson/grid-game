@@ -1,16 +1,24 @@
 import Component from "./Component";
 
-const counterWrapperClass = "counter-number-wrapper";
-const counterClass = "counter-number";
-
 export interface IProps {
   selectionsLeft: number | undefined;
   selectionsMade: number;
   isLevelCleared: boolean;
 }
 
+const counterWrapperClass = "counter-number-wrapper";
+const counterClass = "counter-number";
+
 export default class MovesLeft extends Component<IProps> {
   protected wrapperElement: HTMLElement = document.getElementById("moves-counter");
+
+  public get counterWrapperElement(): HTMLElement {
+    return this.getEl(counterWrapperClass);
+  }
+
+  public get counterClassElements(): NodeList {
+    return this.getEls(counterClass);
+  }
 
   protected HTML(props: IProps): string {
     return `
@@ -26,14 +34,14 @@ export default class MovesLeft extends Component<IProps> {
     const isLevelFailed = !isLevelCleared && moves === 0;
 
     this.removeNumberElement();
-    this.getEl(counterWrapperClass).appendChild(this.createNumberElement(moves));
-    this.getEl(counterWrapperClass).className = `${counterWrapperClass} ${isLevelCleared &&
-      "cleared"} ${isLevelFailed && "failed"}`;
+    this.counterWrapperElement.appendChild(this.createNumberElement(moves));
+    this.counterWrapperElement.className = `${counterWrapperClass} ${isLevelCleared && "cleared"} ${isLevelFailed &&
+      "failed"}`;
   }
 
   private removeNumberElement() {
-    if (this.getEls(counterClass).length) {
-      [].forEach.call(this.getEls(counterClass), (el: Element) => {
+    if (this.counterClassElements.length) {
+      [].forEach.call(this.counterClassElements, (el: Element) => {
         el.classList.remove("new");
       });
     }
