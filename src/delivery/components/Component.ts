@@ -2,6 +2,7 @@
 export default abstract class Component<Props> {
   protected abstract wrapperElement: HTMLElement;
   protected componentIsOnPage = false;
+  private prevProps: Props;
 
   public render(props: Props): void {
     if (!this.componentIsOnPage) {
@@ -9,7 +10,10 @@ export default abstract class Component<Props> {
       this.componentDidMount(props);
       this.componentIsOnPage = true;
     }
-    this.update(props);
+    if (this.hasPropsChanged(props)) {
+      this.prevProps = props;
+      this.update(props);
+    }
   }
 
   protected abstract HTML(props: Props): string;
@@ -37,5 +41,14 @@ export default abstract class Component<Props> {
     // TODO: Use getElementsByClassName
     // https://github.com/nefe/You-Dont-Need-jQuery
     return this.wrapperElement.querySelectorAll('.' + classSelector)
+  }
+
+  /**
+   * Simplistic way of comparing two objects.
+   * Does not work for function but those will (mostly) be added on
+   * component creation and not supplied to .render()
+   */
+  private hasPropsChanged(newProps: Props): boolean {
+    return JSON.stringify(this.prevProps) !== JSON.stringify(newProps);
   }
 }
