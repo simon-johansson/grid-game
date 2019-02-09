@@ -66,15 +66,21 @@ export default class LevelSelector extends Component<IProps> {
   }
 
   protected update({ currentLevel, isLastLevel, isEditing, isReviewing }: IProps) {
-    if (isEditing) {
-      this.getEl(currentLevelClass).textContent = "Level editor";
-    } else if (isReviewing) {
-      this.getEl(currentLevelClass).textContent = "Review level";
-    } else {
-      const isFirstLevel = currentLevel === 0;
-      this.getEl(currentLevelClass).textContent = `Level ${currentLevel + 1}`;
-      this.getEl(prevBtnClass).className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
-      this.getEl(nextBtnClass).className = `${nextBtnClass} ${isLastLevel && "disable"}`;
-    }
+    if (isEditing) this.updateEditingView();
+    else if (isReviewing) this.updateReviewingView();
+    else this.updatePlayingView(currentLevel, isLastLevel);
+  }
+
+  private updateEditingView(): void {
+    this.getEl(currentLevelClass).textContent = "Level editor";
+  }
+  private updateReviewingView(): void {
+    this.getEl(currentLevelClass).textContent = "Review level";
+  }
+  private updatePlayingView(currentLevel: number, isLastLevel: boolean): void {
+    const isFirstLevel = currentLevel === 0;
+    this.getEl(currentLevelClass).textContent = `Level ${currentLevel + 1}`;
+    this.getEl(prevBtnClass).className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
+    this.getEl(nextBtnClass).className = `${nextBtnClass} ${isLastLevel && "disable"}`;
   }
 }
