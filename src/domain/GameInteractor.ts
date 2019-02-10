@@ -11,9 +11,10 @@ import Selection from "./entities/Selection";
 import TileFactory from "./TileFactory";
 
 export default class GameInteractor {
-  private currentGrid: Grid;
+  private grid: Grid;
   private selection: Selection;
   private state: GameState;
+  // private
 
   constructor(
     private selectionPresenter: ISelectionPresenterConstructor,
@@ -43,7 +44,7 @@ export default class GameInteractor {
   }
 
   public evaluateSelection(isEditingGrid: boolean = false): GameState {
-    this.state.onSelectionMade(this.currentGrid.evaluateSelection(isEditingGrid));
+    this.state.onSelectionMade(this.grid.evaluateSelection(isEditingGrid));
     this.selection.clear();
     return this.state;
   }
@@ -61,7 +62,7 @@ export default class GameInteractor {
   private createGrid(): void {
     const tileFactory = new TileFactory(this.state.rules, this.tilePresenter);
     const tiles = tileFactory.parseRawTiles(this.state.grid.layout);
-    this.currentGrid = new Grid(tiles, this.state.rules);
+    this.grid = new Grid(tiles, this.state.rules);
   }
 
   private createSelection(): void {
@@ -73,9 +74,9 @@ export default class GameInteractor {
   }
 
   private supplySelectionToGrid(tileState?: TileType): void {
-    this.currentGrid.applySelection(this.selection.gridSpan, tileState);
+    this.grid.applySelection(this.selection.gridSpan, tileState);
 
     // If in edit mode = always true
-    this.selection.isValid = tileState ? true : this.currentGrid.isSelectionValid;
+    this.selection.isValid = tileState ? true : this.grid.isSelectionValid;
   }
 }
