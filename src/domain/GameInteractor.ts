@@ -18,7 +18,10 @@ export default class GameInteractor {
   constructor(
     private selectionPresenter: ISelectionPresenterConstructor,
     private tilePresenter: ITilePresenterConstructor
-  ) {}
+  ) {
+    // TODO: Load levels from DB
+    // TODO: Load progress from localStorage
+  }
 
   public startLevel(gameLevel: IGameLevel): GameState {
     this.state = new GameState(gameLevel);
@@ -27,11 +30,13 @@ export default class GameInteractor {
     return this.state;
   }
 
+  // TODO: Fult att skicka in tileState här...
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setStartPoint(gridOffsetX, gridOffsetY);
     this.supplySelectionToGrid(tileState);
   }
 
+  // TODO: Fult att skicka in tileState här...
   public setSelectionEnd(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setEndPoint(gridOffsetX, gridOffsetY);
     this.supplySelectionToGrid(tileState);

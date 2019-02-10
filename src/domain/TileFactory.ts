@@ -70,6 +70,7 @@ export default class TileFactory {
     }
 
     // TODO: Ska inte behöva skicka in state när jag skickar in tileType
+    // TODO: Behöve jag skicka in rules här?
     return new Tile(tileType, state, position, this.rules, new this.presenter());
   }
 }
