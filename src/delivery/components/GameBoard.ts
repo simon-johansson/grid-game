@@ -1,10 +1,7 @@
 import { IGameLevel } from "../../domain/boundaries/input";
-import { IGameState } from "../../domain/boundaries/output";
+import { ILevel } from "../../domain/boundaries/output";
 import GameInteractor from "../../domain/GameInteractor";
-import {
-  getSelectionPresenter,
-  getTilePresenter
-} from "../game_presenters/index";
+import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
 
 // TODO: Ändra ordningen av metoderna, bör vara logiskt
@@ -18,7 +15,7 @@ export default abstract class GameBoard extends Component<{}> {
   protected gameInteractor: GameInteractor;
   protected isSelecting: boolean = false;
 
-  constructor(level: IGameLevel, protected onGameStateUpdate: (state: IGameState) => void) {
+  constructor(private customLevel: IGameLevel, protected onGameStateUpdate: (state: ILevel) => void) {
     super();
     this.render({});
     this.setCanvasSize();
@@ -26,30 +23,42 @@ export default abstract class GameBoard extends Component<{}> {
     this.gameInteractor = new GameInteractor(
       // TODO this.tileSize bör också vara en function, blir fel anars vid resize
       getSelectionPresenter(this.selectionCanvasContext.bind(this), this.tileSize),
-      getTilePresenter(this.tileCanvasContext.bind(this), this.tileSize),
+      getTilePresenter(this.tileCanvasContext.bind(this), this.tileSize)
     );
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+
+    // TODO: Går det att göra denna kolla snyggare?
+    if (this.customLevel.layout) {
+      this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
+    } else {
+      this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
+    }
   }
 
-  public goToNextLevel(level: IGameLevel) {
+  public goToNextLevel() {
     this.prepareNewLevel("next");
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+    this.onGameStateUpdate(this.gameInteractor.startNextLevel());
     return this.showNewLevel("next").then(() => {
       this.bindEvents();
     });
   }
 
-  public goToPrevLevel(level: IGameLevel) {
+  public goToPrevLevel() {
     this.prepareNewLevel("prev");
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+    this.onGameStateUpdate(this.gameInteractor.startPrevLevel());
     return this.showNewLevel("prev").then(() => {
       this.bindEvents();
     });
   }
 
-  public restartLevel(level: IGameLevel) {
+  public restartLevel() {
     this.prepareNewLevel("restart");
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+
+    // TODO: Upprepad logik, se constructor
+    if (this.customLevel.layout) {
+      this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
+    } else {
+      this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
+    }
     return this.showNewLevel("restart").then(() => {
       this.bindEvents();
     });

@@ -1,11 +1,10 @@
 import { IGameLevel } from "../../domain/boundaries/input";
-import { IGameState } from "../../domain/boundaries/output";
-import GameInteractor from "../../domain/GameInteractor";
+import { ILevel } from "../../domain/boundaries/output";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardPlayable extends GameBoard {
-  constructor(level: IGameLevel, onGameStateUpdate: (state: IGameState) => void) {
-    super(level, onGameStateUpdate);
+  constructor(queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
+    super(queryStringLevel, onGameStateUpdate);
   }
 
   protected HTML(props: {}): string {

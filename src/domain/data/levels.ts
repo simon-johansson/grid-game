@@ -1,10 +1,10 @@
-import { IGameLevel } from "../../domain/boundaries/input";
+import { IGameLevel } from "../boundaries/input";
 
 // r = regular
 // f = flipped
 // b = block
 
-export const gameBoardLayouts: IGameLevel[] = [
+const levels: IGameLevel[] = [
   {
     moves: 1,
     layout: [
@@ -232,3 +232,5 @@ export const gameBoardLayouts: IGameLevel[] = [
     ]
   }
 ];
+
+export default levels;
