@@ -38,33 +38,33 @@ const setSelectionAndEvaluate = setSelectionAndEvaluateHelper(game);
 
 describe("evaluate selection", () => {
   beforeEach(() => {
-    game.startLevel(level);
+    game.startCustomLevel(level);
   });
 
   describe("game state", () => {
     describe(".selectionsMade", () => {
       test("returnes number of valid selections", () => {
         const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
-        expect(state.selectionsMade.valid).toEqual(3);
-        expect(state.selectionsMade.invalid).toEqual(0);
+        expect(state.selections.made.valid).toEqual(3);
+        expect(state.selections.made.invalid).toEqual(0);
       });
       test("returnes number of invalid selections", () => {
-        game.startLevel({ layout: blockerLayout });
+        game.startCustomLevel({ layout: blockerLayout });
         const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
-        expect(state.selectionsMade.invalid).toEqual(3);
-        expect(state.selectionsMade.valid).toEqual(0);
+        expect(state.selections.made.invalid).toEqual(3);
+        expect(state.selections.made.valid).toEqual(0);
       });
     });
 
     describe(".selectionsLeft", () => {
       test("subtract for every valid move made", () => {
         const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
-        expect(state.selectionsLeft).toEqual(1);
+        expect(state.selections.left).toEqual(1);
       });
       test("does not subtract for every invalid move made", () => {
-        game.startLevel({ layout: blockerLayout, moves: 4 });
+        game.startCustomLevel({ layout: blockerLayout, moves: 4 });
         const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
-        expect(state.selectionsLeft).toEqual(4);
+        expect(state.selections.left).toEqual(4);
       });
     });
 
@@ -98,7 +98,7 @@ describe("evaluate selection", () => {
     });
 
     test("can not unclear already cleared tiles if toggleOnOverlap is false", () => {
-      game.startLevel({ layout: defaultLayout, rules: { toggleOnOverlap: false } });
+      game.startCustomLevel({ layout: defaultLayout, rules: { toggleOnOverlap: false } });
       setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 80, 80]);
       expect(tileStateLayout).toEqual(evaluatedLayout("✔"));
     });
@@ -106,12 +106,20 @@ describe("evaluate selection", () => {
 
   describe("blocker tiles", () => {
     test("disqualifies answer", () => {
-      game.startLevel({ layout: mixedLayout });
+      game.startCustomLevel({
+        layout: [
+          ["r", "r", "r", "r", "r"],
+          ["r", "r", "r", "r", "r"],
+          ["r", "r", "b", "r", "r"],
+          ["r", "r", "r", "r", "r"],
+          ["r", "r", "r", "r", "r"]
+        ]
+      });
       setSelectionAndEvaluate([0, 0, 100, 100]);
       expect(tileStateLayout).toEqual([
-        ["✔", "2", "3", "4", "■"],
         ["□", "□", "□", "□", "□"],
         ["□", "□", "□", "□", "□"],
+        ["□", "□", "■", "□", "□"],
         ["□", "□", "□", "□", "□"],
         ["□", "□", "□", "□", "□"]
       ]);
@@ -120,14 +128,14 @@ describe("evaluate selection", () => {
 
   describe.skip("multi tiles", () => {
     test("2-tiles requires two selections", () => {
-      game.startLevel({ layout: twoMultiTilesLayout });
+      game.startCustomLevel({ layout: twoMultiTilesLayout });
       setSelectionAndEvaluate([0, 0, 100, 100]);
       expect(tileStateLayout).toEqual(evaluatedLayout("□"));
       setSelectionAndEvaluate([0, 0, 100, 100]);
       expect(tileStateLayout).toEqual(evaluatedLayout("✔"));
     });
     test("3-tiles requires three selections", () => {
-      game.startLevel({ layout: threeMultiTilesLayout });
+      game.startCustomLevel({ layout: threeMultiTilesLayout });
       setSelectionAndEvaluate([0, 0, 100, 100]);
       expect(tileStateLayout).toEqual(evaluatedLayout("2"));
       setSelectionAndEvaluate([0, 0, 100, 100]);
@@ -136,7 +144,7 @@ describe("evaluate selection", () => {
       expect(tileStateLayout).toEqual(evaluatedLayout("✔"));
     });
     test("4-tiles requires four selections", () => {
-      game.startLevel({ layout: fourMultiTilesLayout });
+      game.startCustomLevel({ layout: fourMultiTilesLayout });
       setSelectionAndEvaluate([0, 0, 100, 100]);
       expect(tileStateLayout).toEqual(evaluatedLayout("3"));
       setSelectionAndEvaluate([0, 0, 100, 100]);

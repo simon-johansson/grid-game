@@ -19,13 +19,12 @@ export default class Tile implements ITile {
 
   constructor(
     public tileType: TileType,
-    initState: IInitState,
     public position: GridPoint,
     // TODO: Skicka inte med rules här
     private rules: IGameRules,
     private presenter: ITilePresenter
   ) {
-    Object.assign(this.state, initState);
+    this.setTileType(this.tileType);
     this.presenter.render(this);
   }
 
