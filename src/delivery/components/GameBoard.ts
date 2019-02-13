@@ -28,6 +28,7 @@ export default abstract class GameBoard extends Component<{}> {
 
     // TODO: Går det att göra denna kolla snyggare?
     if (this.customLevel.layout) {
+      this.exportLevel();
       this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
     } else {
       this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
@@ -75,6 +76,10 @@ export default abstract class GameBoard extends Component<{}> {
   protected abstract processSelectionEnd(): void;
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
+
+  private exportLevel() {
+    console.log(JSON.stringify(this.customLevel));
+  }
 
   private get tileCanvas(): HTMLCanvasElement {
     return this.getEl(this.tileCanvasClass) as HTMLCanvasElement;
