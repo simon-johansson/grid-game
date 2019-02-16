@@ -1,29 +1,27 @@
 import { IGameLevel, IGameRules, IGridLayout } from "../domain/boundaries/input";
-import { IGameState } from "../domain/boundaries/output";
-import { ISelectedOptions } from "./components/EditorOptions";
+import { ILevel } from "../domain/boundaries/output";
 import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";
 import MovesCounter from "./components/MovesCounter";
-import { gameBoardLayouts } from "./data/levels";
-import LevelManager from "./utils/LevelManager";
 import QueryStringHandler from "./utils/QueryStringHandler";
 
-// TODO: byt ordning på metoderna, skö följa en logisk ordning
+// TODO: byt ordning på metoderna, ska följa en logisk ordning
 class App {
   private isEditing: boolean;
+  private isReviewing: boolean;
   private isTransitioningBetweenLevels: boolean = false;
   private GameBoardPlaybaleComponent: GameBoardPlayable;
   private GameBoardEditorComponent: GameBoardEdit;
   private LevelSelectorComponent: LevelSelector;
   private MovesCounterComponent: MovesCounter;
   private queryString = new QueryStringHandler();
-  private levelManager = new LevelManager(gameBoardLayouts, this.queryString);
 
   constructor() {
     this.isEditing = this.queryString.edit;
+    this.isReviewing = !!this.queryString.layout && !this.isEditing;
     this.createComponents();
-  };
+  }
 
   private createComponents() {
     this.LevelSelectorComponent = new LevelSelector(
@@ -33,38 +31,47 @@ class App {
       this.reviewLevel.bind(this),
       this.editLevel.bind(this),
     );
+
     if (this.isEditing) {
-      this.GameBoardEditorComponent = new GameBoardEdit(
-        this.levelManager.getCurrentLevel,
-        this.onEditStateUpdate.bind(this)
-      );
+      this.GameBoardEditorComponent = new GameBoardEdit(this.getQueryStringLevel(), this.onEditStateUpdate.bind(this));
     } else {
       this.MovesCounterComponent = new MovesCounter();
       this.GameBoardPlaybaleComponent = new GameBoardPlayable(
-        this.levelManager.getCurrentLevel,
-        this.onPlayStateUpdate.bind(this)
+        this.getQueryStringLevel(),
+        this.onPlayStateUpdate.bind(this),
       );
     }
   }
 
-  private onEditStateUpdate(gameState: IGameState) {
-    this.updateComponents(gameState);
-    this.queryString.layout = gameState.grid.layout;
-    this.queryString.minSelection = gameState.rules.minSelection;
-    this.queryString.toggleOnOverlap = gameState.rules.toggleOnOverlap;
-    this.queryString.moves = gameState.selectionsLeft;
+  // TODO: Flytta denna logik till QueryStringHandler
+  private getQueryStringLevel(): IGameLevel {
+    return {
+      layout: this.queryString.layout,
+      moves: this.queryString.moves,
+      rules: this.queryString.rules,
+    };
   }
 
-  private onPlayStateUpdate(gameState: IGameState) {
-    const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
-    this.updateComponents(gameState);
+  private onEditStateUpdate(level: ILevel) {
+    this.updateComponents(level);
 
-    if (this.shouldProcedeToNextLevel(gameState)) {
+    // TODO: skicka in en hel IGameLevel här istället
+    this.queryString.layout = level.minified.layout;
+    this.queryString.minSelection = level.minified.rules.minSelection;
+    this.queryString.toggleOnOverlap = level.minified.rules.toggleOnOverlap;
+    this.queryString.moves = level.minified.moves;
+  }
+
+  private onPlayStateUpdate(level: ILevel) {
+    const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
+    this.updateComponents(level);
+
+    if (this.shouldProcedeToNextLevel(level)) {
       timeout(this.nextLevel);
       return;
     }
 
-    if (this.shouldRestartCurrentLevel(gameState)) {
+    if (this.shouldRestartCurrentLevel(level)) {
       timeout(this.restartLevel);
       return;
     }
@@ -73,25 +80,23 @@ class App {
   private async restartLevel() {
     if (!this.isTransitioningBetweenLevels) {
       this.isTransitioningBetweenLevels = true;
-      await this.GameBoardPlaybaleComponent.restartLevel(this.levelManager.getCurrentLevel);
+      await this.GameBoardPlaybaleComponent.restartLevel();
       this.isTransitioningBetweenLevels = false;
     }
   }
 
   private async prevLevel() {
     if (!this.isTransitioningBetweenLevels) {
-      this.levelManager.decrementCurrentLevel();
       this.isTransitioningBetweenLevels = true;
-      await this.GameBoardPlaybaleComponent.goToPrevLevel(this.levelManager.getCurrentLevel);
+      await this.GameBoardPlaybaleComponent.goToPrevLevel();
       this.isTransitioningBetweenLevels = false;
     }
   }
 
   private async nextLevel() {
     if (!this.isTransitioningBetweenLevels) {
-      this.levelManager.incrementCurrentLevel();
       this.isTransitioningBetweenLevels = true;
-      await this.GameBoardPlaybaleComponent.goToNextLevel(this.levelManager.getCurrentLevel);
+      await this.GameBoardPlaybaleComponent.goToNextLevel();
       this.isTransitioningBetweenLevels = false;
     }
   }
@@ -106,28 +111,28 @@ class App {
     window.location.reload();
   }
 
-  private shouldProcedeToNextLevel(gameState: IGameState): boolean {
-    return gameState.cleared && this.levelManager.canProcedeToNextLevel;
+  private shouldProcedeToNextLevel({ isLastLevel, cleared }: ILevel): boolean {
+    return cleared && !isLastLevel && !this.isReviewing;
   }
 
-  private shouldRestartCurrentLevel(gameState: IGameState): boolean {
-    return gameState.selectionsLeft === 0;
+  private shouldRestartCurrentLevel(level: ILevel): boolean {
+    return level.selections.left === 0;
   }
 
-  private updateComponents(gameState: IGameState): void {
+  private updateComponents(level: ILevel): void {
     if (!this.isEditing) {
       this.MovesCounterComponent.render({
-        selectionsLeft: gameState.selectionsLeft,
-        selectionsMade: gameState.selectionsMade.valid,
-        isLevelCleared: gameState.cleared
+        selectionsLeft: level.selections.left,
+        selectionsMade: level.selections.made.valid,
+        isLevelCleared: level.cleared,
       });
     }
 
     this.LevelSelectorComponent.render({
-      currentLevel: this.levelManager.getCurrentLevelNumber,
-      isLastLevel: this.levelManager.isLastLevel,
+      currentLevel: level.index,
+      isLastLevel: level.isLastLevel,
       isEditing: this.isEditing,
-      isReviewing: !!this.queryString.layout && !this.isEditing
+      isReviewing: !!this.queryString.layout && !this.isEditing,
     });
   }
 }

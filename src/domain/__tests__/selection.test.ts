@@ -30,7 +30,7 @@ const setSelection = setSelectionHelper(game);
 
 describe("tile selection", () => {
   beforeEach(() => {
-    game.startLevel(level);
+    game.startCustomLevel(level);
   });
 
   test("one tile", () => {
@@ -98,7 +98,7 @@ describe("tile selection", () => {
 describe("selection for presenter", () => {
   beforeEach(() => {
     selectionPresenterClearFnCalled = false;
-    game.startLevel(level);
+    game.startCustomLevel(level);
   });
 
   test("#clear() on presenter is called after answer is evaluated", () => {
@@ -133,7 +133,7 @@ describe("selection for presenter", () => {
     });
 
     test("false when selecting less than minSelection", () => {
-      game.startLevel({
+      game.startCustomLevel({
         layout: defaultLayout,
         rules: {
           minSelection: 4
@@ -145,7 +145,7 @@ describe("selection for presenter", () => {
     });
 
     test("false when selecting a disqualifying tile", () => {
-      game.startLevel({ layout: blockerLayout });
+      game.startCustomLevel({ layout: blockerLayout });
       setSelection(0, 0, 100, 100);
 
       expect(selection.isValid).toEqual(false);
@@ -155,7 +155,7 @@ describe("selection for presenter", () => {
   describe(".gridSpan", () => {
     test("one tile when selection has started", () => {
       const gameGridSpan = new GameInteractor(selectionPresenter, tilePresenter);
-      gameGridSpan.startLevel(level);
+      gameGridSpan.startCustomLevel(level);
       gameGridSpan.setSelectionStart(0, 0);
 
       expect(selection.gridSpan.startTile.rowIndex).toEqual(0);

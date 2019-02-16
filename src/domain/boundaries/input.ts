@@ -20,7 +20,7 @@ export interface IGameRules {
   minSelection?: number;
 }
 
-// TODO: Gör den här snyggare
+// TODO: Gör den här snyggare. Byt till enum?
 export type ITileRawState = "r" | "f" | "b" | "2" | "3" | "4";
 
 export enum TileType {
@@ -30,6 +30,8 @@ export enum TileType {
 }
 
 export type IGridLayout = ITileRawState[][];
+
+export type ITypedGridLayout = TileType[][];
 
 export interface IGameLevel {
   layout: IGridLayout;

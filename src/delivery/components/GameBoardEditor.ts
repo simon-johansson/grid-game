@@ -1,5 +1,5 @@
 import { IGameLevel, TileType } from "../../domain/boundaries/input";
-import { IGameState } from "../../domain/boundaries/output";
+import { ILevel } from "../../domain/boundaries/output";
 import EditorOptions, { ISelectedOptions } from "./EditorOptions";
 import GameBoard from "./GameBoard";
 
@@ -7,8 +7,8 @@ export default class GameBoardEditor extends GameBoard {
   private EditorOptionsComponent: EditorOptions;
   private selectedOptions: ISelectedOptions;
 
-  constructor(level: IGameLevel, onGameStateUpdate: (state: IGameState) => void) {
-    super(level, onGameStateUpdate);
+  constructor(queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
+    super(queryStringLevel, onGameStateUpdate);
     this.EditorOptionsComponent = new EditorOptions(this.onNewOptionsSet);
   }
 
@@ -35,7 +35,6 @@ export default class GameBoardEditor extends GameBoard {
   }
 
   private onNewOptionsSet = (options: ISelectedOptions) => {
-    // console.log(options);
     this.selectedOptions = options;
     this.gameInteractor.setLevelMoves(this.selectedOptions.moves);
     this.onGameStateUpdate(this.gameInteractor.setLevelRules(this.selectedOptions.rules));

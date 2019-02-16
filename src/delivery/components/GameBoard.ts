@@ -1,10 +1,8 @@
 import { IGameLevel } from "../../domain/boundaries/input";
-import { IGameState } from "../../domain/boundaries/output";
+import { ILevel } from "../../domain/boundaries/output";
 import GameInteractor from "../../domain/GameInteractor";
-import {
-  getSelectionPresenter,
-  getTilePresenter
-} from "../game_presenters/index";
+import NetworkGateway from '../../infrastructure/NetworkGatewayImp';
+import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
 
 // TODO: Ändra ordningen av metoderna, bör vara logiskt
@@ -18,7 +16,7 @@ export default abstract class GameBoard extends Component<{}> {
   protected gameInteractor: GameInteractor;
   protected isSelecting: boolean = false;
 
-  constructor(level: IGameLevel, protected onGameStateUpdate: (state: IGameState) => void) {
+  constructor(private customLevel: IGameLevel, protected onGameStateUpdate: (state: ILevel) => void) {
     super();
     this.render({});
     this.setCanvasSize();
@@ -27,29 +25,33 @@ export default abstract class GameBoard extends Component<{}> {
       // TODO this.tileSize bör också vara en function, blir fel anars vid resize
       getSelectionPresenter(this.selectionCanvasContext.bind(this), this.tileSize),
       getTilePresenter(this.tileCanvasContext.bind(this), this.tileSize),
+      new NetworkGateway()
     );
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+
+    this.gameInteractor.loadLevels().then(() => {
+      this.startLevel();
+    });
   }
 
-  public goToNextLevel(level: IGameLevel) {
+  public goToNextLevel() {
     this.prepareNewLevel("next");
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+    this.onGameStateUpdate(this.gameInteractor.startNextLevel());
     return this.showNewLevel("next").then(() => {
       this.bindEvents();
     });
   }
 
-  public goToPrevLevel(level: IGameLevel) {
+  public goToPrevLevel() {
     this.prepareNewLevel("prev");
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+    this.onGameStateUpdate(this.gameInteractor.startPrevLevel());
     return this.showNewLevel("prev").then(() => {
       this.bindEvents();
     });
   }
 
-  public restartLevel(level: IGameLevel) {
+  public restartLevel() {
     this.prepareNewLevel("restart");
-    this.onGameStateUpdate(this.gameInteractor.startLevel(level));
+    this.startLevel();
     return this.showNewLevel("restart").then(() => {
       this.bindEvents();
     });
@@ -66,6 +68,15 @@ export default abstract class GameBoard extends Component<{}> {
   protected abstract processSelectionEnd(): void;
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
+
+  private startLevel() {
+    // TODO: Går det att göra denna kolla snyggare?
+    if (this.customLevel.layout) {
+      this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
+    } else {
+      this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
+    }
+  }
 
   private get tileCanvas(): HTMLCanvasElement {
     return this.getEl(this.tileCanvasClass) as HTMLCanvasElement;
@@ -166,7 +177,7 @@ export default abstract class GameBoard extends Component<{}> {
       this.wrapperElement.addEventListener(
         eventType,
         proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn.bind(this),
-        false
+        false,
       );
 
     addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
