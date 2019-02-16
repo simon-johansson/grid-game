@@ -29,14 +29,17 @@ class App {
       this.nextLevel.bind(this),
       this.restartLevel.bind(this),
       this.reviewLevel.bind(this),
-      this.editLevel.bind(this)
+      this.editLevel.bind(this),
     );
 
     if (this.isEditing) {
       this.GameBoardEditorComponent = new GameBoardEdit(this.getQueryStringLevel(), this.onEditStateUpdate.bind(this));
     } else {
       this.MovesCounterComponent = new MovesCounter();
-      this.GameBoardPlaybaleComponent = new GameBoardPlayable(this.getQueryStringLevel(), this.onPlayStateUpdate.bind(this));
+      this.GameBoardPlaybaleComponent = new GameBoardPlayable(
+        this.getQueryStringLevel(),
+        this.onPlayStateUpdate.bind(this),
+      );
     }
   }
 
@@ -45,7 +48,7 @@ class App {
     return {
       layout: this.queryString.layout,
       moves: this.queryString.moves,
-      rules: this.queryString.rules
+      rules: this.queryString.rules,
     };
   }
 
@@ -121,7 +124,7 @@ class App {
       this.MovesCounterComponent.render({
         selectionsLeft: level.selections.left,
         selectionsMade: level.selections.made.valid,
-        isLevelCleared: level.cleared
+        isLevelCleared: level.cleared,
       });
     }
 
@@ -129,7 +132,7 @@ class App {
       currentLevel: level.index,
       isLastLevel: level.isLastLevel,
       isEditing: this.isEditing,
-      isReviewing: !!this.queryString.layout && !this.isEditing
+      isReviewing: !!this.queryString.layout && !this.isEditing,
     });
   }
 }
