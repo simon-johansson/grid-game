@@ -1,24 +1,36 @@
 import { IGameLevel, IGameRules, ISelectionPresenterConstructor, ITilePresenterConstructor, TileType } from "./boundaries/input";
-import gameLevels from "./data/levels";
 import Grid from "./entities/Grid";
 import GridPoint from "./entities/GridPoint";
 import Level from "./entities/Level";
 import Selection from "./entities/Selection";
 import Tile from "./entities/Tile";
+import INetworkGateway from "./INetworkGateway";
 
 export default class GameInteractor {
   private level: Level;
   private grid: Grid;
   private selection: Selection;
   private currentLevelIndex: number = 0;
+  private levels: IGameLevel[];
 
   constructor(
     private selectionPresenter: ISelectionPresenterConstructor,
     private tilePresenter: ITilePresenterConstructor,
-    private levels: IGameLevel[] = gameLevels
+    private network: INetworkGateway
   ) {
-    // TODO: Load levels from DB
     // TODO: Load progress from localStorage
+
+    // TODO: Gör snyggare
+    (window as any).exportLevel = () => console.log(JSON.stringify(this.level.minified));
+  }
+
+  // TODO: Cache i service-worker.js så att det funkar offline
+  public async loadLevels() {
+    try {
+      this.levels = await this.network.getLevels();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public startCurrentLevel(): Level {

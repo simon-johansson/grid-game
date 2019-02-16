@@ -1,6 +1,7 @@
 import { IGameLevel } from "../../domain/boundaries/input";
 import { ILevel } from "../../domain/boundaries/output";
 import GameInteractor from "../../domain/GameInteractor";
+import NetworkGateway from '../../infrastructure/NetworkGatewayImp';
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
 
@@ -23,16 +24,13 @@ export default abstract class GameBoard extends Component<{}> {
     this.gameInteractor = new GameInteractor(
       // TODO this.tileSize bör också vara en function, blir fel anars vid resize
       getSelectionPresenter(this.selectionCanvasContext.bind(this), this.tileSize),
-      getTilePresenter(this.tileCanvasContext.bind(this), this.tileSize)
+      getTilePresenter(this.tileCanvasContext.bind(this), this.tileSize),
+      new NetworkGateway()
     );
 
-    // TODO: Går det att göra denna kolla snyggare?
-    if (this.customLevel.layout) {
-      this.exportLevel();
-      this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
-    } else {
-      this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
-    }
+    this.gameInteractor.loadLevels().then(() => {
+      this.startLevel();
+    });
   }
 
   public goToNextLevel() {
@@ -53,13 +51,7 @@ export default abstract class GameBoard extends Component<{}> {
 
   public restartLevel() {
     this.prepareNewLevel("restart");
-
-    // TODO: Upprepad logik, se constructor
-    if (this.customLevel.layout) {
-      this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
-    } else {
-      this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
-    }
+    this.startLevel();
     return this.showNewLevel("restart").then(() => {
       this.bindEvents();
     });
@@ -77,8 +69,13 @@ export default abstract class GameBoard extends Component<{}> {
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
 
-  private exportLevel() {
-    console.log(JSON.stringify(this.customLevel));
+  private startLevel() {
+    // TODO: Går det att göra denna kolla snyggare?
+    if (this.customLevel.layout) {
+      this.onGameStateUpdate(this.gameInteractor.startCustomLevel(this.customLevel));
+    } else {
+      this.onGameStateUpdate(this.gameInteractor.startCurrentLevel());
+    }
   }
 
   private get tileCanvas(): HTMLCanvasElement {
@@ -180,7 +177,7 @@ export default abstract class GameBoard extends Component<{}> {
       this.wrapperElement.addEventListener(
         eventType,
         proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn.bind(this),
-        false
+        false,
       );
 
     addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
