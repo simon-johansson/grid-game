@@ -25,6 +25,7 @@ function saveLevels() {
 }
 
 async function getLevelsFromTrello() {
+  console.info('Getting levels from Trello');
   return await trello.getCardsOnList(trelloListID).then(cards => {
     return cards.map(card => {
       const level = JSON.parse(card.desc);
@@ -36,9 +37,13 @@ async function getLevelsFromTrello() {
 
 function getLevelsFromFile() {
   return new Promise((resolve, reject) => {
-    if (cachedLevels) return resolve(cachedLevels);
+    if (cachedLevels) {
+      console.info('Getting levels from cached file');
+      return resolve(cachedLevels);
+    }
     fs.readFile(path.join(__dirname, fileName), function read(err, data) {
       if (err) return reject(err);
+      console.info('Getting levels from file');
       cachedLevels = data;
       resolve(data);
     });
