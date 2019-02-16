@@ -1,0 +1,92 @@
+[
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 1,
+    "layout": [
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "id": "5c65374acf779116954dd83e"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 2,
+    "layout": [
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ]
+    ],
+    "id": "5c65375c150ce38d6dbc6231"
+  }
+]
