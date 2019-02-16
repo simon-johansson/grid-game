@@ -44,8 +44,8 @@ function getLevelsFromFile() {
     fs.readFile(path.join(__dirname, fileName), function read(err, data) {
       if (err) return reject(err);
       console.info('Getting levels from file');
-      cachedLevels = data;
-      resolve(data);
+      cachedLevels = JSON.parse(data);
+      resolve(cachedLevels);
     });
   });
 }
