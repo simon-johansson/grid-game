@@ -46,15 +46,7 @@
       <div id="level-selection"></div>
     </div>
 
-    <script src="/vendor/require.js"></script>
     <script src="/vendor/doorbell.js"></script>
-    <script>
-      // Ugly but needed for require.js to work
-      // app = file name of js
-      // delivery/app = path to main ts
-      require(["app"], function() {
-        require(["delivery/App"]);
-      });
-    </script>
+    <script src="/app.js"></script>
   </body>
 </html>
