@@ -1,5 +1,5 @@
-import { IGameLevel } from "../../domain/boundaries/input";
-import { ILevel } from "../../domain/boundaries/output";
+import { IGameLevel } from "../../application/boundaries/input";
+import { ILevel } from "../../application/boundaries/output";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardPlayable extends GameBoard {

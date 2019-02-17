@@ -1,4 +1,4 @@
-import { ITile } from "../../domain/boundaries/output";
+import { ITile } from "../../application/boundaries/output";
 import { tileFlippable as styles } from "./presenterStyles";
 import TilePresenter from "./TilePresenter";
 

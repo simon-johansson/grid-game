@@ -1,4 +1,4 @@
-import { ITile } from "../../domain/boundaries/output";
+import { ITile } from "../../application/boundaries/output";
 import CanvasProvider from "../components/GameBoard";
 import TilePresenter from "./TilePresenter";
 

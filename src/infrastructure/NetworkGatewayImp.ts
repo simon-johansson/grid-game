@@ -1,5 +1,5 @@
-import { IGameLevel } from "../domain/boundaries/input";
-import INetworkGateway from "../domain/INetworkGateway";
+import { IGameLevel } from "../application/boundaries/input";
+import INetworkGateway from "../application/INetworkGateway";
 
 export default class NetworkGatewayImp implements INetworkGateway {
   public getLevels(): Promise<IGameLevel[]> {

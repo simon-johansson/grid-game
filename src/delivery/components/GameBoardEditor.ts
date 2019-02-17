@@ -1,5 +1,5 @@
-import { IGameLevel, TileType } from "../../domain/boundaries/input";
-import { ILevel } from "../../domain/boundaries/output";
+import { IGameLevel, TileType } from "../../application/boundaries/input";
+import { ILevel } from "../../application/boundaries/output";
 import EditorOptions, { ISelectedOptions } from "./EditorOptions";
 import GameBoard from "./GameBoard";
 

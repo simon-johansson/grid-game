@@ -1,4 +1,4 @@
-import { IGameRules, ITilePresenter, TileType } from "../boundaries/input";
+import { IGameRules, ITilePresenter, TileType } from "../application/boundaries/input";
 import GridPoint, { IGridSpan } from "./GridPoint";
 import Tile from "./Tile";
 

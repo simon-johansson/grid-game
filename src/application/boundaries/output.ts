@@ -1,4 +1,4 @@
-import GridPoint, { IGridSpan } from "../entities/GridPoint";
+import GridPoint, { IGridSpan } from "../../domain/GridPoint";
 import { IGameLevel, IGameRules, IGridLayout, TileType } from "./input";
 
 export interface ITile {

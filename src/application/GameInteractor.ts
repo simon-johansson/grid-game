@@ -1,9 +1,9 @@
+import Grid from "../domain/Grid";
+import GridPoint from "../domain/GridPoint";
+import Level from "../domain/Level";
+import Selection from "../domain/Selection";
+import Tile from "../domain/Tile";
 import { IGameLevel, IGameRules, ISelectionPresenterConstructor, ITilePresenterConstructor, TileType } from "./boundaries/input";
-import Grid from "./entities/Grid";
-import GridPoint from "./entities/GridPoint";
-import Level from "./entities/Level";
-import Selection from "./entities/Selection";
-import Tile from "./entities/Tile";
 import INetworkGateway from "./INetworkGateway";
 
 export default class GameInteractor {

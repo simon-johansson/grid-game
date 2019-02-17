@@ -1,5 +1,5 @@
-import { IGameLevel, IGameRules, IGridLayout } from "../domain/boundaries/input";
-import { ILevel } from "../domain/boundaries/output";
+import { IGameLevel, IGameRules, IGridLayout } from "../application/boundaries/input";
+import { ILevel } from "../application/boundaries/output";
 import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";

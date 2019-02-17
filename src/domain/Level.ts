@@ -1,6 +1,6 @@
-import { IGameLevel, IGameRules, ITypedGridLayout } from "../boundaries/input";
-import { ILevel } from "../boundaries/output";
-import { getMinifiedLayout, getTypedLayout } from "../utils";
+import { IGameLevel, IGameRules, ITypedGridLayout } from "../application/boundaries/input";
+import { ILevel } from "../application/boundaries/output";
+import { getMinifiedLayout, getTypedLayout } from "../application/utils";
 import { IEvaluateSelection } from "./Grid";
 
 function assertNever(state: never): never {

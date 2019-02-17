@@ -1,6 +1,6 @@
-import { IGameLevel } from "../../domain/boundaries/input";
-import { ILevel } from "../../domain/boundaries/output";
-import GameInteractor from "../../domain/GameInteractor";
+import { IGameLevel } from "../../application/boundaries/input";
+import { ILevel } from "../../application/boundaries/output";
+import GameInteractor from "../../application/GameInteractor";
 import NetworkGateway from '../../infrastructure/NetworkGatewayImp';
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";

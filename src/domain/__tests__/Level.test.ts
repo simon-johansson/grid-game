@@ -1,5 +1,5 @@
-import { blockerLayout, clearedLayout, defaultLayout } from "../../__tests__/testUtils";
-import { IGameLevel, IGameRules, TileType } from "../../boundaries/input";
+import { IGameLevel, IGameRules, TileType } from "../../application/boundaries/input";
+import { blockerLayout, clearedLayout, defaultLayout } from "../../application/__tests__/testUtils";
 import Level from "../Level";
 
 const defaultLevel: IGameLevel = {
