@@ -16,9 +16,9 @@
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\"",
     "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
-    "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/delivery/App.js -o dist/app.js",
+    "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/main.js -o dist/app.js",
     "watch:tsc": "tsc --watch",
-    "watch:browserify": "onchange \".tmp/**/*.{js,json}\" -- browserify .tmp/delivery/App.js -o dist/app.js --debug",
+    "watch:browserify": "onchange \".tmp/**/*.{js,json}\" -- browserify .tmp/main.js -o dist/app.js --debug",
     "watch:scss": "onchange \"src/delivery/**/*.scss\" -- run-s build:scss",
     "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,json,png,jpg,gif}\" -- run-s build:assets",
     "watch": "rm -rf ./dist && run-s build:* && run-p start serve watch:*",
@@ -45,8 +45,6 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "inversify": "^5.0.1",
-    "reflect-metadata": "^0.1.13",
     "trello": "^0.9.1"
   }
 }
