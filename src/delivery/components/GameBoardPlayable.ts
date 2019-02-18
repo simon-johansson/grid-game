@@ -1,10 +1,11 @@
 import { IGameLevel } from "../../application/boundaries/input";
 import { ILevel } from "../../application/boundaries/output";
+import GameInteractor from "../../application/GameInteractor";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardPlayable extends GameBoard {
-  constructor(queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
-    super(queryStringLevel, onGameStateUpdate);
+  constructor(interactor: GameInteractor, queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
+    super(interactor, queryStringLevel, onGameStateUpdate);
   }
 
   protected HTML(props: {}): string {
@@ -17,20 +18,20 @@ export default class GameBoardPlayable extends GameBoard {
   }
 
   protected processSelectionStart(x: number, y: number): void {
-    this.gameInteractor.setSelectionStart(
+    this.interactor.setSelectionStart(
       this.convertAbsoluteOffsetToProcent(x),
       this.convertAbsoluteOffsetToProcent(y)
     );
   }
 
   protected processSelectionMove(x: number, y: number): void {
-    this.gameInteractor.setSelectionEnd(
+    this.interactor.setSelectionEnd(
       this.convertAbsoluteOffsetToProcent(x),
       this.convertAbsoluteOffsetToProcent(y)
     );
   }
 
   protected processSelectionEnd(): void {
-    this.onGameStateUpdate(this.gameInteractor.evaluateSelection());
+    this.onGameStateUpdate(this.interactor.evaluateSelection());
   }
 }

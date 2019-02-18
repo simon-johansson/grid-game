@@ -9,7 +9,8 @@ import {
   ITilePresenter,
   ITilePresenterConstructor,
 } from "../boundaries/input";
-import GameInteractor from "../GameInteractor";
+import GameInteractor, { IPresenters } from "../GameInteractor";
+import INetworkGateway from "../INetworkGateway";
 
 // X = selected
 // O = not selected
@@ -76,6 +77,15 @@ export const evaluatedLayout = (state: ITileState | ITileSelection) => {
   const layout: any = [[], [], [], [], []];
   layout.forEach((row: any) => row.push(state, state, state, state, state));
   return layout;
+};
+
+export const networkGatewayMock: INetworkGateway = {
+  getLevels: () => Promise.resolve([]),
+};
+
+export const presenters: IPresenters = {
+  selection: getSelectionPresenter(),
+  tile: getTilePresenter(),
 };
 
 export const defaultLayout: IGridLayout = [

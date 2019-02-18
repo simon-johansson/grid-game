@@ -1,5 +1,6 @@
 import { IGameLevel, TileType } from "../../application/boundaries/input";
 import { ILevel } from "../../application/boundaries/output";
+import GameInteractor from "../../application/GameInteractor";
 import EditorOptions, { ISelectedOptions } from "./EditorOptions";
 import GameBoard from "./GameBoard";
 
@@ -7,8 +8,8 @@ export default class GameBoardEditor extends GameBoard {
   private EditorOptionsComponent: EditorOptions;
   private selectedOptions: ISelectedOptions;
 
-  constructor(queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
-    super(queryStringLevel, onGameStateUpdate);
+  constructor(interactor: GameInteractor, queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
+    super(interactor, queryStringLevel, onGameStateUpdate);
     this.EditorOptionsComponent = new EditorOptions(this.onNewOptionsSet);
   }
 
@@ -22,22 +23,22 @@ export default class GameBoardEditor extends GameBoard {
   }
 
   protected processSelectionStart(x: number, y: number): void {
-    this.gameInteractor.setSelectionStart(...this.getSelectionArguments(x, y));
+    this.interactor.setSelectionStart(...this.getSelectionArguments(x, y));
   }
 
   protected processSelectionMove(x: number, y: number): void {
-    this.gameInteractor.setSelectionEnd(...this.getSelectionArguments(x, y));
+    this.interactor.setSelectionEnd(...this.getSelectionArguments(x, y));
   }
 
   protected processSelectionEnd(): void {
     // TODO: Borde använda en annan funktion än evaluateSelection här
-    this.onGameStateUpdate(this.gameInteractor.evaluateSelection(true));
+    this.onGameStateUpdate(this.interactor.evaluateSelection(true));
   }
 
   private onNewOptionsSet = (options: ISelectedOptions) => {
     this.selectedOptions = options;
-    this.gameInteractor.setLevelMoves(this.selectedOptions.moves);
-    this.onGameStateUpdate(this.gameInteractor.setLevelRules(this.selectedOptions.rules));
+    this.interactor.setLevelMoves(this.selectedOptions.moves);
+    this.onGameStateUpdate(this.interactor.setLevelRules(this.selectedOptions.rules));
   };
 
   private getSelectionArguments = (x: number, y: number): [number, number, TileType] => [
