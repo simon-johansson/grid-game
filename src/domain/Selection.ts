@@ -1,5 +1,5 @@
-import { IGameRules, ISelectionPresenter } from "../boundaries/input";
-import { ISelection } from "../boundaries/output";
+import { IGameRules, ISelectionPresenter } from "../application/boundaries/input";
+import { ISelection } from "../application/boundaries/output";
 import GridPoint, { IGridSpan } from "./GridPoint";
 
 export interface IPoint {

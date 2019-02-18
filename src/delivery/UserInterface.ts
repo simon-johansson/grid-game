@@ -1,5 +1,6 @@
-import { IGameLevel, IGameRules, IGridLayout } from "../domain/boundaries/input";
-import { ILevel } from "../domain/boundaries/output";
+import { IGameLevel } from "../application/boundaries/input";
+import { ILevel } from "../application/boundaries/output";
+import GameInteractor from "../application/GameInteractor";
 import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";
@@ -7,7 +8,7 @@ import MovesCounter from "./components/MovesCounter";
 import QueryStringHandler from "./utils/QueryStringHandler";
 
 // TODO: byt ordning på metoderna, ska följa en logisk ordning
-class App {
+export default class UserInterface {
   private isEditing: boolean;
   private isReviewing: boolean;
   private isTransitioningBetweenLevels: boolean = false;
@@ -17,13 +18,13 @@ class App {
   private MovesCounterComponent: MovesCounter;
   private queryString = new QueryStringHandler();
 
-  constructor() {
+  constructor(interactor: GameInteractor) {
     this.isEditing = this.queryString.edit;
     this.isReviewing = !!this.queryString.layout && !this.isEditing;
-    this.createComponents();
+    this.createComponents(interactor);
   }
 
-  private createComponents() {
+  private createComponents(interactor: GameInteractor) {
     this.LevelSelectorComponent = new LevelSelector(
       this.prevLevel.bind(this),
       this.nextLevel.bind(this),
@@ -33,10 +34,15 @@ class App {
     );
 
     if (this.isEditing) {
-      this.GameBoardEditorComponent = new GameBoardEdit(this.getQueryStringLevel(), this.onEditStateUpdate.bind(this));
+      this.GameBoardEditorComponent = new GameBoardEdit(
+        interactor,
+        this.getQueryStringLevel(),
+        this.onEditStateUpdate.bind(this),
+      );
     } else {
       this.MovesCounterComponent = new MovesCounter();
       this.GameBoardPlaybaleComponent = new GameBoardPlayable(
+        interactor,
         this.getQueryStringLevel(),
         this.onPlayStateUpdate.bind(this),
       );
@@ -136,5 +142,3 @@ class App {
     });
   }
 }
-
-const app = new App();

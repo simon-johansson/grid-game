@@ -1,15 +1,16 @@
 /* tslint:disable: max-classes-per-file */
 
+import Selection from "../../domain/Selection";
+import Tile from "../../domain/Tile";
 import {
   IGridLayout,
   ISelectionPresenter,
   ISelectionPresenterConstructor,
   ITilePresenter,
-  ITilePresenterConstructor
+  ITilePresenterConstructor,
 } from "../boundaries/input";
-import Selection from "../entities/Selection";
-import Tile from "../entities/Tile";
-import GameInteractor from "../GameInteractor";
+import GameInteractor, { IPresenters } from "../GameInteractor";
+import INetworkGateway from "../INetworkGateway";
 
 // X = selected
 // O = not selected
@@ -35,7 +36,7 @@ export const getTilePresenter = (clb?: (tile: Tile) => void): ITilePresenterCons
 
 export const getSelectionPresenter = (
   renderClb?: (selection: Selection) => void,
-  clearClb?: () => void
+  clearClb?: () => void,
 ): ISelectionPresenterConstructor => {
   return class SelectionPresenter implements ISelectionPresenter {
     public render(selection: Selection): void {
@@ -78,12 +79,21 @@ export const evaluatedLayout = (state: ITileState | ITileSelection) => {
   return layout;
 };
 
+export const networkGatewayMock: INetworkGateway = {
+  getLevels: () => Promise.resolve([]),
+};
+
+export const presenters: IPresenters = {
+  selection: getSelectionPresenter(),
+  tile: getTilePresenter(),
+};
+
 export const defaultLayout: IGridLayout = [
   ["r", "r", "r", "r", "r"],
   ["r", "r", "r", "r", "r"],
   ["r", "r", "r", "r", "r"],
   ["r", "r", "r", "r", "r"],
-  ["r", "r", "r", "r", "r"]
+  ["r", "r", "r", "r", "r"],
 ];
 
 export const clearedLayout: IGridLayout = [
@@ -91,7 +101,7 @@ export const clearedLayout: IGridLayout = [
   ["f", "f", "f", "f", "f"],
   ["f", "f", "f", "f", "f"],
   ["f", "f", "f", "f", "f"],
-  ["f", "f", "f", "f", "f"]
+  ["f", "f", "f", "f", "f"],
 ];
 
 export const blockerLayout: IGridLayout = [
@@ -99,7 +109,7 @@ export const blockerLayout: IGridLayout = [
   ["b", "b", "b", "b", "b"],
   ["b", "b", "b", "b", "b"],
   ["b", "b", "b", "b", "b"],
-  ["b", "b", "b", "b", "b"]
+  ["b", "b", "b", "b", "b"],
 ];
 
 export const mixedLayout: IGridLayout = [
@@ -107,7 +117,7 @@ export const mixedLayout: IGridLayout = [
   ["r", "r", "r", "r", "r"],
   ["r", "r", "r", "r", "r"],
   ["r", "r", "r", "r", "r"],
-  ["r", "r", "r", "r", "r"]
+  ["r", "r", "r", "r", "r"],
 ];
 
 export const twoMultiTilesLayout: IGridLayout = [
@@ -115,7 +125,7 @@ export const twoMultiTilesLayout: IGridLayout = [
   ["2", "2", "2", "2", "2"],
   ["2", "2", "2", "2", "2"],
   ["2", "2", "2", "2", "2"],
-  ["2", "2", "2", "2", "2"]
+  ["2", "2", "2", "2", "2"],
 ];
 
 export const threeMultiTilesLayout: IGridLayout = [
@@ -123,7 +133,7 @@ export const threeMultiTilesLayout: IGridLayout = [
   ["3", "3", "3", "3", "3"],
   ["3", "3", "3", "3", "3"],
   ["3", "3", "3", "3", "3"],
-  ["3", "3", "3", "3", "3"]
+  ["3", "3", "3", "3", "3"],
 ];
 
 export const fourMultiTilesLayout: IGridLayout = [
@@ -131,5 +141,5 @@ export const fourMultiTilesLayout: IGridLayout = [
   ["4", "4", "4", "4", "4"],
   ["4", "4", "4", "4", "4"],
   ["4", "4", "4", "4", "4"],
-  ["4", "4", "4", "4", "4"]
+  ["4", "4", "4", "4", "4"],
 ];

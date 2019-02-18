@@ -8,6 +8,15 @@
 
 The game is built using [Typescript](https://www.typescriptlang.org/) and the HTML5 canvas element without the use of any front-end framework.
 
+## Structure
+
+* `server/` - Backend stuff. Slim express server serving the site and an API
+* `src/`- Frontend stuff. Split into diffrent layers explined below.
+
+### Frontend architecture
+
+...
+
 ## Development
 The `src/` folder is divided into separate concerns. 
 - `domain/` - game logic
@@ -34,7 +43,11 @@ $ npm start
 ```
 
 ## Deployment
-Deployment is done automagically when a push to the remote `master` branch is detected. The site is deployed on Heroku. Heroku builds the site so the build folder does not need to be in the repo.
+
+Deployment is done automagically on Heroku. Heroku builds the site so the build folder does not need to be in the repo.
+
+* Pushing to the `develop` branch builds the site to [dev.gridgame.net](https://dev.gridgame.net)
+* Pushing to the `master` branch builds the site to [gridgame.net](https://gridgame.net)
 
 ## Tests
 The tests are written in [Jest](https://jestjs.io/). Coverage report can be found [here](https://codecov.io/gh/simon-johansson/grid-game).
@@ -45,6 +58,29 @@ $ npm run test # will run all tests once
 $ npm run test-watch # will run all tests and keep doing so on each file change
 $ npm run test-converage # will run all tests once and collect a coverage report
 ```
+
+## GIT Flow
+
+### Developing features
+```bash
+$ git flow feature start authentication
+
+# Develop feature. Make commits...
+
+$ git flow feature finish authentication
+```
+
+### Making releases
+```bash
+$ git flow release start 0.1.0
+
+# Bump the version number now!
+# Start committing last-minute fixes in preparing your release
+
+$ git flow release finish 0.1.0
+```
+
+Nice reference: [link](https://jeffkreeftmeijer.com/git-flow/)
 
 [travis-image]: https://travis-ci.org/simon-johansson/grid-game.svg?branch=master
 [travis-url]: https://travis-ci.org/simon-johansson/grid-game

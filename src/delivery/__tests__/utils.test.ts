@@ -1,4 +1,4 @@
-import { IGameLevel, IGridLayout } from "../../domain/boundaries/input";
+import { IGameLevel, IGridLayout } from "../../application/boundaries/input";
 import QueryStringHandler from "../utils/QueryStringHandler";
 
 const setQueryString = (query: string): void => {

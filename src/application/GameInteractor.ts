@@ -1,10 +1,21 @@
-import { IGameLevel, IGameRules, ISelectionPresenterConstructor, ITilePresenterConstructor, TileType } from "./boundaries/input";
-import Grid from "./entities/Grid";
-import GridPoint from "./entities/GridPoint";
-import Level from "./entities/Level";
-import Selection from "./entities/Selection";
-import Tile from "./entities/Tile";
+import Grid from "../domain/Grid";
+import GridPoint from "../domain/GridPoint";
+import Level from "../domain/Level";
+import Selection from "../domain/Selection";
+import Tile from "../domain/Tile";
+import {
+  IGameLevel,
+  IGameRules,
+  ISelectionPresenterConstructor,
+  ITilePresenterConstructor,
+  TileType,
+} from "./boundaries/input";
 import INetworkGateway from "./INetworkGateway";
+
+export interface IPresenters {
+  selection: ISelectionPresenterConstructor;
+  tile: ITilePresenterConstructor,
+}
 
 export default class GameInteractor {
   private level: Level;
@@ -13,11 +24,7 @@ export default class GameInteractor {
   private currentLevelIndex: number = 0;
   private levels: IGameLevel[];
 
-  constructor(
-    private selectionPresenter: ISelectionPresenterConstructor,
-    private tilePresenter: ITilePresenterConstructor,
-    private network: INetworkGateway
-  ) {
+  constructor(private network: INetworkGateway) {
     // TODO: Load progress from localStorage
 
     // TODO: Gör snyggare
@@ -33,22 +40,22 @@ export default class GameInteractor {
     }
   }
 
-  public startCurrentLevel(): Level {
-    return this.startLevel();
+  public startCurrentLevel(presenters: IPresenters): Level {
+    return this.startLevel(presenters);
   }
 
-  public startNextLevel(): Level {
+  public startNextLevel(presenters: IPresenters): Level {
     ++this.currentLevelIndex;
-    return this.startLevel();
+    return this.startLevel(presenters);
   }
 
-  public startPrevLevel(): Level {
+  public startPrevLevel(presenters: IPresenters): Level {
     --this.currentLevelIndex;
-    return this.startLevel();
+    return this.startLevel(presenters);
   }
 
-  public startCustomLevel(level: IGameLevel): Level {
-    return this.startLevel(level);
+  public startCustomLevel(presenters: IPresenters, level: IGameLevel): Level {
+    return this.startLevel(presenters, level);
   }
 
   // TODO: Fult att skicka in tileState här...
@@ -82,39 +89,40 @@ export default class GameInteractor {
     return this.level;
   }
 
-  private startLevel(level?: IGameLevel): Level {
+  private startLevel(presenters: IPresenters, level?: IGameLevel): Level {
     const index = this.currentLevelIndex;
     this.level = new Level(level || this.levels[index], index);
-    this.createGrid();
-    this.createSelection();
+    this.createGrid(presenters.tile);
+    this.createSelection(presenters.selection);
     return this.level;
   }
 
-  private createGrid(): void {
-    this.grid = new Grid(this.createTiles(), this.level.rules);
+  private createGrid(presenter: ITilePresenterConstructor): void {
+    const tiles = this.createTiles(presenter);
+    this.grid = new Grid(tiles, this.level.rules);
   }
 
-  private createSelection(): void {
+  private createSelection(presenter: ISelectionPresenterConstructor): void {
     this.selection = new Selection(
       this.level.grid.numberOfRows,
       this.level.grid.numberOfCols,
-      new this.selectionPresenter()
+      new presenter(),
     );
+  }
+
+  private createTiles(presenter: ITilePresenterConstructor): Tile[] {
+    const tiles: Tile[] = [];
+    this.level.grid.layout.forEach((row, rowIndex) => {
+      row.forEach((tileState, colIndex) => {
+        tiles.push(new Tile(tileState, new GridPoint(rowIndex, colIndex), this.level.rules, new presenter()));
+      });
+    });
+    return tiles;
   }
 
   private supplySelectionToGrid(tileState?: TileType): void {
     this.grid.applySelection(this.selection.gridSpan, tileState);
     // If in edit mode = always true
     this.selection.isValid = tileState ? true : this.grid.isSelectionValid;
-  }
-
-  private createTiles(): Tile[] {
-    const tiles: Tile[] = [];
-    this.level.grid.layout.forEach((row, rowIndex) => {
-      row.forEach((tileState, colIndex) => {
-        tiles.push(new Tile(tileState, new GridPoint(rowIndex, colIndex), this.level.rules, new this.tilePresenter()));
-      });
-    });
-    return tiles;
   }
 }

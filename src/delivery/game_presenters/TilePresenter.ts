@@ -1,5 +1,5 @@
-import { ITilePresenter } from "../../domain/boundaries/input";
-import { ITile } from "../../domain/boundaries/output";
+import { ITilePresenter } from "../../application/boundaries/input";
+import { ITile } from "../../application/boundaries/output";
 import CanvasProvider from "../components/GameBoard";
 import { roundRect } from "./presenterUtils";
 

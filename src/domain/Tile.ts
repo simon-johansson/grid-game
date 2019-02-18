@@ -1,5 +1,5 @@
-import { IGameRules, ITilePresenter, TileType } from "../boundaries/input";
-import { ITile } from "../boundaries/output";
+import { IGameRules, ITilePresenter, TileType } from "../application/boundaries/input";
+import { ITile } from "../application/boundaries/output";
 import GridPoint, { IGridSpan } from "./GridPoint";
 
 export interface IInitState {

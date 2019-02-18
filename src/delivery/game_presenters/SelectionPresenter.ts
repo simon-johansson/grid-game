@@ -1,4 +1,4 @@
-import { ISelection } from "../../domain/boundaries/output";
+import { ISelection } from "../../application/boundaries/output";
 import CanvasProvider from "../components/GameBoard";
 import { selection as styles } from "./presenterStyles";
 import { roundRect } from "./presenterUtils";

@@ -3,9 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <title>Grid Game</title>
-    <meta name="description" content="" />
+    <meta name="description" content="Make the grey tiles green to clear the grid 🤔" />
+    <meta name="author" content="Simon Johansson & Sebastian Söderback" />
+    <meta name="keywords" content="game,grid,puzzle,tile,grid game,hard" />
+
+    <meta property="og:title" content="Grid Game" />
+    <meta property="og:site_name" content="gridgame.net" />
+    <meta property="og:url" content="https://gridgame.net" />
+    <meta property="og:description" content="Make the grey tiles green to clear the grid 🤔" />
+    <meta property="og:type" content="game" />
+    <meta property="og:image" content="https://gridgame.net/assets/icons/icon-512x512.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="https://gridgame.net" />
+    <meta name="twitter:title" content="Grid Game" />
+    <meta name="twitter:description" content="Make the grey tiles green to clear the grid 🤔" />
+    <meta name="twitter:image" content="https://gridgame.net/assets/icons/icon-512x512.png" />
+
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png" />
     <link rel="stylesheet" href="/styles/styles.css" />
@@ -15,7 +31,7 @@
         //Register the ServiceWorker
         navigator.serviceWorker
           .register("/service-worker.js", {
-            scope: "/"
+            scope: "/",
           })
           .then(function(reg) {
             console.log("Service worker has been registered for scope:" + reg.scope);
@@ -46,15 +62,7 @@
       <div id="level-selection"></div>
     </div>
 
-    <script src="/vendor/require.js"></script>
     <script src="/vendor/doorbell.js"></script>
-    <script>
-      // Ugly but needed for require.js to work
-      // app = file name of js
-      // delivery/app = path to main ts
-      require(["app"], function() {
-        require(["delivery/App"]);
-      });
-    </script>
+    <script src="/app.js"></script>
   </body>
 </html>

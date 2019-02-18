@@ -1,4 +1,4 @@
-import { ITile } from "../../domain/boundaries/output";
+import { ITile } from "../../application/boundaries/output";
 import getTileBlockerPresenter from "./TileBlockerPresenter";
 import getTileFlippablePresenter from "./TileFlippablePresenter";
 import getTileMultiFlipPresenter from "./TileMultiFlipPresenter";

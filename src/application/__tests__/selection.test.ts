@@ -1,7 +1,6 @@
 import { IGameLevel } from "../boundaries/input";
 import { ISelection, ITile } from "../boundaries/output";
-import GameInteractor from "../GameInteractor";
-
+import GameInteractor, { IPresenters } from "../GameInteractor";
 import {
   blockerLayout,
   defaultLayout,
@@ -9,28 +8,31 @@ import {
   getSelectionPresenter,
   getTilePresenter,
   ITileSelectionLayout,
+  networkGatewayMock,
   setSelectionHelper,
 } from "./testUtils";
 
 const level: IGameLevel = {
-  layout: defaultLayout
+  layout: defaultLayout,
 };
 let selection: ISelection;
 let selectionPresenterClearFnCalled: boolean = false;
-const selectionPresenter = getSelectionPresenter(
-  (selectionForPresenter: ISelection) => (selection = selectionForPresenter),
-  () => (selectionPresenterClearFnCalled = true)
-);
 const tileSelectionLayout: ITileSelectionLayout = [[], [], [], [], []];
-const tilePresenter = getTilePresenter((tile: ITile) => {
-  tileSelectionLayout[tile.position.rowIndex][tile.position.colIndex] = tile.isSelected ? "X" : "O";
-});
-const game = new GameInteractor(selectionPresenter, tilePresenter);
+const presenters: IPresenters = {
+  selection: getSelectionPresenter(
+    (selectionForPresenter: ISelection) => (selection = selectionForPresenter),
+    () => (selectionPresenterClearFnCalled = true),
+  ),
+  tile: getTilePresenter((tile: ITile) => {
+    tileSelectionLayout[tile.position.rowIndex][tile.position.colIndex] = tile.isSelected ? "X" : "O";
+  })
+};
+const game = new GameInteractor(networkGatewayMock);
 const setSelection = setSelectionHelper(game);
 
 describe("tile selection", () => {
   beforeEach(() => {
-    game.startCustomLevel(level);
+    game.startCustomLevel(presenters, level);
   });
 
   test("one tile", () => {
@@ -40,7 +42,7 @@ describe("tile selection", () => {
       ["O", "O", "O", "O", "O"],
       ["O", "O", "O", "O", "O"],
       ["O", "O", "O", "O", "O"],
-      ["O", "O", "O", "O", "O"]
+      ["O", "O", "O", "O", "O"],
     ]);
   });
 
@@ -51,7 +53,7 @@ describe("tile selection", () => {
       ["O", "X", "O", "O", "O"],
       ["O", "O", "O", "O", "O"],
       ["O", "O", "O", "O", "O"],
-      ["O", "O", "O", "O", "O"]
+      ["O", "O", "O", "O", "O"],
     ]);
   });
 
@@ -67,7 +69,7 @@ describe("tile selection", () => {
       ["O", "X", "X", "O", "O"],
       ["O", "X", "X", "O", "O"],
       ["O", "X", "X", "O", "O"],
-      ["O", "X", "X", "O", "O"]
+      ["O", "X", "X", "O", "O"],
     ]);
   });
 
@@ -79,7 +81,7 @@ describe("tile selection", () => {
       ["X", "X", "X", "O", "O"],
       ["X", "X", "X", "O", "O"],
       ["O", "O", "O", "O", "O"],
-      ["O", "O", "O", "O", "O"]
+      ["O", "O", "O", "O", "O"],
     ]);
   });
 
@@ -98,7 +100,7 @@ describe("tile selection", () => {
 describe("selection for presenter", () => {
   beforeEach(() => {
     selectionPresenterClearFnCalled = false;
-    game.startCustomLevel(level);
+    game.startCustomLevel(presenters, level);
   });
 
   test("#clear() on presenter is called after answer is evaluated", () => {
@@ -133,11 +135,11 @@ describe("selection for presenter", () => {
     });
 
     test("false when selecting less than minSelection", () => {
-      game.startCustomLevel({
+      game.startCustomLevel(presenters, {
         layout: defaultLayout,
         rules: {
-          minSelection: 4
-        }
+          minSelection: 4,
+        },
       });
       setSelection(0, 0, 0, 20);
 
@@ -145,7 +147,7 @@ describe("selection for presenter", () => {
     });
 
     test("false when selecting a disqualifying tile", () => {
-      game.startCustomLevel({ layout: blockerLayout });
+      game.startCustomLevel(presenters, { layout: blockerLayout });
       setSelection(0, 0, 100, 100);
 
       expect(selection.isValid).toEqual(false);
@@ -154,8 +156,8 @@ describe("selection for presenter", () => {
 
   describe(".gridSpan", () => {
     test("one tile when selection has started", () => {
-      const gameGridSpan = new GameInteractor(selectionPresenter, tilePresenter);
-      gameGridSpan.startCustomLevel(level);
+      const gameGridSpan = new GameInteractor(networkGatewayMock);
+      gameGridSpan.startCustomLevel(presenters, level);
       gameGridSpan.setSelectionStart(0, 0);
 
       expect(selection.gridSpan.startTile.rowIndex).toEqual(0);

@@ -1,4 +1,4 @@
-import { ITile } from "../../domain/boundaries/output";
+import { ITile } from "../../application/boundaries/output";
 import TilePresenter from "./TilePresenter";
 
 const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: number) =>

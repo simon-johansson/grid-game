@@ -1,4 +1,4 @@
-import { IGameRules, TileType } from "../../domain/boundaries/input";
+import { IGameRules, TileType } from "../../application/boundaries/input";
 import QueryStringHandler from "../utils/QueryStringHandler";
 import Component from "./Component";
 
