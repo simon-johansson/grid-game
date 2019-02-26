@@ -1,20 +1,31 @@
-import { IGameRules, ITilePresenter, TileType } from "../application/boundaries/input";
-import { ITile } from "../application/boundaries/output";
+import { IGameRules } from "../application/interfaces";
 import GridPoint, { IGridSpan } from "./GridPoint";
 
-export interface IInitState {
-  selected?: boolean;
-  blocker?: boolean;
-  cleared?: boolean;
-  clearsRequired?: number;
+export interface ITilePresentationData {
+  isSelected: boolean;
+  isBlocker: boolean;
+  isCleared: boolean;
+  clearsRequired: number;
+  position: GridPoint;
 }
 
-export default class Tile implements ITile {
-  private state: IInitState = {
+export interface ITilePresenter {
+  render: (tile: ITilePresentationData) => void;
+}
+
+export enum TileType {
+  Blocker = "Blocker",
+  Regular = "Regular",
+  Cleared = "Cleared",
+}
+
+export default class Tile {
+  // TODO: Kan jag använda TileType istället för state?
+  private state = {
     selected: false,
     blocker: false,
     cleared: false,
-    clearsRequired: 1
+    clearsRequired: 1,
   };
 
   constructor(
@@ -22,10 +33,9 @@ export default class Tile implements ITile {
     public position: GridPoint,
     // TODO: Skicka inte med rules här
     private rules: IGameRules,
-    private presenter: ITilePresenter
+    private presenter: ITilePresenter,
   ) {
     this.setTileType(this.tileType);
-    this.presenter.render(this);
   }
 
   public get isSelected(): boolean {
@@ -73,33 +83,21 @@ export default class Tile implements ITile {
     return this.isBlocker;
   }
 
-  public checkIfSelected(selection: IGridSpan, tileType?: TileType): void {
-    const intersects = this.doesIntersectWithSelection(selection);
-    const shouldChangeTileType =  intersects && tileType;
-    const shouldChangeSelectionState =  this.isSelected !== intersects;
-
-    if (shouldChangeTileType) {
-      this.changeTileType(tileType);
-    } else if (shouldChangeSelectionState) {
-      this.changeSelectionState(intersects);
-    }
+  public applySelection(selection: IGridSpan, tileType?: TileType): void {
+    const isCovered = this.isCoveredBySelection(selection);
+    if (isCovered && tileType) this.setTileType(tileType);
+    else if (this.isSelected !== isCovered) this.changeSelectionState(isCovered);
   }
 
-  private doesIntersectWithSelection(selection: IGridSpan): boolean {
+  public isCoveredBySelection(selection: IGridSpan): boolean {
     const { rowIndex, colIndex } = this.position;
     const rowIntersect = selection.startTile.rowIndex <= rowIndex && selection.endTile.rowIndex >= rowIndex;
     const colIntersect = selection.startTile.colIndex <= colIndex && selection.endTile.colIndex >= colIndex;
     return rowIntersect && colIntersect;
   }
 
-  private changeTileType(tileType: TileType): void {
-    this.state.selected = false;
-    this.setTileType(tileType);
-    this.presenter.render(this);
-  }
-
-  private changeSelectionState(tileIntersects: boolean) {
-    this.state.selected = tileIntersects;
+  private changeSelectionState(isSelected: boolean) {
+    this.state.selected = isSelected;
     this.presenter.render(this);
   }
 
@@ -117,10 +115,12 @@ export default class Tile implements ITile {
         this.state.cleared = true;
         break;
 
-        case TileType.Blocker:
+      case TileType.Blocker:
         this.state.blocker = true;
         this.state.cleared = false;
         break;
     }
+
+    this.presenter.render(this);
   }
 }

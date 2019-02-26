@@ -1,5 +1,5 @@
 import GameInteractor from "./application/GameInteractor";
-import UserInterface from "./delivery/UserInterface";
+import UserInterface from "./delivery/UI";
 import NetworkGatewayImp from "./infrastructure/NetworkGatewayImp";
 
 const networkGateway = new NetworkGatewayImp();

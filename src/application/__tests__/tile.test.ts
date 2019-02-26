@@ -46,15 +46,13 @@ describe("evaluate selection", () => {
     describe(".selectionsMade", () => {
       test("returnes number of valid selections", () => {
         const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
-        expect(state.selections.made.valid).toEqual(3);
-        expect(state.selections.made.invalid).toEqual(0);
+        expect(state.selections.made).toEqual(3);
       });
-      test("returnes number of invalid selections", () => {
-        game.startCustomLevel(presenters, { layout: blockerLayout });
-        const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
-        expect(state.selections.made.invalid).toEqual(3);
-        expect(state.selections.made.valid).toEqual(0);
-      });
+      // test("returnes number of invalid selections", () => {
+      //   game.startCustomLevel(presenters, { layout: blockerLayout });
+      //   const state = setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 100, 100], [0, 0, 100, 100]);
+      //   expect(state.selections.made).toEqual(3);
+      // });
     });
 
     describe(".selectionsLeft", () => {
@@ -72,11 +70,11 @@ describe("evaluate selection", () => {
     describe(".cleared", () => {
       test("returnes false when tiles left to clear", () => {
         const state = setSelectionAndEvaluate([0, 0, 0, 0]);
-        expect(state.cleared).toEqual(false);
+        expect(state.isCleared).toEqual(false);
       });
       test("returnes true when all tiles are cleared", () => {
         const state = setSelectionAndEvaluate([0, 0, 100, 100]);
-        expect(state.cleared).toEqual(true);
+        expect(state.isCleared).toEqual(true);
       });
     });
   });

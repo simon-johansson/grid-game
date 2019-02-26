@@ -1,6 +1,7 @@
-import { IGameLevel } from "../boundaries/input";
-import { ISelection, ITile } from "../boundaries/output";
+import { ISelectionPresentationData } from "../../domain/Selection";
+import { ITilePresentationData } from "../../domain/Tile";
 import GameInteractor, { IPresenters } from "../GameInteractor";
+import { IGameLevel } from "../interfaces";
 import {
   blockerLayout,
   defaultLayout,
@@ -15,17 +16,17 @@ import {
 const level: IGameLevel = {
   layout: defaultLayout,
 };
-let selection: ISelection;
+let selection: ISelectionPresentationData;
 let selectionPresenterClearFnCalled: boolean = false;
 const tileSelectionLayout: ITileSelectionLayout = [[], [], [], [], []];
 const presenters: IPresenters = {
   selection: getSelectionPresenter(
-    (selectionForPresenter: ISelection) => (selection = selectionForPresenter),
+    (selectionForPresenter: ISelectionPresentationData) => (selection = selectionForPresenter),
     () => (selectionPresenterClearFnCalled = true),
   ),
-  tile: getTilePresenter((tile: ITile) => {
+  tile: getTilePresenter((tile: ITilePresentationData) => {
     tileSelectionLayout[tile.position.rowIndex][tile.position.colIndex] = tile.isSelected ? "X" : "O";
-  })
+  }),
 };
 const game = new GameInteractor(networkGatewayMock);
 const setSelection = setSelectionHelper(game);
@@ -87,7 +88,7 @@ describe("tile selection", () => {
 
   test("selection canceled after evaluation", () => {
     setSelection(0, 0, 100, 100);
-    game.evaluateSelection();
+    game.processSelection();
     expect(tileSelectionLayout).toEqual(evaluatedLayout("O"));
   });
 
@@ -106,7 +107,7 @@ describe("selection for presenter", () => {
   test("#clear() on presenter is called after answer is evaluated", () => {
     setSelection(0, 0, 100, 100);
     expect(selectionPresenterClearFnCalled).toEqual(false);
-    game.evaluateSelection();
+    game.processSelection();
     expect(selectionPresenterClearFnCalled).toEqual(true);
   });
 
