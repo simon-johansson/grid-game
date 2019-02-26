@@ -1,7 +1,5 @@
-import { IGameLevel } from "../../application/boundaries/input";
-import { ILevel } from "../../application/boundaries/output";
 import GameInteractor, { IPresenters } from "../../application/GameInteractor";
-import NetworkGateway from "../../infrastructure/NetworkGatewayImp";
+import { IGameLevel, ILevelData } from "../../application/interfaces";
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
 
@@ -18,7 +16,7 @@ export default abstract class GameBoard extends Component<{}> {
   constructor(
     protected interactor: GameInteractor,
     private customLevel: IGameLevel,
-    protected onGameStateUpdate: (state: ILevel) => void,
+    protected onGameStateUpdate: (state: ILevelData) => void,
   ) {
     super();
     this.render({});

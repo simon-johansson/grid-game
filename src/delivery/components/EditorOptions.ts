@@ -1,4 +1,4 @@
-import { IGameRules, TileType } from "../../application/boundaries/input";
+import { IGameRules, TileType } from "../../application/interfaces";
 import QueryStringHandler from "../utils/QueryStringHandler";
 import Component from "./Component";
 
@@ -23,8 +23,8 @@ export default class EditorOptions extends Component<{}> {
     moves: 3,
     rules: {
       minSelection: 1,
-      toggleOnOverlap: true
-    }
+      toggleOnOverlap: true,
+    },
   };
 
   constructor(private onNewOptionsSet: (options: ISelectedOptions) => void) {
@@ -40,11 +40,11 @@ export default class EditorOptions extends Component<{}> {
       this.options.rules.toggleOnOverlap = toggleOnOverlap;
     }
     this.render({});
-    onNewOptionsSet(this.options);
+    // onNewOptionsSet(this.options);
   }
 
   protected HTML(props: {}): string {
-    const { toggleOnOverlap } = this.options.rules;
+    const { toggleOnOverlap, minSelection } = this.options.rules;
 
     return `
       <div class="moves-picker">
@@ -53,9 +53,7 @@ export default class EditorOptions extends Component<{}> {
       </div>
       <div class="minselection-picker">
         <label for="minselection-input">Minimum tiles selected:</label>
-        <input type="number" class="${minSelectionClass}" id="minselection-input" value="${
-      this.options.rules.minSelection
-    }">
+        <input type="number" class="${minSelectionClass}" id="minselection-input" value="${minSelection}">
       </div>
       <div class="overlap-picker">
         <label for="overlap-select">Should toggle on overlap:</label>

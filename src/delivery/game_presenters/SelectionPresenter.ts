@@ -1,5 +1,4 @@
-import { ISelection } from "../../application/boundaries/output";
-import CanvasProvider from "../components/GameBoard";
+import { ISelectionPresentationData } from "../../application/interfaces";
 import { selection as styles } from "./presenterStyles";
 import { roundRect } from "./presenterUtils";
 
@@ -16,7 +15,7 @@ const getSelectionPresenter = (selectionContext: () => CanvasRenderingContext2D,
     private tileSize: number = tileSize;
     private prevRect: IPrevRect;
 
-    public render(selection: ISelection): void {
+    public render(selection: ISelectionPresentationData): void {
       this.clear();
       this.ctx.save();
       this.setStyling(selection.isValid);
@@ -49,7 +48,7 @@ const getSelectionPresenter = (selectionContext: () => CanvasRenderingContext2D,
       }
     }
 
-    private drawRect(selection: ISelection): void {
+    private drawRect(selection: ISelectionPresentationData): void {
       const { startTile, endTile } = selection.gridSpan;
       const padding = 2;
       const radius = 8;

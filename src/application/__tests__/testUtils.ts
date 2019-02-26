@@ -2,15 +2,16 @@
 
 import Selection from "../../domain/Selection";
 import Tile from "../../domain/Tile";
+import GameInteractor, { IPresenters } from "../GameInteractor";
 import {
   IGridLayout,
+  ILevelData,
+  INetworkGateway,
   ISelectionPresenter,
   ISelectionPresenterConstructor,
   ITilePresenter,
   ITilePresenterConstructor,
-} from "../boundaries/input";
-import GameInteractor, { IPresenters } from "../GameInteractor";
-import INetworkGateway from "../INetworkGateway";
+} from "../interfaces";
 
 // X = selected
 // O = not selected
@@ -62,12 +63,12 @@ export const setSelectionHelper = (gameInteractor: GameInteractor) => {
 };
 
 export const setSelectionAndEvaluateHelper = (gameInteractor: GameInteractor) => {
-  return (...args: Array<[number, number, number, number]>) => {
+  return (...args: Array<[number, number, number, number]>): ILevelData => {
     const setSelection = setSelectionHelper(gameInteractor);
     let state: any;
     args.forEach(arg => {
       setSelection(...arg);
-      state = gameInteractor.evaluateSelection();
+      state = gameInteractor.processSelection();
     });
     return state;
   };

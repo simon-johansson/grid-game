@@ -1,128 +1,92 @@
-import Grid from "../domain/Grid";
-import GridPoint from "../domain/GridPoint";
 import Level from "../domain/Level";
-import Selection from "../domain/Selection";
-import Tile from "../domain/Tile";
+import { InteractorUtils } from "./InteractorUtils";
 import {
   IGameLevel,
-  IGameRules,
+  IGridLayout,
+  ILevelData,
+  INetworkGateway,
   ISelectionPresenterConstructor,
   ITilePresenterConstructor,
   TileType,
-} from "./boundaries/input";
-import INetworkGateway from "./INetworkGateway";
+} from "./interfaces";
+import LevelManager from "./LevelManager";
 
 export interface IPresenters {
   selection: ISelectionPresenterConstructor;
-  tile: ITilePresenterConstructor,
+  tile: ITilePresenterConstructor;
 }
 
-export default class GameInteractor {
+/**
+ * Class containing the use cases for the application
+ */
+export default class GameInteractor extends InteractorUtils {
+  private levelManager: LevelManager;
   private level: Level;
-  private grid: Grid;
-  private selection: Selection;
-  private currentLevelIndex: number = 0;
-  private levels: IGameLevel[];
 
-  constructor(private network: INetworkGateway) {
+  constructor(network: INetworkGateway) {
+    super(network);
     // TODO: Load progress from localStorage
-
-    // TODO: Gör snyggare
-    (window as any).exportLevel = () => console.log(JSON.stringify(this.level.minified));
   }
 
-  // TODO: Cache i service-worker.js så att det funkar offline
   public async loadLevels() {
     try {
-      this.levels = await this.network.getLevels();
+      const levels = await this.network.getLevels();
+      this.levelManager = new LevelManager(levels, 0);
     } catch (error) {
       console.error(error);
     }
   }
 
-  public startCurrentLevel(presenters: IPresenters): Level {
-    return this.startLevel(presenters);
+  public startCurrentLevel(presenters: IPresenters): ILevelData {
+    this.level = this.levelManager.getCurrentLevel;
+    this.startLevel(presenters, this.level);
+    return this.level;
   }
 
-  public startNextLevel(presenters: IPresenters): Level {
-    ++this.currentLevelIndex;
-    return this.startLevel(presenters);
+  public startNextLevel(presenters: IPresenters): ILevelData {
+    this.level = this.levelManager.getNextLevel;
+    this.startLevel(presenters, this.level);
+    return this.level;
   }
 
-  public startPrevLevel(presenters: IPresenters): Level {
-    --this.currentLevelIndex;
-    return this.startLevel(presenters);
+  public startPrevLevel(presenters: IPresenters): ILevelData {
+    this.level = this.levelManager.getPreviousLevel;
+    this.startLevel(presenters, this.level);
+    return this.level;
   }
 
-  public startCustomLevel(presenters: IPresenters, level: IGameLevel): Level {
-    return this.startLevel(presenters, level);
+  public startCustomLevel(presenters: IPresenters, level: IGameLevel): ILevelData {
+    this.level = LevelManager.newLevel(level);
+    this.startLevel(presenters, this.level);
+    return this.level;
   }
 
-  // TODO: Fult att skicka in tileState här...
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setStartPoint(gridOffsetX, gridOffsetY);
-    this.supplySelectionToGrid(tileState);
+    this.applySelectionToGrid(tileState);
   }
 
-  // TODO: Fult att skicka in tileState här...
   public setSelectionEnd(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setEndPoint(gridOffsetX, gridOffsetY);
-    this.supplySelectionToGrid(tileState);
+    this.applySelectionToGrid(tileState);
   }
 
-  // TODO: Fult att skicka in edit flagga här...
-  public evaluateSelection(isEditingGrid: boolean = false): Level {
-    this.level.onSelectionMade(this.grid.evaluateSelection(isEditingGrid));
+  public processSelection(): ILevelData {
+    if (this.grid.isSelectionValid) {
+      this.grid.clearSelectedTiles();
+      this.level.onValidSelection();
+      this.level.isCleared = this.grid.isGridCleared;
+    }
+    this.removeSelection();
+    return this.level;
+  }
+
+  public removeSelection(): void {
+    this.grid.deselectTiles();
     this.selection.clear();
-    return this.level;
   }
 
-  // TODO: Inte snyggt, borde skötas via en customLevel metod
-  public setLevelRules(rules: IGameRules): Level {
-    this.level.minified.rules = rules;
-    return this.level;
-  }
-
-  // TODO: Inte snyggt, borde skötas via en customLevel metod
-  public setLevelMoves(moves: number): Level {
-    this.level.minified.moves = moves;
-    return this.level;
-  }
-
-  private startLevel(presenters: IPresenters, level?: IGameLevel): Level {
-    const index = this.currentLevelIndex;
-    this.level = new Level(level || this.levels[index], index);
-    this.createGrid(presenters.tile);
-    this.createSelection(presenters.selection);
-    return this.level;
-  }
-
-  private createGrid(presenter: ITilePresenterConstructor): void {
-    const tiles = this.createTiles(presenter);
-    this.grid = new Grid(tiles, this.level.rules);
-  }
-
-  private createSelection(presenter: ISelectionPresenterConstructor): void {
-    this.selection = new Selection(
-      this.level.grid.numberOfRows,
-      this.level.grid.numberOfCols,
-      new presenter(),
-    );
-  }
-
-  private createTiles(presenter: ITilePresenterConstructor): Tile[] {
-    const tiles: Tile[] = [];
-    this.level.grid.layout.forEach((row, rowIndex) => {
-      row.forEach((tileState, colIndex) => {
-        tiles.push(new Tile(tileState, new GridPoint(rowIndex, colIndex), this.level.rules, new presenter()));
-      });
-    });
-    return tiles;
-  }
-
-  private supplySelectionToGrid(tileState?: TileType): void {
-    this.grid.applySelection(this.selection.gridSpan, tileState);
-    // If in edit mode = always true
-    this.selection.isValid = tileState ? true : this.grid.isSelectionValid;
+  public getGridLayout(): IGridLayout {
+    return LevelManager.getMinifiedLayout(this.grid.tiles);
   }
 }

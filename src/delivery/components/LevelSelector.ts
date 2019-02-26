@@ -10,6 +10,7 @@ const currentLevelClass = "current-level";
 export interface IProps {
   currentLevel: number;
   isLastLevel: boolean;
+  isFirstLevel: boolean;
   isEditing: boolean;
   isReviewing: boolean;
 }
@@ -22,7 +23,7 @@ export default class LevelSelector extends Component<IProps> {
     private onNextLevel: () => void,
     private onRestart: () => void,
     private onReviewLevel: () => void,
-    private onEditLevel: () => void
+    private onEditLevel: () => void,
   ) {
     super();
   }
@@ -65,10 +66,10 @@ export default class LevelSelector extends Component<IProps> {
     this.bindEvent(editBtnClass, this.onEditLevel);
   }
 
-  protected update({ currentLevel, isLastLevel, isEditing, isReviewing }: IProps) {
+  protected update({ currentLevel, isFirstLevel, isLastLevel, isEditing, isReviewing }: IProps) {
     if (isEditing) this.updateEditingView();
     else if (isReviewing) this.updateReviewingView();
-    else this.updatePlayingView(currentLevel, isLastLevel);
+    else this.updatePlayingView(currentLevel, isFirstLevel, isLastLevel);
   }
 
   private updateEditingView(): void {
@@ -77,8 +78,7 @@ export default class LevelSelector extends Component<IProps> {
   private updateReviewingView(): void {
     this.getEl(currentLevelClass).textContent = "Review level";
   }
-  private updatePlayingView(currentLevel: number, isLastLevel: boolean): void {
-    const isFirstLevel = currentLevel === 0;
+  private updatePlayingView(currentLevel: number, isFirstLevel: boolean, isLastLevel: boolean): void {
     this.getEl(currentLevelClass).textContent = `Level ${currentLevel + 1}`;
     this.getEl(prevBtnClass).className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
     this.getEl(nextBtnClass).className = `${nextBtnClass} ${isLastLevel && "disable"}`;

@@ -1,6 +1,5 @@
-import { IGameLevel } from "../application/boundaries/input";
-import { ILevel } from "../application/boundaries/output";
 import GameInteractor from "../application/GameInteractor";
+import { IGameLevel, ILevelData } from "../application/interfaces";
 import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";
@@ -38,6 +37,7 @@ export default class UserInterface {
         interactor,
         this.getQueryStringLevel(),
         this.onEditStateUpdate.bind(this),
+        this.onEditMade.bind(this),
       );
     } else {
       this.MovesCounterComponent = new MovesCounter();
@@ -58,17 +58,19 @@ export default class UserInterface {
     };
   }
 
-  private onEditStateUpdate(level: ILevel) {
+  private onEditStateUpdate(level: ILevelData) {
     this.updateComponents(level);
-
-    // TODO: skicka in en hel IGameLevel här istället
-    this.queryString.layout = level.minified.layout;
-    this.queryString.minSelection = level.minified.rules.minSelection;
-    this.queryString.toggleOnOverlap = level.minified.rules.toggleOnOverlap;
-    this.queryString.moves = level.minified.moves;
   }
 
-  private onPlayStateUpdate(level: ILevel) {
+  private onEditMade(level: IGameLevel) {
+    // TODO: skicka in en hel IGameLevel här istället
+    this.queryString.layout = level.layout;
+    this.queryString.minSelection = level.rules.minSelection;
+    this.queryString.toggleOnOverlap = level.rules.toggleOnOverlap;
+    this.queryString.moves = level.moves;
+  }
+
+  private onPlayStateUpdate(level: ILevelData) {
     const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
     this.updateComponents(level);
 
@@ -117,25 +119,26 @@ export default class UserInterface {
     window.location.reload();
   }
 
-  private shouldProcedeToNextLevel({ isLastLevel, cleared }: ILevel): boolean {
-    return cleared && !isLastLevel && !this.isReviewing;
+  private shouldProcedeToNextLevel({ isCleared, isLastLevel }: ILevelData): boolean {
+    return isCleared && !isLastLevel && !this.isReviewing;
   }
 
-  private shouldRestartCurrentLevel(level: ILevel): boolean {
+  private shouldRestartCurrentLevel(level: ILevelData): boolean {
     return level.selections.left === 0;
   }
 
-  private updateComponents(level: ILevel): void {
+  private updateComponents(level: ILevelData): void {
     if (!this.isEditing) {
       this.MovesCounterComponent.render({
         selectionsLeft: level.selections.left,
-        selectionsMade: level.selections.made.valid,
-        isLevelCleared: level.cleared,
+        selectionsMade: level.selections.made,
+        isLevelCleared: level.isCleared,
       });
     }
 
     this.LevelSelectorComponent.render({
-      currentLevel: level.index,
+      currentLevel: level.name,
+      isFirstLevel: level.isFirstLevel,
       isLastLevel: level.isLastLevel,
       isEditing: this.isEditing,
       isReviewing: !!this.queryString.layout && !this.isEditing,
