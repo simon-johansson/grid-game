@@ -18,7 +18,6 @@ module.exports = {
   "collectCoverage": false,
   "coverageDirectory": "coverage/",
   "collectCoverageFrom": [
-    "<rootDir>/src/domain/**/*.{ts}",
-    "!<rootDir>/src/domain/boundaries/**/*.{ts}",
+    "<rootDir>/src/**/*.{ts}",
   ]
 }
