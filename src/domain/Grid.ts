@@ -1,6 +1,6 @@
 import { IGameRules } from "../application/interfaces";
-import { IGridSpan } from "./GridPoint";
 import Tile, { TileType } from "./Tile";
+import TileSpan from "./TileSpan";
 
 interface ISelectedTile extends Tile {
   isSelected: true;
@@ -9,11 +9,11 @@ interface ISelectedTile extends Tile {
 export default class Grid {
   constructor(public tiles: Tile[], private rules: IGameRules) {}
 
-  public applySelection(selection: IGridSpan, tileState?: TileType): void {
+  public applySelection(selection: TileSpan, tileState?: TileType): void {
     this.tiles.forEach(tile => tile.applySelection(selection, tileState));
   }
 
-  public get isSelectionValid(): boolean {
+  public get isSelectedTilesClearable(): boolean {
     return this.isEnoughTilesSelected && !this.isDisqualifyingTileSelected;
   }
 
@@ -21,8 +21,8 @@ export default class Grid {
     this.selectedTiles.forEach(tile => tile.deselect());
   }
 
-  public clearSelectedTiles(): void {
-    this.selectedTiles.forEach(tile => tile.clear());
+  public toggleClearedOnSelectedTiles(): void {
+    this.selectedTiles.forEach(tile => tile.toggleCleared());
   }
 
   public get isGridCleared(): boolean {
@@ -39,6 +39,6 @@ export default class Grid {
   }
 
   private get isDisqualifyingTileSelected(): boolean {
-    return this.selectedTiles.some(tile => tile.disqualifiesSelection);
+    return this.selectedTiles.some(tile => tile.isBlocker);
   }
 }

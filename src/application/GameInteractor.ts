@@ -62,18 +62,18 @@ export default class GameInteractor extends InteractorUtils {
   }
 
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
-    this.selection.setStartPoint(gridOffsetX, gridOffsetY);
+    this.selection.setStartPoint({ x: gridOffsetX, y: gridOffsetY });
     this.applySelectionToGrid(tileState);
   }
 
   public setSelectionEnd(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
-    this.selection.setEndPoint(gridOffsetX, gridOffsetY);
+    this.selection.setEndPoint({ x: gridOffsetX, y: gridOffsetY });
     this.applySelectionToGrid(tileState);
   }
 
   public processSelection(): ILevelData {
-    if (this.grid.isSelectionValid) {
-      this.grid.clearSelectedTiles();
+    if (this.grid.isSelectedTilesClearable) {
+      this.grid.toggleClearedOnSelectedTiles();
       this.level.onValidSelection();
       this.level.isCleared = this.grid.isGridCleared;
     }
@@ -83,7 +83,7 @@ export default class GameInteractor extends InteractorUtils {
 
   public removeSelection(): void {
     this.grid.deselectTiles();
-    this.selection.clear();
+    this.selection.remove();
   }
 
   public getGridLayout(): IGridLayout {

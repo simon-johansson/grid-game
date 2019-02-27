@@ -1,6 +1,6 @@
-import { IGameLevel } from "../boundaries/input";
-import { ITile } from "../boundaries/output";
+import { ITilePresentationData } from "../../domain/Tile";
 import GameInteractor, { IPresenters } from "../GameInteractor";
+import { IGameLevel } from "../interfaces";
 import {
   blockerLayout,
   defaultLayout,
@@ -22,7 +22,7 @@ const level: IGameLevel = {
 const tileStateLayout: ITileStateLayout = [[], [], [], [], []];
 const presenters: IPresenters = {
   selection: getSelectionPresenter(),
-  tile: getTilePresenter((tile: ITile) => {
+  tile: getTilePresenter((tile: ITilePresentationData) => {
     const { rowIndex, colIndex } = tile.position;
     if (tile.isBlocker) {
       tileStateLayout[rowIndex][colIndex] = "■";
@@ -86,7 +86,7 @@ describe("evaluate selection", () => {
     });
 
     test("can unclear already cleared tiles if toggleOnOverlap is true", () => {
-      setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 80, 80]);
+      setSelectionAndEvaluate([0, 0, 100, 100], [0, 0, 70, 70]);
       expect(tileStateLayout).toEqual([
         ["□", "□", "□", "□", "✔"],
         ["□", "□", "□", "□", "✔"],

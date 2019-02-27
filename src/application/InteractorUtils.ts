@@ -1,12 +1,12 @@
 import Grid from "../domain/Grid";
-import GridPoint from "../domain/GridPoint";
 import Level from "../domain/Level";
+import Rules from "../domain/Rules";
 import Selection from "../domain/Selection";
 import Tile from "../domain/Tile";
+import TilePosition from "../domain/TilePosition";
 import { IPresenters } from "./GameInteractor";
 import {
   IGameLevel,
-  IGameRules,
   INetworkGateway,
   ISelectionPresenterConstructor,
   ITilePresenterConstructor,
@@ -30,7 +30,7 @@ export abstract class InteractorUtils {
     this.selection = this.createSelection(presenters.selection, level.grid.numberOfRows, level.grid.numberOfCols);
   }
 
-  protected createGrid(tiles: Tile[], rules: IGameRules): Grid {
+  protected createGrid(tiles: Tile[], rules: Rules): Grid {
     return new Grid(tiles, rules);
   }
 
@@ -38,18 +38,18 @@ export abstract class InteractorUtils {
     return new Selection(rows, cols, new presenter());
   }
 
-  protected createTiles(presenter: ITilePresenterConstructor, layout: ITypedGridLayout, rules: IGameRules): Tile[] {
+  protected createTiles(presenter: ITilePresenterConstructor, layout: ITypedGridLayout, rules: Rules): Tile[] {
     const tiles: Tile[] = [];
     layout.forEach((row, rowIndex) => {
       row.forEach((tileState, colIndex) => {
-        tiles.push(new Tile(tileState, new GridPoint(rowIndex, colIndex), rules, new presenter()));
+        tiles.push(new Tile(tileState, new TilePosition(rowIndex, colIndex), rules, new presenter()));
       });
     });
     return tiles;
   }
 
   protected applySelectionToGrid(tileState?: TileType): void {
-    this.grid.applySelection(this.selection.gridSpan, tileState);
-    if (!tileState) this.selection.isValid = this.grid.isSelectionValid;
+    this.grid.applySelection(this.selection.tileSpan, tileState);
+    if (!tileState) this.selection.isValid = this.grid.isSelectedTilesClearable;
   }
 }
