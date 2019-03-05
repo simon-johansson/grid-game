@@ -1,4 +1,4 @@
-import { getTilePresenter } from "../../application/__tests__/testUtils";
+import { getTilePresenter } from "../../shared/__tests__/testUtils";
 import Rules from "../Rules";
 import Tile, { ITilePresentationData, TileType } from "../Tile";
 import TilePosition from "../TilePosition";

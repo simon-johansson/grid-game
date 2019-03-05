@@ -11,6 +11,7 @@ describe("component/LevelSelector", () => {
   test("displays correct level number when playing", () => {
     ls.render({
       currentLevel: 3,
+      isFirstLevel: false,
       isLastLevel: false,
       isEditing: false,
       isReviewing: false
@@ -22,6 +23,7 @@ describe("component/LevelSelector", () => {
   test("displays correct text if in edit mode", () => {
     ls.render({
       currentLevel: 0,
+      isFirstLevel: false,
       isLastLevel: false,
       isEditing: true,
       isReviewing: false
@@ -33,6 +35,7 @@ describe("component/LevelSelector", () => {
   test("displays correct text if reviewing custom level", () => {
     ls.render({
       currentLevel: 0,
+      isFirstLevel: false,
       isLastLevel: false,
       isEditing: false,
       isReviewing: true

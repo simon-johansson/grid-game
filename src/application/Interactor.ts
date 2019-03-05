@@ -1,5 +1,9 @@
-import Level from "../domain/Level";
-import { InteractorUtils } from "./InteractorUtils";
+import Grid from "../domain/Grid";
+import Level, { ITypedGridLayout } from "../domain/Level";
+import Rules from "../domain/Rules";
+import Selection from "../domain/Selection";
+import Tile from "../domain/Tile";
+import TilePosition from "../domain/TilePosition";
 import {
   IGameLevel,
   IGridLayout,
@@ -16,17 +20,26 @@ export interface IPresenters {
   tile: ITilePresenterConstructor;
 }
 
+const createTiles = (presenter: ITilePresenterConstructor, layout: ITypedGridLayout, rules: Rules): Tile[] => {
+  const tiles: Tile[] = [];
+  layout.forEach((row, rowIndex) => {
+    row.forEach((tileState, colIndex) => {
+      tiles.push(new Tile(tileState, new TilePosition(rowIndex, colIndex), rules, new presenter()));
+    });
+  });
+  return tiles;
+};
+
 /**
  * Class containing the use cases for the application
  */
-export default class GameInteractor extends InteractorUtils {
+export default class Interactor {
   private levelManager: LevelManager;
   private level: Level;
+  private grid: Grid;
+  private selection: Selection;
 
-  constructor(network: INetworkGateway) {
-    super(network);
-    // TODO: Load progress from localStorage
-  }
+  constructor(private network: INetworkGateway) {}
 
   public async loadLevels() {
     try {
@@ -88,5 +101,16 @@ export default class GameInteractor extends InteractorUtils {
 
   public getGridLayout(): IGridLayout {
     return LevelManager.getMinifiedLayout(this.grid.tiles);
+  }
+
+  private startLevel(presenters: IPresenters, { grid, rules }: Level): void {
+    const tiles = createTiles(presenters.tile, grid.layout, rules);
+    this.grid = new Grid(tiles, rules);
+    this.selection = new Selection(grid.numberOfRows, grid.numberOfCols, new presenters.selection());
+  }
+
+  private applySelectionToGrid(tileState?: TileType): void {
+    this.grid.applySelection(this.selection.tileSpan, tileState);
+    if (!tileState) this.selection.isValid = this.grid.isSelectedTilesClearable;
   }
 }

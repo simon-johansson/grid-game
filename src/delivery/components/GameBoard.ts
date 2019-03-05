@@ -1,4 +1,4 @@
-import GameInteractor, { IPresenters } from "../../application/GameInteractor";
+import Interactor, { IPresenters } from "../../application/Interactor";
 import { IGameLevel, ILevelData } from "../../application/interfaces";
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
@@ -14,7 +14,7 @@ export default abstract class GameBoard extends Component<{}> {
   protected isSelecting: boolean = false;
 
   constructor(
-    protected interactor: GameInteractor,
+    protected interactor: Interactor,
     private customLevel: IGameLevel,
     protected onGameStateUpdate: (state: ILevelData) => void,
   ) {

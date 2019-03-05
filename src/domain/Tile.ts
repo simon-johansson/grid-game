@@ -21,7 +21,7 @@ export enum TileType {
 }
 
 export default class Tile {
-  private selected: boolean;
+  private selected: boolean = false;
 
   constructor(
     public tileType: TileType,

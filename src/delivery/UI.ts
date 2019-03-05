@@ -1,4 +1,4 @@
-import GameInteractor from "../application/GameInteractor";
+import Interactor from "../application/Interactor";
 import { IGameLevel, ILevelData } from "../application/interfaces";
 import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
@@ -17,13 +17,13 @@ export default class UserInterface {
   private MovesCounterComponent: MovesCounter;
   private queryString = new QueryStringHandler();
 
-  constructor(interactor: GameInteractor) {
+  constructor(interactor: Interactor) {
     this.isEditing = this.queryString.edit;
     this.isReviewing = !!this.queryString.layout && !this.isEditing;
     this.createComponents(interactor);
   }
 
-  private createComponents(interactor: GameInteractor) {
+  private createComponents(interactor: Interactor) {
     this.LevelSelectorComponent = new LevelSelector(
       this.prevLevel.bind(this),
       this.nextLevel.bind(this),

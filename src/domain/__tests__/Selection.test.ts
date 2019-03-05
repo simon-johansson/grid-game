@@ -1,16 +1,13 @@
-import { getSelectionPresenter, getTilePresenter } from "../../application/__tests__/testUtils";
+import { getSelectionPresenter, getTilePresenter } from "../../shared/__tests__/testUtils";
 import Selection, { ISelectionPresentationData } from "../Selection";
 
 describe("Selection", () => {
   let timesRendered: number = 0;
   const rows = 5;
   const cols = 5;
-  const presenter = getSelectionPresenter(
-    (selectionData: ISelectionPresentationData) => {
-      timesRendered++;
-    },
-    () => {},
-  );
+  const presenter = getSelectionPresenter((selectionData: ISelectionPresentationData) => {
+    timesRendered++;
+  });
   let selection: Selection;
 
   describe("set size", () => {
