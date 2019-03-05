@@ -1,9 +1,9 @@
-import GameInteractor from "../../application/GameInteractor";
+import Interactor from "../../application/Interactor";
 import { IGameLevel, ILevelData } from "../../application/interfaces";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardPlayable extends GameBoard {
-  constructor(interactor: GameInteractor, queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevelData) => void) {
+  constructor(interactor: Interactor, queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevelData) => void) {
     super(interactor, queryStringLevel, onGameStateUpdate);
   }
 

@@ -3,7 +3,6 @@ import Rules from "../domain/Rules";
 import Tile from "../domain/Tile";
 import { IGameLevel, IGridLayout, ITileRawState, ITypedGridLayout, TileType } from "./interfaces";
 
-// TODO: Använd denna fallback
 function assertNever(state: never): never {
   throw new Error("Unkown minified tile state supplied: " + state);
 }
@@ -58,7 +57,7 @@ export default class LevelManager {
     return layout as IGridLayout;
   }
 
-  constructor(private levels: IGameLevel[], private currentLevelIndex: number) {
+  constructor(private levels: IGameLevel[], private currentLevelIndex: number = 0) {
     if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
       throw new Error("Supplied level index is out of bounds");
     }

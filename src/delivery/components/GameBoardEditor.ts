@@ -1,4 +1,4 @@
-import GameInteractor from "../../application/GameInteractor";
+import Interactor from "../../application/Interactor";
 import { IGameLevel, ILevelData, TileType } from "../../application/interfaces";
 import EditorOptions, { ISelectedOptions } from "./EditorOptions";
 import GameBoard from "./GameBoard";
@@ -8,7 +8,7 @@ export default class GameBoardEditor extends GameBoard {
   private selectedOptions: ISelectedOptions;
 
   constructor(
-    interactor: GameInteractor,
+    interactor: Interactor,
     queryStringLevel: IGameLevel,
     onGameStateUpdate: (state: ILevelData) => void,
     private onEdit: (state: IGameLevel) => void,

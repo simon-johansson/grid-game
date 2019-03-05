@@ -56,7 +56,7 @@ The following commands can be used to run tests.
 ```bash
 $ npm run test # will run all tests once
 $ npm run test-watch # will run all tests and keep doing so on each file change
-$ npm run test-converage # will run all tests once and collect a coverage report
+$ npm run test-coverage # will run all tests once and collect a coverage report
 ```
 
 ## GIT Flow

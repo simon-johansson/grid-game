@@ -25,7 +25,7 @@ const getSelectionPresenter = (selectionContext: () => CanvasRenderingContext2D,
       this.ctx.restore();
     }
 
-    public clear() {
+    private clear() {
       if (this.prevRect) {
         const { x, y, width, height } = this.prevRect;
         this.ctx.clearRect(x - 10, y - 10, width + 20, height + 20);
@@ -49,26 +49,28 @@ const getSelectionPresenter = (selectionContext: () => CanvasRenderingContext2D,
     }
 
     private drawRect(selection: ISelectionPresentationData): void {
-      const { startTile, endTile } = selection.gridSpan;
-      const padding = 2;
-      const radius = 8;
+      if (selection.tileSpan !== undefined) {
+        const { startTile, endTile } = selection.tileSpan;
+        const padding = 2;
+        const radius = 8;
 
-      const startXPx = startTile.colIndex * this.tileSize + padding;
-      const startYPx = startTile.rowIndex * this.tileSize + padding;
-      const width = endTile.colIndex * this.tileSize - startXPx + this.tileSize - padding;
-      const height = endTile.rowIndex * this.tileSize - startYPx + this.tileSize - padding;
+        const startXPx = startTile.colIndex * this.tileSize + padding;
+        const startYPx = startTile.rowIndex * this.tileSize + padding;
+        const width = endTile.colIndex * this.tileSize - startXPx + this.tileSize - padding;
+        const height = endTile.rowIndex * this.tileSize - startYPx + this.tileSize - padding;
 
-      this.prevRect = {
-        x: startXPx,
-        y: startYPx,
-        width,
-        height
-      };
+        this.prevRect = {
+          x: startXPx,
+          y: startYPx,
+          width,
+          height,
+        };
 
-      roundRect(this.ctx, startXPx, startYPx, width, height, radius);
+        roundRect(this.ctx, startXPx, startYPx, width, height, radius);
 
-      this.ctx.fill();
-      this.ctx.stroke();
+        this.ctx.fill();
+        this.ctx.stroke();
+      }
     }
   };
 

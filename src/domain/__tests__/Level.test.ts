@@ -1,10 +1,8 @@
 import { TileType } from "../../application/interfaces";
-import Level, { ITypedGridLayout } from "../Level";
+import { get5x5TypedLayout } from "../../shared/__tests__/testUtils";
+import Level from "../Level";
 import Rules from "../Rules";
 
-const defaultLayout = Array.from({ length: 5 }, () => {
-  return Array.from({ length: 5 }, () => TileType.Regular);
-}) as ITypedGridLayout;
 const defaultMoves = 3;
 const defaultRules: Rules = new Rules({
   toggleOnOverlap: true,
@@ -15,11 +13,11 @@ describe("Level", () => {
   let level: Level;
 
   beforeEach(() => {
-    level = new Level(defaultLayout, defaultMoves, defaultRules);
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules);
   })
 
   test(".grid", () => {
-    expect(level.grid.layout).toEqual(defaultLayout);
+    expect(level.grid.layout).toEqual(get5x5TypedLayout(TileType.Regular));
     expect(level.grid.numberOfCols).toEqual(5);
     expect(level.grid.numberOfRows).toEqual(5);
   });
