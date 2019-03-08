@@ -2,6 +2,7 @@
 
 import Interactor, { IPresenters } from "../../application/Interactor";
 import {
+  IAnalytics,
   IGameLevel,
   IGridLayout,
   ILevelData,
@@ -12,6 +13,7 @@ import {
   ITilePresenterConstructor,
   ITypedGridLayout,
 } from "../../application/interfaces";
+import Level from "../../domain/Level";
 import Rules from "../../domain/Rules";
 import { ISelectionPresentationData } from "../../domain/Selection";
 import Tile, { TileType } from "../../domain/Tile";
@@ -100,6 +102,12 @@ export const processedLayout = (state: ITileState | ITileSelection) => {
 
 export const getNetworkGatewayMock = (data: IGameLevel[] = []): INetworkGateway => ({
   getLevels: () => Promise.resolve(data),
+});
+
+export const getAnalyticsMock = (): IAnalytics => ({
+  startLevel: (level: Level) => {},
+  onSelection: (level: Level) => {},
+  onError: (error: any) => {},
 });
 
 export const presenters: IPresenters = {
