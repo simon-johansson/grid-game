@@ -34,6 +34,7 @@
     "browser-sync": "^2.24.7",
     "browserify": "^16.2.3",
     "copyfiles": "^2.1.0",
+    "gameanalytics": "file:./local_modules/gameanalytics",
     "jest": "^23.6.0",
     "node-sass": "^4.9.3",
     "npm-run-all": "^4.1.3",
