@@ -187,12 +187,12 @@ export default abstract class GameBoard extends Component<{}> {
     addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
     addCanvasListener("mousemove", this.onSelectionMove, this.onMouseSelection);
     addCanvasListener("mouseup", this.onSelectionEnd);
-    document.addEventListener("mouseup", this.onSelectionEnd, false);
+    document.addEventListener("mouseup", this.onSelectionEnd.bind(this), false);
 
     addCanvasListener("touchstart", this.onSelectionStart, this.onTouchSelection);
     addCanvasListener("touchmove", this.onSelectionMove, this.onTouchSelection);
     addCanvasListener("touchend", this.onSelectionEnd);
-    document.addEventListener("touchend", this.onSelectionEnd, false);
+    document.addEventListener("touchend", this.onSelectionEnd.bind(this), false);
   }
 
   private onMouseSelection = (method: (x: number, y: number) => void, e: MouseEvent): void => {
