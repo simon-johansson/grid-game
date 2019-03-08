@@ -19,8 +19,8 @@ export default class AnalyticsIml implements IAnalytics {
     }
     // In development
     else {
-      gameanalytics.GameAnalytics.setEnabledInfoLog(true);
-      gameanalytics.GameAnalytics.setEnabledVerboseLog(true);
+      // gameanalytics.GameAnalytics.setEnabledInfoLog(true);
+      // gameanalytics.GameAnalytics.setEnabledVerboseLog(true);
       gameanalytics.GameAnalytics.initialize(GA_DEV_KEY, GA_DEV_SECRET);
     }
   }
