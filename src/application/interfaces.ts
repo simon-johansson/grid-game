@@ -1,3 +1,4 @@
+import Level from "../domain/Level";
 import { IGameRules } from "../domain/Rules";
 import { ISelectionPresenter } from "../domain/Selection";
 import { ITilePresenter } from "../domain/Tile";
@@ -39,4 +40,10 @@ export interface ILevelData {
 
 export interface INetworkGateway {
   getLevels: () => Promise<IGameLevel[]>
+}
+
+export interface IAnalytics {
+  startLevel: (level: Level) => void;
+  onSelection: (level: Level) => void;
+  onError: (error: any) => void;
 }

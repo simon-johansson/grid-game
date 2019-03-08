@@ -1,5 +1,6 @@
 import Rules from "../../../domain/Rules";
 import {
+  getAnalyticsMock,
   getNetworkGatewayMock,
   getSelectionPresenter,
   getTilePresenter,
@@ -20,7 +21,7 @@ const presenters: IPresenters = {
   }),
   tile: getTilePresenter(() => {}, tileStateLayout, tileSelectionLayout),
 };
-const interactor = new Interactor(getNetworkGatewayMock());
+const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock());
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 const setSelection = setSelectionHelper(interactor);
 

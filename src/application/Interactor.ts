@@ -5,6 +5,7 @@ import Selection from "../domain/Selection";
 import Tile from "../domain/Tile";
 import TilePosition from "../domain/TilePosition";
 import {
+  IAnalytics,
   IGameLevel,
   IGridLayout,
   ILevelData,
@@ -39,7 +40,7 @@ export default class Interactor {
   private grid: Grid;
   private selection: Selection;
 
-  constructor(private network: INetworkGateway) {}
+  constructor(private network: INetworkGateway, private analytics: IAnalytics) {}
 
   public async loadLevels() {
     try {
@@ -47,6 +48,7 @@ export default class Interactor {
       this.levelManager = new LevelManager(levels, 0);
     } catch (error) {
       console.error(error);
+      this.analytics.onError(error);
     }
   }
 
@@ -91,6 +93,7 @@ export default class Interactor {
       this.level.isCleared = this.grid.isGridCleared;
     }
     this.removeSelection();
+    this.analytics.onSelection(this.level);
     return this.level;
   }
 
@@ -103,10 +106,12 @@ export default class Interactor {
     return LevelManager.getMinifiedLayout(this.grid.tiles);
   }
 
-  private startLevel(presenters: IPresenters, { grid, rules }: Level): void {
+  private startLevel(presenters: IPresenters, level: Level): void {
+    const { grid, rules } = level;
     const tiles = createTiles(presenters.tile, grid.layout, rules);
     this.grid = new Grid(tiles, rules);
     this.selection = new Selection(grid.numberOfRows, grid.numberOfCols, new presenters.selection());
+    this.analytics.startLevel(level);
   }
 
   private applySelectionToGrid(tileState?: TileType): void {

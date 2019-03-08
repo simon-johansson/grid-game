@@ -1,5 +1,6 @@
 import Rules from "../../../domain/Rules";
 import {
+  getAnalyticsMock,
   getNetworkGatewayMock,
   getSelectionPresenter,
   getTilePresenter,
@@ -28,7 +29,7 @@ const levels: IGameLevel[] = [
     rules: new Rules(),
   },
 ];
-const interactor = new Interactor(getNetworkGatewayMock(levels));
+const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock());
 interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
