@@ -112,14 +112,14 @@ export const getAnalyticsMock = (): IAnalytics => ({
   onError: (error: any) => {},
 });
 
-export const getStorageMock = (): IStorage => ({
+export const getStorageMock = (data: string[] = []): IStorage => ({
   setCurrentLevel: (level: Level) => {},
   getCurrentLevel: () => Promise.resolve(0),
   onLevelComplete: (level: Level): Promise<string[]> => {
-    return Promise.resolve([]);
+    return Promise.resolve(data);
   },
   getCompletedLevels: (): Promise<string[]> => {
-    return Promise.resolve([]);
+    return Promise.resolve(data);
   },
   onFail: (level: Level) => {},
 });

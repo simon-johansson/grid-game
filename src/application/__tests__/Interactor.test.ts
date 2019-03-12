@@ -42,9 +42,10 @@ presenters = {
 describe("Interactor", () => {
   let interactor: Interactor;
 
-  beforeEach(() => {
+  beforeEach(async done => {
     interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
-    interactor.loadLevels();
+    await interactor.loadLevels();
+    done();
   });
 
   describe("#loadLevels", () => {

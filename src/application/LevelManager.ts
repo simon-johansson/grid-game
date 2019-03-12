@@ -96,7 +96,6 @@ export default class LevelManager {
   }
 
   public onLevelComplete(completedLevels: string[]): void {
-    console.log(completedLevels);
     this.completedLevels = completedLevels;
   }
 

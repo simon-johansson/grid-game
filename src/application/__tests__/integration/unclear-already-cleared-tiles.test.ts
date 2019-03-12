@@ -31,10 +31,14 @@ const levels: IGameLevel[] = [
   },
 ];
 const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
-interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
 describe("unclear already cleared tiles", () => {
+  beforeAll(async done => {
+    await interactor.loadLevels();
+    done();
+  });
+
   test("start level", () => {
     interactor.startCurrentLevel(presenters);
   });

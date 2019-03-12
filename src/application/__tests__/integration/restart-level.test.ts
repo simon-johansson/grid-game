@@ -23,6 +23,11 @@ interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
 describe("restart level", () => {
+  beforeAll(async done => {
+    await interactor.loadLevels();
+    done();
+  });
+
   test("start level", () => {
     interactor.startCurrentLevel(presenters);
   });
