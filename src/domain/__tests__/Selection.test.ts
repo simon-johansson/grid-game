@@ -1,4 +1,4 @@
-import { getSelectionPresenter, getTilePresenter } from "../../shared/__tests__/testUtils";
+import { getSelectionPresenter, getTilePresenter } from "@shared/__tests__/testUtils";
 import Selection, { ISelectionPresentationData } from "../Selection";
 
 describe("Selection", () => {

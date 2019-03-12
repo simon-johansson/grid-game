@@ -1,11 +1,11 @@
-import Rules from "../../domain/Rules";
+import Rules from "@domain/Rules";
 import {
   blockerLayout,
   clearedLayout,
   createTiles,
   defaultLayout,
   get5x5TypedLayout,
-} from "../../shared/__tests__/testUtils";
+} from "@shared/__tests__/testUtils";
 import { IGameLevel, TileType } from "../interfaces";
 import LevelManager from "../LevelManager";
 
@@ -14,9 +14,9 @@ const levelDefaults = {
   moves: 3,
 };
 const levels: IGameLevel[] = [
-  { ...levelDefaults, layout: defaultLayout },
-  { ...levelDefaults, layout: clearedLayout },
-  { ...levelDefaults, layout: blockerLayout },
+  { ...levelDefaults, layout: defaultLayout, id: "0" },
+  { ...levelDefaults, layout: clearedLayout, id: "1" },
+  { ...levelDefaults, layout: blockerLayout, id: "2" },
 ];
 
 describe("LevelManager", () => {
@@ -90,6 +90,12 @@ describe("LevelManager", () => {
       expect(level.name).toEqual(1);
       expect(level.isFirstLevel).toEqual(false);
       expect(level.isLastLevel).toEqual(false);
+    });
+
+    test("level should be set as completed if id is present in storage", () => {
+      levelManager = new LevelManager(levels, 2, ["2"]);
+      const level = levelManager.getCurrentLevel;
+      expect(level.hasCompleted).toEqual(true);
     });
   });
 

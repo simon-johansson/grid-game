@@ -11,6 +11,7 @@ import {
   ILevelData,
   INetworkGateway,
   ISelectionPresenterConstructor,
+  IStorage,
   ITilePresenterConstructor,
   TileType,
 } from "./interfaces";
@@ -40,12 +41,14 @@ export default class Interactor {
   private grid: Grid;
   private selection: Selection;
 
-  constructor(private network: INetworkGateway, private analytics: IAnalytics) {}
+  constructor(private network: INetworkGateway, private analytics: IAnalytics, private storage: IStorage) {}
 
   public async loadLevels() {
     try {
       const levels = await this.network.getLevels();
-      this.levelManager = new LevelManager(levels, 0);
+      const currentLevel = await this.storage.getCurrentLevel();
+      const completedLevels = await this.storage.getCompletedLevels();
+      this.levelManager = new LevelManager(levels, currentLevel, completedLevels);
     } catch (error) {
       console.error(error);
       this.analytics.onError(error);
@@ -54,25 +57,25 @@ export default class Interactor {
 
   public startCurrentLevel(presenters: IPresenters): ILevelData {
     this.level = this.levelManager.getCurrentLevel;
-    this.startLevel(presenters, this.level);
+    this.startLevel(presenters);
     return this.level;
   }
 
   public startNextLevel(presenters: IPresenters): ILevelData {
     this.level = this.levelManager.getNextLevel;
-    this.startLevel(presenters, this.level);
+    this.startLevel(presenters);
     return this.level;
   }
 
   public startPrevLevel(presenters: IPresenters): ILevelData {
     this.level = this.levelManager.getPreviousLevel;
-    this.startLevel(presenters, this.level);
+    this.startLevel(presenters);
     return this.level;
   }
 
   public startCustomLevel(presenters: IPresenters, level: IGameLevel): ILevelData {
     this.level = LevelManager.newLevel(level);
-    this.startLevel(presenters, this.level);
+    this.startLevel(presenters);
     return this.level;
   }
 
@@ -87,13 +90,9 @@ export default class Interactor {
   }
 
   public processSelection(): ILevelData {
-    if (this.grid.isSelectedTilesClearable) {
-      this.grid.toggleClearedOnSelectedTiles();
-      this.level.onValidSelection();
-      this.level.isCleared = this.grid.isGridCleared;
-    }
+    if (this.grid.isSelectedTilesClearable) this.clearTiles();
+    if (this.hasLevelEnded) this.onLevelEnded();
     this.removeSelection();
-    this.analytics.onSelection(this.level);
     return this.level;
   }
 
@@ -106,16 +105,41 @@ export default class Interactor {
     return LevelManager.getMinifiedLayout(this.grid.tiles);
   }
 
-  private startLevel(presenters: IPresenters, level: Level): void {
-    const { grid, rules } = level;
+  private startLevel(presenters: IPresenters): void {
+    this.createEnteties(presenters);
+    this.storage.setCurrentLevel(this.level);
+    this.analytics.startLevel(this.level);
+  }
+
+  private createEnteties(presenters: IPresenters) {
+    const { grid, rules } = this.level;
     const tiles = createTiles(presenters.tile, grid.layout, rules);
     this.grid = new Grid(tiles, rules);
     this.selection = new Selection(grid.numberOfRows, grid.numberOfCols, new presenters.selection());
-    this.analytics.startLevel(level);
   }
 
   private applySelectionToGrid(tileState?: TileType): void {
     this.grid.applySelection(this.selection.tileSpan, tileState);
     if (!tileState) this.selection.isValid = this.grid.isSelectedTilesClearable;
+  }
+
+  private clearTiles() {
+    this.grid.toggleClearedOnSelectedTiles();
+    this.level.onValidSelection();
+    this.level.isCleared = this.grid.isGridCleared;
+  }
+
+  private async onLevelEnded() {
+      if (this.level.isCleared) {
+        this.analytics.onLevelComplete(this.level);
+        const completedLevels = await this.storage.onLevelComplete(this.level);
+        this.levelManager.onLevelComplete(completedLevels);
+      } else {
+        this.analytics.onLevelFailed(this.level);
+      }
+  }
+
+  private get hasLevelEnded(): boolean {
+    return !this.level.selections.left && typeof this.level.name !== undefined;
   }
 }

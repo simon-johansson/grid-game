@@ -1,4 +1,4 @@
-import { Board5x5 } from "../shared/interfaces";
+import { Board5x5 } from "@shared/interfaces";
 import Rules from "./Rules";
 import { TileType } from "./Tile";
 
@@ -17,7 +17,6 @@ interface IGrid {
 
 export default class Level {
   public isCleared: boolean = false;
-  public id: string;
   public grid: IGrid;
   public selections: ISelections;
 
@@ -28,6 +27,8 @@ export default class Level {
     public name?: number,
     public isFirstLevel?: boolean,
     public isLastLevel?: boolean,
+    public id?: string,
+    public hasCompleted?: boolean
   ) {
     this.grid = {
       layout,

@@ -2,13 +2,14 @@ import {
   getAnalyticsMock,
   getNetworkGatewayMock,
   getSelectionPresenter,
+  getStorageMock,
   getTilePresenter,
   ITileSelectionLayout,
   ITileStateLayout,
   processedLayout,
   setSelectionAndProcessHelper,
   setSelectionHelper,
-} from "../../../shared/__tests__/testUtils";
+} from "@shared/__tests__/testUtils";
 import Interactor, { IPresenters } from "../../Interactor";
 import { ISelectionPresentationData } from "../../interfaces";
 
@@ -21,7 +22,7 @@ const presenters: IPresenters = {
   }),
   tile: getTilePresenter(() => {}, tileStateLayout, tileSelectionLayout),
 };
-const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock());
+const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock(), getStorageMock());
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 const setSelection = setSelectionHelper(interactor);
 

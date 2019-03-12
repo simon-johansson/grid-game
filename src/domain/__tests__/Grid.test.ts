@@ -1,4 +1,4 @@
-import { createTiles, get5x5TypedLayout } from "../../shared/__tests__/testUtils";
+import { createTiles, get5x5TypedLayout } from "@shared/__tests__/testUtils";
 import Grid from "../Grid";
 import Rules from "../Rules";
 import Tile, { TileType } from "../Tile";

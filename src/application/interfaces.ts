@@ -1,8 +1,8 @@
+import { Board5x5 } from "@shared/interfaces";
 import Level from "../domain/Level";
 import { IGameRules } from "../domain/Rules";
 import { ISelectionPresenter } from "../domain/Selection";
 import { ITilePresenter } from "../domain/Tile";
-import { Board5x5 } from "../shared/interfaces";
 
 export { ITypedGridLayout } from "../domain/Level";
 export { IGameRules } from "../domain/Rules";
@@ -25,6 +25,7 @@ export interface IGameLevel {
   layout: IGridLayout;
   moves?: number;
   rules?: IGameRules;
+  id?: string;
 }
 
 export interface ILevelData {
@@ -44,6 +45,15 @@ export interface INetworkGateway {
 
 export interface IAnalytics {
   startLevel: (level: Level) => void;
-  onSelection: (level: Level) => void;
+  onLevelComplete: (level: Level) => void;
+  onLevelFailed: (level: Level) => void;
   onError: (error: any) => void;
+}
+
+export interface IStorage {
+  setCurrentLevel: (level: Level) => void;
+  getCurrentLevel: () => Promise<number>;
+  onLevelComplete: (level: Level) => Promise<string[]>;
+  getCompletedLevels: () => Promise<string[]>;
+  onFail: (level: Level) => void;
 }

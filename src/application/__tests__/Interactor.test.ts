@@ -1,14 +1,16 @@
-import Rules from "../../domain/Rules";
-import { ISelectionPresentationData } from "../../domain/Selection";
+import Rules from "@domain/Rules";
+import { ISelectionPresentationData } from "@domain/Selection";
 import {
   blockerLayout,
   clearedLayout,
   defaultLayout,
+  getAnalyticsMock,
   getNetworkGatewayMock,
   getSelectionPresenter,
+  getStorageMock,
   getTilePresenter,
   mixedLayout,
-} from "../../shared/__tests__/testUtils";
+} from "@shared/__tests__/testUtils";
 import Interactor, { IPresenters } from "../Interactor";
 import { IGameLevel } from "../interfaces";
 
@@ -40,21 +42,22 @@ presenters = {
 describe("Interactor", () => {
   let interactor: Interactor;
 
-  beforeEach(() => {
-    interactor = new Interactor(getNetworkGatewayMock(levels));
-    interactor.loadLevels();
+  beforeEach(async done => {
+    interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
+    await interactor.loadLevels();
+    done();
   });
 
   describe("#loadLevels", () => {
     test("throw if try to play without loading levels", () => {
-      interactor = new Interactor(getNetworkGatewayMock(levels));
+      interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
       expect(() => {
         interactor.startCurrentLevel(presenters);
       }).toThrow();
     });
 
     test("can play start levels after load", () => {
-      interactor = new Interactor(getNetworkGatewayMock(levels));
+      interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
       return interactor.loadLevels().then(() => {
         expect(() => {
           interactor.startCurrentLevel(presenters);

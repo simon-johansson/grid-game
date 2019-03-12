@@ -35,22 +35,16 @@ export default class GameBoardEditor extends GameBoard {
   }
 
   protected processSelectionEnd(): void {
-    console.log('processSelectionEnd');
-
     this.interactor.removeSelection();
     this.onEdit(this.getLevel);
   }
 
   private onNewOptionsSet = (options: ISelectedOptions) => {
-    console.log('onNewOptionsSet');
-
     this.selectedOptions = options;
     this.onEdit(this.getLevel);
   };
 
   private get getLevel(): IGameLevel {
-    console.log('getLevel');
-
     return {
       layout: this.interactor.getGridLayout(),
       moves: this.selectedOptions.moves,

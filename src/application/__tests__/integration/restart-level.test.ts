@@ -1,13 +1,14 @@
-import Rules from "../../../domain/Rules";
 import {
   defaultLayout,
   getAnalyticsMock,
   getNetworkGatewayMock,
   getSelectionPresenter,
+  getStorageMock,
   getTilePresenter,
   ITileStateLayout,
   setSelectionAndProcessHelper,
-} from "../../../shared/__tests__/testUtils";
+} from "@shared/__tests__/testUtils";
+import Rules from "../../../domain/Rules";
 import Interactor, { IPresenters } from "../../Interactor";
 import { IGameLevel } from "../../interfaces";
 
@@ -17,11 +18,16 @@ const presenters: IPresenters = {
   tile: getTilePresenter(() => {}, tileStateLayout),
 };
 const levels: IGameLevel[] = [{ layout: defaultLayout, moves: 2, rules: new Rules() }];
-const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock());
+const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
 interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
 describe("restart level", () => {
+  beforeAll(async done => {
+    await interactor.loadLevels();
+    done();
+  });
+
   test("start level", () => {
     interactor.startCurrentLevel(presenters);
   });

@@ -9,6 +9,7 @@ import {
   INetworkGateway,
   ISelectionPresenter,
   ISelectionPresenterConstructor,
+  IStorage,
   ITilePresenter,
   ITilePresenterConstructor,
   ITypedGridLayout,
@@ -106,8 +107,21 @@ export const getNetworkGatewayMock = (data: IGameLevel[] = []): INetworkGateway 
 
 export const getAnalyticsMock = (): IAnalytics => ({
   startLevel: (level: Level) => {},
-  onSelection: (level: Level) => {},
+  onLevelComplete: (level: Level) => {},
+  onLevelFailed: (level: Level) => {},
   onError: (error: any) => {},
+});
+
+export const getStorageMock = (data: string[] = []): IStorage => ({
+  setCurrentLevel: (level: Level) => {},
+  getCurrentLevel: () => Promise.resolve(0),
+  onLevelComplete: (level: Level): Promise<string[]> => {
+    return Promise.resolve(data);
+  },
+  getCompletedLevels: (): Promise<string[]> => {
+    return Promise.resolve(data);
+  },
+  onFail: (level: Level) => {},
 });
 
 export const presenters: IPresenters = {
