@@ -1,20 +1,13 @@
-import { IGameLevel, IGameRules, ITypedGridLayout } from "../application/boundaries/input";
-import { ILevel } from "../application/boundaries/output";
-import { getMinifiedLayout, getTypedLayout } from "../application/utils";
-import { IEvaluateSelection } from "./Grid";
-
-function assertNever(state: never): never {
-  throw new Error("Unkown tile state supplied: " + state);
-}
+import { Board5x5 } from "@shared/interfaces";
+import Rules from "./Rules";
+import { TileType } from "./Tile";
 
 interface ISelections {
-  availableFromStart: number;
   left: number;
-  made: {
-    valid: number;
-    invalid: number;
-  };
+  made: number;
 }
+
+export type ITypedGridLayout = Board5x5<TileType>;
 
 interface IGrid {
   layout: ITypedGridLayout;
@@ -22,66 +15,38 @@ interface IGrid {
   numberOfCols: number;
 }
 
-export default class Level implements ILevel {
-  public cleared: boolean = false;
-  public id: string;
+export default class Level {
+  public isCleared: boolean = false;
   public grid: IGrid;
-  public rules: IGameRules;
   public selections: ISelections;
-  public minified: IGameLevel;
 
-  // TODO: Gör denna dynamisk
-  public isLastLevel: boolean = false;
-
-  private defaultRules: IGameRules = {
-    toggleOnOverlap: true,
-    minSelection: 1
-  };
-
-  constructor({ layout, moves, rules }: IGameLevel, public index: number) {
+  constructor(
+    layout: ITypedGridLayout,
+    moves: number,
+    public rules: Rules,
+    public name?: number,
+    public isFirstLevel?: boolean,
+    public isLastLevel?: boolean,
+    public id?: string,
+    public hasCompleted?: boolean
+  ) {
     this.grid = {
-      layout: getTypedLayout(layout),
+      layout,
       numberOfRows: layout.length,
-      numberOfCols: layout[0].length
+      numberOfCols: layout[0].length,
     };
-
-    this.rules = this.getRules(rules);
 
     this.selections = {
-      availableFromStart: moves,
       left: moves,
-      made: {
-        valid: 0,
-        invalid: 0
-      }
-    };
-
-    this.minified = {
-      rules: this.rules,
-      moves,
-      layout
+      made: 0,
     };
   }
 
-  public onSelectionMade(selection: IEvaluateSelection) {
-    if (selection.isSelectionValid) {
-      this.selections.made.valid++;
+  public onValidSelection() {
+      this.selections.made++;
+
       if (this.selections.left) {
         this.selections.left--;
       }
-    } else {
-      this.selections.made.invalid++;
-    }
-
-    if (selection.tilesLeftToClear === 0) {
-      this.cleared = true;
-    }
-
-    // TODO: Skapa och kör detta på onEditMade istället
-    this.minified.layout = getMinifiedLayout(selection.tiles);
-  }
-
-  private getRules(rules: IGameRules): IGameRules {
-    return Object.assign(this.defaultRules, rules);
   }
 }

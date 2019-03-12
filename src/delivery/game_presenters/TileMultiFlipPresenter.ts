@@ -1,4 +1,4 @@
-import { ITile } from "../../application/boundaries/output";
+import { ITilePresentationData } from "../../application/interfaces";
 import TilePresenter from "./TilePresenter";
 
 const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: number) =>
@@ -22,7 +22,7 @@ const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       super(ctx, size)
     }
 
-    protected setStyling(tile: ITile): void {
+    protected setStyling(tile: ITilePresentationData): void {
       if (!tile.isCleared) {
         this.styleDefault(tile);
       } else {
@@ -30,7 +30,7 @@ const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    protected drawAdditionalDetails(tile: ITile): void {
+    protected drawAdditionalDetails(tile: ITilePresentationData): void {
       if (tile.clearsRequired > 1) {
         const x = tile.position.colIndex * this.size + this.size / 2;
         const y = tile.position.rowIndex * this.size + this.size / 2;
@@ -41,7 +41,7 @@ const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    private styleDefault(tile: ITile) {
+    private styleDefault(tile: ITilePresentationData) {
       this.ctx.fillStyle = this.defaultStyles.fill;
       this.ctx.strokeStyle = this.defaultStyles.stroke;
 
@@ -50,7 +50,7 @@ const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    private styleFlipped(tile: ITile) {
+    private styleFlipped(tile: ITilePresentationData) {
       this.ctx.fillStyle = this.fllippedStyles.fill;
       this.ctx.strokeStyle = this.fllippedStyles.stroke;
 

@@ -1,41 +1,33 @@
-import { IGameRules, ISelectionPresenter } from "../application/boundaries/input";
-import { ISelection } from "../application/boundaries/output";
-import GridPoint, { IGridSpan } from "./GridPoint";
+import TileSpan, { ICoordinates } from "./TileSpan";
 
-export interface IPoint {
-  x: number;
-  y: number;
-}
-interface ISize {
-  width: number;
-  height: number;
+export interface ISelectionPresentationData {
+  tileSpan: TileSpan;
+  isValid: boolean;
 }
 
-export default class Selection implements ISelection {
-  public gridSpan: IGridSpan;
+export interface ISelectionPresenter {
+  render: (selection: ISelectionPresentationData) => void;
+}
 
-  private startPoint: IPoint;
-  private endPoint: IPoint;
-  private valid: boolean;
-  private size: ISize;
+export default class Selection {
+  public tileSpan: TileSpan;
+  private startPoint: ICoordinates;
+  private valid: boolean = true;
 
-  constructor(private numberOfRows: number, private numberOfCols: number, private presenter: ISelectionPresenter) {}
+  constructor(private rows: number, private cols: number, private presenter: ISelectionPresenter) {}
 
-  public setStartPoint(x: number, y: number): void {
-    this.startPoint = { x, y };
-    this.setGridSpan(this.startPoint);
-    this.presenter.render(this);
+  public setStartPoint(gridOffsetCoordinates: ICoordinates): void {
+    this.startPoint = gridOffsetCoordinates;
+    this.setTileSpan(this.startPoint);
   }
 
-  public setEndPoint(x: number, y: number): void {
-    this.endPoint = { x, y };
-    this.setSize();
-    this.setGridSpan(this.startPoint, this.endPoint);
-    this.presenter.render(this);
+  public setEndPoint(gridOffsetCoordinates: ICoordinates): void {
+    this.setTileSpan(this.startPoint, gridOffsetCoordinates);
   }
 
-  public clear(): void {
-    this.presenter.clear();
+  public remove(): void {
+    this.tileSpan = undefined;
+    this.render();
   }
 
   public get isValid(): boolean {
@@ -43,18 +35,18 @@ export default class Selection implements ISelection {
   }
 
   public set isValid(bool: boolean) {
-    this.valid = bool;
+    if (this.valid !== bool) {
+      this.valid = bool;
+      this.render();
+    }
+  }
+
+  private setTileSpan(startPoint: ICoordinates, endPoint?: ICoordinates): void {
+    this.tileSpan = TileSpan.fromAbsoluteCoordinates(startPoint, endPoint || startPoint, this.rows);
+    this.render();
+  }
+
+  private render() {
     this.presenter.render(this);
-  }
-
-  private setSize(): void {
-    this.size = {
-      width: this.endPoint.x - this.startPoint.x,
-      height: this.endPoint.y - this.startPoint.y
-    };
-  }
-
-  private setGridSpan(startPoint: IPoint, endPoint?: IPoint): void {
-    this.gridSpan = GridPoint.convertPxSpanToGridSpan(startPoint, endPoint || startPoint, this.numberOfRows);
   }
 }

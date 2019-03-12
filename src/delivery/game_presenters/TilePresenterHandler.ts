@@ -1,12 +1,11 @@
-import { ITile } from "../../application/boundaries/output";
+import { ITilePresentationData } from "../../application/interfaces";
 import getTileBlockerPresenter from "./TileBlockerPresenter";
 import getTileFlippablePresenter from "./TileFlippablePresenter";
-import getTileMultiFlipPresenter from "./TileMultiFlipPresenter";
 import TilePresenter from "./TilePresenter";
 
 const getTilePresenter = (ctx: () => CanvasRenderingContext2D, size: number) =>
   class TilePresenterHandler {
-    public render(tile: ITile): void {
+    public render(tile: ITilePresentationData): void {
       let presenterGetter;
       let presenter: TilePresenter;
       if (tile.isBlocker) {

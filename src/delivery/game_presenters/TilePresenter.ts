@@ -1,6 +1,4 @@
-import { ITilePresenter } from "../../application/boundaries/input";
-import { ITile } from "../../application/boundaries/output";
-import CanvasProvider from "../components/GameBoard";
+import { ITilePresentationData, ITilePresenter } from "../../application/interfaces";
 import { roundRect } from "./presenterUtils";
 
 export default abstract class TilePresenter implements ITilePresenter {
@@ -11,7 +9,7 @@ export default abstract class TilePresenter implements ITilePresenter {
     protected size: number
   ) {}
 
-  public render(tile: ITile): void {
+  public render(tile: ITilePresentationData): void {
     this.ctx.save();
     this.setCommonStyling(tile);
     this.setStyling(tile);
@@ -26,13 +24,13 @@ export default abstract class TilePresenter implements ITilePresenter {
     return this.context();
   }
 
-  protected setCommonStyling(tile: ITile): void {
+  protected setCommonStyling(tile: ITilePresentationData): void {
     this.ctx.lineJoin = "round";
   }
 
-  protected abstract setStyling(tile: ITile): void;
+  protected abstract setStyling(tile: ITilePresentationData): void;
 
-  protected drawRect(tile: ITile): void {
+  protected drawRect(tile: ITilePresentationData): void {
     const startX = (tile.position.colIndex * this.size) + this.padding;
     const startY = (tile.position.rowIndex * this.size) + this.padding;
     const size = this.size - (this.padding * 2);
@@ -42,5 +40,5 @@ export default abstract class TilePresenter implements ITilePresenter {
     this.ctx.fill();
   }
 
-  protected drawAdditionalDetails(tile: ITile): void {}
+  protected drawAdditionalDetails(tile: ITilePresentationData): void {}
 }

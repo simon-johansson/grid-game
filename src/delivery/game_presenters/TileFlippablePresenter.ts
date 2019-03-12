@@ -1,4 +1,4 @@
-import { ITile } from "../../application/boundaries/output";
+import { ITilePresentationData } from "../../application/interfaces";
 import { tileFlippable as styles } from "./presenterStyles";
 import TilePresenter from "./TilePresenter";
 
@@ -8,7 +8,7 @@ const getTileFlippablePresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       super(ctx, size)
     }
 
-    protected setStyling(tile: ITile): void {
+    protected setStyling(tile: ITilePresentationData): void {
       if (!tile.isCleared) {
         this.styleCommon(tile, styles.notCleared);
       } else {
@@ -16,7 +16,7 @@ const getTileFlippablePresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    private styleCommon(tile: ITile, style: any) {
+    private styleCommon(tile: ITilePresentationData, style: any) {
       this.ctx.fillStyle = style.fill;
 
       if (tile.isSelected) {

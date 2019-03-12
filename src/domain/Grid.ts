@@ -1,71 +1,33 @@
-import { IGameRules, ITilePresenter, TileType } from "../application/boundaries/input";
-import GridPoint, { IGridSpan } from "./GridPoint";
-import Tile from "./Tile";
+import { IGameRules } from "../application/interfaces";
+import Tile, { TileType } from "./Tile";
+import TileSpan from "./TileSpan";
 
 interface ISelectedTile extends Tile {
   isSelected: true;
 }
 
-export interface IEvaluateSelection {
-  tilesLeftToClear: number;
-  isSelectionValid: boolean;
-  tiles: Tile[];
-}
-
 export default class Grid {
-  private tilesLeftToClear: number;
+  constructor(public tiles: Tile[], private rules: IGameRules) {}
 
-  constructor(private tiles: Tile[], private rules: IGameRules) {
-    this.getTileStatus();
+  public applySelection(selection: TileSpan, tileState?: TileType): void {
+    this.tiles.forEach(tile => tile.applySelection(selection, tileState));
   }
 
-  public applySelection(selection: IGridSpan, tileState?: TileType): void {
-    this.tiles.forEach(tile => tile.checkIfSelected(selection, tileState));
-  }
-
-  // TODO: Går att göra snyggare, lättare att läsa?
-  public evaluateSelection(isEditingGrid: boolean): IEvaluateSelection {
-    const isSelectionValid = this.isSelectionValid;
-
-    if (!isEditingGrid && isSelectionValid) {
-      this.clearSelectedTiles();
-    }
-
-    this.cancelSelection();
-
-    return {
-      tilesLeftToClear: this.tilesLeftToClear,
-      isSelectionValid,
-      tiles: this.tiles
-    };
-  }
-
-  public cancelSelection(): void {
-    this.deselectTiles();
-    this.getTileStatus();
-  }
-
-  public get isSelectionValid(): boolean {
-    // console.log(this.isEnoughTilesSelected, !this.isDisqualifyingTileSelected);
+  public get isSelectedTilesClearable(): boolean {
     return this.isEnoughTilesSelected && !this.isDisqualifyingTileSelected;
   }
 
-  private deselectTiles(): void {
+  public deselectTiles(): void {
     this.selectedTiles.forEach(tile => tile.deselect());
   }
 
-  private clearSelectedTiles(): void {
-    this.selectedTiles.forEach(tile => tile.clear());
+  public toggleClearedOnSelectedTiles(): void {
+    this.selectedTiles.forEach(tile => tile.toggleCleared());
   }
 
-  private getTileStatus(): void {
-    this.tilesLeftToClear = 0;
-
-    this.tiles.forEach(tile => {
-      if (tile.isClearable && !tile.isCleared) {
-        this.tilesLeftToClear++;
-      }
-    });
+  public get isGridCleared(): boolean {
+    const tileLeftToClear = (tile: Tile) => tile.isClearable && !tile.isCleared;
+    return !this.tiles.some(tileLeftToClear);
   }
 
   private get selectedTiles(): ISelectedTile[] {
@@ -77,6 +39,6 @@ export default class Grid {
   }
 
   private get isDisqualifyingTileSelected(): boolean {
-    return this.selectedTiles.some(tile => tile.disqualifiesSelection);
+    return this.selectedTiles.some(tile => tile.isBlocker);
   }
 }

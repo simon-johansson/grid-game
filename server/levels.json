@@ -94,6 +94,141 @@
       "toggleOnOverlap": true,
       "minSelection": 1
     },
+    "moves": 2,
+    "layout": [
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "id": "5c74208a2eda3e26bf095b7d"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 2,
+    "layout": [
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c742ad876af9434ac560a93"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "layout": [
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ]
+    ],
+    "id": "5c7429fd173ac3751db4fce2"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
     "moves": 3,
     "layout": [
       [
@@ -139,14 +274,14 @@
       "toggleOnOverlap": true,
       "minSelection": 1
     },
-    "moves": 4,
+    "moves": 3,
     "layout": [
       [
         "b",
         "r",
         "r",
         "r",
-        "r"
+        "b"
       ],
       [
         "r",
@@ -158,7 +293,90 @@
       [
         "r",
         "r",
-        "f",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c742a7158a79d28a811c2cd"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "layout": [
+      [
+        "b",
+        "r",
+        "r",
+        "b",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "b",
+        "b"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "b",
+        "b"
+      ],
+      [
+        "b",
+        "b",
+        "b",
+        "b",
+        "b"
+      ]
+    ],
+    "id": "5c742cd6220faf04fec4957e"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "layout": [
+      [
+        "b",
+        "b",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
         "r",
         "r"
       ],
@@ -175,9 +393,61 @@
         "r",
         "r",
         "b"
+      ],
+      [
+        "b",
+        "b",
+        "r",
+        "r",
+        "b"
       ]
     ],
-    "id": "5c6881efcc9b985762ca24e6"
+    "id": "5c742d3a189eaa53ca746b7c"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 5,
+    "layout": [
+      [
+        "b",
+        "b",
+        "r",
+        "b",
+        "b"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "b",
+        "b",
+        "r",
+        "b",
+        "b"
+      ]
+    ],
+    "id": "5c74297ddabd356fdfd21e98"
   },
   {
     "rules": {
@@ -223,6 +493,51 @@
       ]
     ],
     "id": "5c6b18615f07382a2db6f8d0"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "layout": [
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c6881efcc9b985762ca24e6"
   },
   {
     "rules": {
@@ -1033,5 +1348,95 @@
       ]
     ],
     "id": "5c6883418a26da5647bd51fd"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "layout": [
+      [
+        "f",
+        "r",
+        "r",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "id": "5c7d6942fe98b78882b25344"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "layout": [
+      [
+        "b",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "b",
+        "b",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c7dad1cf2b1782732b1cb13"
   }
 ]

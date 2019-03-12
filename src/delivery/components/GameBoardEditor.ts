@@ -1,6 +1,5 @@
-import { IGameLevel, TileType } from "../../application/boundaries/input";
-import { ILevel } from "../../application/boundaries/output";
-import GameInteractor from "../../application/GameInteractor";
+import Interactor from "../../application/Interactor";
+import { IGameLevel, ILevelData, TileType } from "../../application/interfaces";
 import EditorOptions, { ISelectedOptions } from "./EditorOptions";
 import GameBoard from "./GameBoard";
 
@@ -8,7 +7,12 @@ export default class GameBoardEditor extends GameBoard {
   private EditorOptionsComponent: EditorOptions;
   private selectedOptions: ISelectedOptions;
 
-  constructor(interactor: GameInteractor, queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevel) => void) {
+  constructor(
+    interactor: Interactor,
+    queryStringLevel: IGameLevel,
+    onGameStateUpdate: (state: ILevelData) => void,
+    private onEdit: (state: IGameLevel) => void,
+  ) {
     super(interactor, queryStringLevel, onGameStateUpdate);
     this.EditorOptionsComponent = new EditorOptions(this.onNewOptionsSet);
   }
@@ -31,19 +35,26 @@ export default class GameBoardEditor extends GameBoard {
   }
 
   protected processSelectionEnd(): void {
-    // TODO: Borde använda en annan funktion än evaluateSelection här
-    this.onGameStateUpdate(this.interactor.evaluateSelection(true));
+    this.interactor.removeSelection();
+    this.onEdit(this.getLevel);
   }
 
   private onNewOptionsSet = (options: ISelectedOptions) => {
     this.selectedOptions = options;
-    this.interactor.setLevelMoves(this.selectedOptions.moves);
-    this.onGameStateUpdate(this.interactor.setLevelRules(this.selectedOptions.rules));
+    this.onEdit(this.getLevel);
   };
+
+  private get getLevel(): IGameLevel {
+    return {
+      layout: this.interactor.getGridLayout(),
+      moves: this.selectedOptions.moves,
+      rules: this.selectedOptions.rules,
+    };
+  }
 
   private getSelectionArguments = (x: number, y: number): [number, number, TileType] => [
     this.convertAbsoluteOffsetToProcent(x),
     this.convertAbsoluteOffsetToProcent(y),
-    this.selectedOptions.tile
+    this.selectedOptions.tile,
   ];
 }

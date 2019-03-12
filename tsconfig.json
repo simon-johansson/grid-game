@@ -10,9 +10,15 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
-    "types": ["jest"] ,
-    "outDir": ".tmp"
+    "types": ["jest"],
+    "outDir": ".tmp",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["./src/shared/*"],
+      "@domain/*": ["./src/domain/*"]
+    }
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.test.ts", "dist"]
+  "exclude": ["node_modules", "dist"]
 }

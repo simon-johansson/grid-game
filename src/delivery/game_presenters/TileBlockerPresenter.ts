@@ -1,5 +1,4 @@
-import { ITile } from "../../application/boundaries/output";
-import CanvasProvider from "../components/GameBoard";
+import { ITilePresentationData } from "../../application/interfaces";
 import TilePresenter from "./TilePresenter";
 
 const getTileBlockerPresenter = (ctx: () => CanvasRenderingContext2D, size: number) =>
@@ -16,7 +15,7 @@ const getTileBlockerPresenter = (ctx: () => CanvasRenderingContext2D, size: numb
       super(ctx, size)
     }
 
-    protected setStyling(tile: ITile): void {
+    protected setStyling(tile: ITilePresentationData): void {
       this.ctx.fillStyle = this.styles.fill;
       this.ctx.strokeStyle = this.styles.stroke;
 

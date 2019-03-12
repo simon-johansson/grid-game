@@ -1,7 +1,5 @@
-import { IGameLevel } from "../../application/boundaries/input";
-import { ILevel } from "../../application/boundaries/output";
-import GameInteractor, { IPresenters } from "../../application/GameInteractor";
-import NetworkGateway from "../../infrastructure/NetworkGatewayImp";
+import Interactor, { IPresenters } from "../../application/Interactor";
+import { IGameLevel, ILevelData } from "../../application/interfaces";
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
 
@@ -16,9 +14,9 @@ export default abstract class GameBoard extends Component<{}> {
   protected isSelecting: boolean = false;
 
   constructor(
-    protected interactor: GameInteractor,
+    protected interactor: Interactor,
     private customLevel: IGameLevel,
-    protected onGameStateUpdate: (state: ILevel) => void,
+    protected onGameStateUpdate: (state: ILevelData) => void,
   ) {
     super();
     this.render({});
@@ -189,12 +187,12 @@ export default abstract class GameBoard extends Component<{}> {
     addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
     addCanvasListener("mousemove", this.onSelectionMove, this.onMouseSelection);
     addCanvasListener("mouseup", this.onSelectionEnd);
-    document.addEventListener("mouseup", this.onSelectionEnd, false);
+    document.addEventListener("mouseup", this.onSelectionEnd.bind(this), false);
 
     addCanvasListener("touchstart", this.onSelectionStart, this.onTouchSelection);
     addCanvasListener("touchmove", this.onSelectionMove, this.onTouchSelection);
     addCanvasListener("touchend", this.onSelectionEnd);
-    document.addEventListener("touchend", this.onSelectionEnd, false);
+    document.addEventListener("touchend", this.onSelectionEnd.bind(this), false);
   }
 
   private onMouseSelection = (method: (x: number, y: number) => void, e: MouseEvent): void => {

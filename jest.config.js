@@ -6,7 +6,7 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest"
   },
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-  "testPathIgnorePatterns": ["/node_modules/", "testUtils.ts"],
+  "testPathIgnorePatterns": ["/node_modules/", "testUtils.ts", "/dist/", "/.tmp/"],
   "moduleFileExtensions": [
     "ts",
     "tsx",
@@ -15,10 +15,13 @@ module.exports = {
     "json",
     "node"
   ],
+  "moduleNameMapper": {
+    '@shared/(.*)': '<rootDir>/src/shared/$1',
+    '@domain/(.*)': '<rootDir>/src/domain/$1',
+  },
   "collectCoverage": false,
   "coverageDirectory": "coverage/",
   "collectCoverageFrom": [
-    "<rootDir>/src/domain/**/*.{ts}",
-    "!<rootDir>/src/domain/boundaries/**/*.{ts}",
+    "<rootDir>/src/**/*.{ts}",
   ]
 }
