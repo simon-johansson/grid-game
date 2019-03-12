@@ -41,10 +41,16 @@ const getMinifiedTile = (tile: Tile): ITileRawState => {
 };
 
 export default class LevelManager {
-  public static newLevel(level: IGameLevel, name?: number, isFirst?: boolean, isLast?: boolean): Level {
-    const { layout, moves, rules: rawRules } = level;
+  public static newLevel(
+    level: IGameLevel,
+    name?: number,
+    isFirst?: boolean,
+    isLast?: boolean,
+    hasCompleted?: boolean,
+  ): Level {
+    const { layout, moves, rules: rawRules, id } = level;
     const rules = new Rules(rawRules);
-    return new Level(getTypedLayout(layout), moves, rules, name, isFirst, isLast);
+    return new Level(getTypedLayout(layout), moves, rules, name, isFirst, isLast, id, hasCompleted);
   }
 
   public static getMinifiedLayout(tiles: Tile[]): IGridLayout {
@@ -57,7 +63,11 @@ export default class LevelManager {
     return layout as IGridLayout;
   }
 
-  constructor(private levels: IGameLevel[], private currentLevelIndex: number = 0) {
+  constructor(
+    private levels: IGameLevel[],
+    private currentLevelIndex: number = 0,
+    private completedLevels: string[] = [],
+  ) {
     if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
       throw new Error("Supplied level index is out of bounds");
     }
@@ -85,13 +95,26 @@ export default class LevelManager {
     }
   }
 
+  public onLevelComplete(completedLevels: string[]): void {
+    console.log(completedLevels);
+    this.completedLevels = completedLevels;
+  }
+
   private get level(): Level {
+    const level = this.levels[this.currentLevelIndex];
+    const hasCompleted = level.id ? this.hasCompleted(level.id) : false;
+
     return LevelManager.newLevel(
-      this.levels[this.currentLevelIndex],
+      level,
       this.currentLevelIndex,
       this.isPlayingFirstLevel,
       this.isPlayingLastLevel,
+      hasCompleted,
     );
+  }
+
+  private hasCompleted(id: string): boolean {
+    return this.completedLevels.indexOf(id) !== -1;
   }
 
   private get isPlayingLastLevel(): boolean {
