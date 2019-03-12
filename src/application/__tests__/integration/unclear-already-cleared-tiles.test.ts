@@ -1,13 +1,14 @@
-import Rules from "../../../domain/Rules";
 import {
   getAnalyticsMock,
   getNetworkGatewayMock,
   getSelectionPresenter,
+  getStorageMock,
   getTilePresenter,
   ITileStateLayout,
   processedLayout,
   setSelectionAndProcessHelper,
-} from "../../../shared/__tests__/testUtils";
+} from "@shared/__tests__/testUtils";
+import Rules from "../../../domain/Rules";
 import Interactor, { IPresenters } from "../../Interactor";
 import { IGameLevel } from "../../interfaces";
 
@@ -29,7 +30,7 @@ const levels: IGameLevel[] = [
     rules: new Rules(),
   },
 ];
-const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock());
+const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
 interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
