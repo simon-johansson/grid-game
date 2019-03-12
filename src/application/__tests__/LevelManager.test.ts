@@ -1,11 +1,11 @@
-import Rules from "../../domain/Rules";
+import Rules from "@domain/Rules";
 import {
   blockerLayout,
   clearedLayout,
   createTiles,
   defaultLayout,
   get5x5TypedLayout,
-} from "../../shared/__tests__/testUtils";
+} from "@shared/__tests__/testUtils";
 import { IGameLevel, TileType } from "../interfaces";
 import LevelManager from "../LevelManager";
 

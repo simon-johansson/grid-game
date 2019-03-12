@@ -1,5 +1,5 @@
+import { get5x5TypedLayout } from "@shared/__tests__/testUtils";
 import { TileType } from "../../application/interfaces";
-import { get5x5TypedLayout } from "../../shared/__tests__/testUtils";
 import Level from "../Level";
 import Rules from "../Rules";
 
