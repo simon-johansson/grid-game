@@ -45,6 +45,14 @@ export default class AnalyticsIml implements IAnalytics {
     }
   }
 
+  public onLevelComplete(level: Level) {
+    gameanalytics.GameAnalytics.addProgressionEvent(gameanalytics.EGAProgressionStatus.Complete, level.name.toString());
+  }
+
+  public onLevelFailed(level: Level) {
+    gameanalytics.GameAnalytics.addProgressionEvent(gameanalytics.EGAProgressionStatus.Fail, level.name.toString());
+  }
+
   public onError(error: string) {
     gameanalytics.GameAnalytics.addErrorEvent(gameanalytics.EGAErrorSeverity.Error, error);
   }
