@@ -10,7 +10,8 @@ body {
   height: 100%;
   user-select: none;
   overflow: hidden;
-  overscroll-behavior-x: none;
+  overscroll-behavior: contain;
+  position: fixed;
 }
 
 body {
