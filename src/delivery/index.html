@@ -65,7 +65,6 @@
     />
 
     <link rel="stylesheet" href="/styles/styles.css" />
-    <script src="/vendor/google-tag-manager.js"></script>
     <script>
       if ("serviceWorker" in navigator) {
         //Register the ServiceWorker
@@ -81,17 +80,8 @@
   </head>
 
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-5Z7SL7S"
-        height="0"
-        width="0"
-        style="display:none;visibility:hidden"
-      ></iframe
-    ></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
+    <!-- TODO: Skapa element i koden istället -->
     <div id="app">
       <div id="moves-counter"></div>
 
@@ -102,6 +92,7 @@
       <div id="level-selection"></div>
     </div>
 
+    <script src="/vendor/game-analytics.min.js"></script>
     <script src="/vendor/doorbell.js"></script>
     <script src="/app.js"></script>
   </body>

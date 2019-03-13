@@ -1,4 +1,3 @@
-import gameanalytics from "gameanalytics";
 import packageJSON from "../../package.json";
 import { IAnalytics } from "../application/interfaces";
 import Level from "../domain/Level";
@@ -8,6 +7,12 @@ const GA_SECRET = "8e789012ed8133df1908eaff64a97d01a1cdcfa4";
 
 const GA_DEV_KEY = "05fa73c552a901b72307566335e61ce0";
 const GA_DEV_SECRET = "5383806560f5ec338170b98de5468f387bb31a60";
+
+/**
+ * Needed because the gameanalytics NPM lib does not work
+ * for TypeScript. Lib is in vendor folder.
+ */
+const gameanalytics = (window as any).gameanalytics;
 
 export default class AnalyticsIml implements IAnalytics {
   constructor() {
