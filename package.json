@@ -35,6 +35,7 @@
     "browser-sync": "^2.24.7",
     "browserify": "^16.2.3",
     "copyfiles": "^2.1.0",
+    "gameanalytics": "^3.1.2",
     "jest": "^23.6.0",
     "localforage": "^1.7.3",
     "node-sass": "^4.9.3",
