@@ -1,6 +1,6 @@
-import Level from "../domain/Level";
-import Rules from "../domain/Rules";
-import Tile from "../domain/Tile";
+import Level from "@domain/Level";
+import Rules from "@domain/Rules";
+import Tile from "@domain/Tile";
 import { IGameLevel, IGridLayout, ITileRawState, ITypedGridLayout, TileType } from "./interfaces";
 
 function assertNever(state: never): never {

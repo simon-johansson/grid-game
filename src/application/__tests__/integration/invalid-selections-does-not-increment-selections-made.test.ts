@@ -1,3 +1,6 @@
+import Interactor, { IPresenters } from "@application/Interactor";
+import { ISelectionPresentationData } from "@application/interfaces";
+import Rules from "@domain/Rules";
 import {
   getAnalyticsMock,
   getNetworkGatewayMock,
@@ -9,9 +12,6 @@ import {
   setSelectionAndProcessHelper,
   setSelectionHelper,
 } from "@shared/__tests__/testUtils";
-import Rules from "../../../domain/Rules";
-import Interactor, { IPresenters } from "../../Interactor";
-import { ISelectionPresentationData } from "../../interfaces";
 
 let selectionData: ISelectionPresentationData;
 const tileSelectionLayout: ITileSelectionLayout = [[], [], [], [], []];

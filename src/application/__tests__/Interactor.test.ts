@@ -1,3 +1,5 @@
+import Interactor, { IPresenters } from "@application/Interactor";
+import { IGameLevel } from "@application/interfaces";
 import Rules from "@domain/Rules";
 import { ISelectionPresentationData } from "@domain/Selection";
 import {
@@ -11,8 +13,6 @@ import {
   getTilePresenter,
   mixedLayout,
 } from "@shared/__tests__/testUtils";
-import Interactor, { IPresenters } from "../Interactor";
-import { IGameLevel } from "../interfaces";
 
 let presenters: IPresenters;
 const levelDefaults = {

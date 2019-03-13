@@ -1,4 +1,4 @@
-import { IGameRules, IGridLayout } from "../../application/interfaces";
+import { IGameRules, IGridLayout } from "@application/interfaces";
 
 export interface IQueryStringOptions {
   level?: number;

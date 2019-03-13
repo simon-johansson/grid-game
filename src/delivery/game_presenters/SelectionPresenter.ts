@@ -1,4 +1,4 @@
-import { ISelectionPresentationData } from "../../application/interfaces";
+import { ISelectionPresentationData } from "@application/interfaces";
 import { selection as styles } from "./presenterStyles";
 import { roundRect } from "./presenterUtils";
 

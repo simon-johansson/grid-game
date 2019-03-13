@@ -1,4 +1,4 @@
-import { ITilePresentationData, ITilePresenter } from "../../application/interfaces";
+import { ITilePresentationData, ITilePresenter } from "@application/interfaces";
 import { roundRect } from "./presenterUtils";
 
 export default abstract class TilePresenter implements ITilePresenter {

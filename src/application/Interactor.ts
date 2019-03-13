@@ -1,9 +1,9 @@
-import Grid from "../domain/Grid";
-import Level, { ITypedGridLayout } from "../domain/Level";
-import Rules from "../domain/Rules";
-import Selection from "../domain/Selection";
-import Tile from "../domain/Tile";
-import TilePosition from "../domain/TilePosition";
+import Grid from "@domain/Grid";
+import Level, { ITypedGridLayout } from "@domain/Level";
+import Rules from "@domain/Rules";
+import Selection from "@domain/Selection";
+import Tile from "@domain/Tile";
+import TilePosition from "@domain/TilePosition";
 import {
   IAnalytics,
   IGameLevel,

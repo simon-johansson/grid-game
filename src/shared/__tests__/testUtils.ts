@@ -1,6 +1,5 @@
 /* tslint:disable: max-classes-per-file */
-
-import Interactor, { IPresenters } from "../../application/Interactor";
+import Interactor, { IPresenters } from "@application/Interactor";
 import {
   IAnalytics,
   IGameLevel,
@@ -13,12 +12,12 @@ import {
   ITilePresenter,
   ITilePresenterConstructor,
   ITypedGridLayout,
-} from "../../application/interfaces";
-import Level from "../../domain/Level";
-import Rules from "../../domain/Rules";
-import { ISelectionPresentationData } from "../../domain/Selection";
-import Tile, { TileType } from "../../domain/Tile";
-import TilePosition from "../../domain/TilePosition";
+} from "@application/interfaces";
+import Level from "@domain/Level";
+import Rules from "@domain/Rules";
+import { ISelectionPresentationData } from "@domain/Selection";
+import Tile, { TileType } from "@domain/Tile";
+import TilePosition from "@domain/TilePosition";
 
 // X = selected
 // O = not selected

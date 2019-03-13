@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["./src/shared/*"],
-      "@domain/*": ["./src/domain/*"]
+      "@domain/*": ["./src/domain/*"],
+      "@application/*": ["./src/application/*"]
     }
   },
   "include": ["./src/**/*.ts"],

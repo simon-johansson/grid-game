@@ -1,4 +1,4 @@
-import { ITilePresentationData } from "../../application/interfaces";
+import { ITilePresentationData } from "@application/interfaces";
 import { tileFlippable as styles } from "./presenterStyles";
 import TilePresenter from "./TilePresenter";
 

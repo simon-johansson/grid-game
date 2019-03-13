@@ -1,5 +1,5 @@
-import Interactor from "../../application/Interactor";
-import { IGameLevel, ILevelData } from "../../application/interfaces";
+import Interactor from "@application/Interactor";
+import { IGameLevel, ILevelData } from "@application/interfaces";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardPlayable extends GameBoard {

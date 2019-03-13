@@ -1,7 +1,7 @@
+import { IAnalytics } from "@application/interfaces";
+import Level from "@domain/Level";
 import { EGAErrorSeverity, EGAProgressionStatus, GameAnalytics } from "gameanalytics";
 import packageJSON from "../../package.json";
-import { IAnalytics } from "../application/interfaces";
-import Level from "../domain/Level";
 
 const GA_KEY = "87aaaa576796f5ef0df26df23fc7c0e3";
 const GA_SECRET = "8e789012ed8133df1908eaff64a97d01a1cdcfa4";

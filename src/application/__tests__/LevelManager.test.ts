@@ -1,3 +1,5 @@
+import { IGameLevel, TileType } from "@application/interfaces";
+import LevelManager from "@application/LevelManager";
 import Rules from "@domain/Rules";
 import {
   blockerLayout,
@@ -6,8 +8,6 @@ import {
   defaultLayout,
   get5x5TypedLayout,
 } from "@shared/__tests__/testUtils";
-import { IGameLevel, TileType } from "../interfaces";
-import LevelManager from "../LevelManager";
 
 const levelDefaults = {
   rules: new Rules(),

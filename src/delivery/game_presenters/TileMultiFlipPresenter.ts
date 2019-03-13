@@ -1,4 +1,4 @@
-import { ITilePresentationData } from "../../application/interfaces";
+import { ITilePresentationData } from "@application/interfaces";
 import TilePresenter from "./TilePresenter";
 
 const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: number) =>

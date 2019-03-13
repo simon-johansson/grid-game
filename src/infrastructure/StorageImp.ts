@@ -1,6 +1,6 @@
+import { IStorage } from "@application/interfaces";
+import Level from "@domain/Level";
 import localforage from "localforage";
-import { IStorage } from "../application/interfaces";
-import Level from "../domain/Level";
 
 export default class StorageIml implements IStorage {
   private currentLevelKey = "currentLevel";
