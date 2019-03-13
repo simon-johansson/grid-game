@@ -130,13 +130,13 @@ export default class Interactor {
   }
 
   private async onLevelEnded() {
-      if (this.level.isCleared) {
-        this.analytics.onLevelComplete(this.level);
-        const completedLevels = await this.storage.onLevelComplete(this.level);
-        this.levelManager.onLevelComplete(completedLevels);
-      } else {
-        this.analytics.onLevelFailed(this.level);
-      }
+    if (this.level.isCleared) {
+      this.analytics.onLevelComplete(this.level);
+      const completedLevels = await this.storage.onLevelComplete(this.level);
+      this.levelManager.onLevelComplete(completedLevels);
+    } else {
+      this.analytics.onLevelFailed(this.level);
+    }
   }
 
   private get hasLevelEnded(): boolean {

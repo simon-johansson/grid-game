@@ -3,6 +3,7 @@ import { IGameRules } from "@domain/Rules";
 import { ISelectionPresenter } from "@domain/Selection";
 import { ITilePresenter } from "@domain/Tile";
 import { Board5x5 } from "@shared/interfaces";
+
 export { ITypedGridLayout } from "@domain/Level";
 export { IGameRules } from "@domain/Rules";
 export { ISelectionPresentationData, ISelectionPresenter } from "@domain/Selection";
