@@ -1,13 +1,13 @@
+import Level from "@domain/Level";
+import { IGameRules } from "@domain/Rules";
+import { ISelectionPresenter } from "@domain/Selection";
+import { ITilePresenter } from "@domain/Tile";
 import { Board5x5 } from "@shared/interfaces";
-import Level from "../domain/Level";
-import { IGameRules } from "../domain/Rules";
-import { ISelectionPresenter } from "../domain/Selection";
-import { ITilePresenter } from "../domain/Tile";
 
-export { ITypedGridLayout } from "../domain/Level";
-export { IGameRules } from "../domain/Rules";
-export { ISelectionPresentationData, ISelectionPresenter } from "../domain/Selection";
-export { ITilePresentationData, ITilePresenter, TileType } from "../domain/Tile";
+export { ITypedGridLayout } from "@domain/Level";
+export { IGameRules } from "@domain/Rules";
+export { ISelectionPresentationData, ISelectionPresenter } from "@domain/Selection";
+export { ITilePresentationData, ITilePresenter, TileType } from "@domain/Tile";
 
 export interface ITilePresenterConstructor {
   new (): ITilePresenter;

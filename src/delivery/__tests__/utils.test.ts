@@ -1,4 +1,4 @@
-import { IGridLayout } from "../../application/interfaces";
+import { IGridLayout } from "@application/interfaces";
 import QueryStringHandler from "../utils/QueryStringHandler";
 
 const setQueryString = (query: string): void => {

@@ -1,6 +1,6 @@
 {
   "name": "grid-game",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "",
   "author": "Simon Johansson <mail@simon-johansson.com>",
   "repository": {
@@ -12,16 +12,16 @@
   },
   "scripts": {
     "start": "node ./server",
-    "build": "run-p remove-build && run-s build:* service-worker",
+    "build": "run-s remove-build && run-p build:* service-worker",
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\" --logLevel debug",
     "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
-    "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/src/main.js -o dist/app.js",
+    "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/src/main.js -t [ aliasify ] -o dist/app.js",
     "watch:tsc": "tsc --watch",
-    "watch:watchify": "watchify .tmp/src/main.js -o dist/app.js --debug",
+    "watch:watchify": "watchify .tmp/src/main.js -t [ aliasify ] -o dist/app.js --debug",
     "watch:scss": "onchange \"src/delivery/**/*.scss\" -- run-s build:scss",
     "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,json,png,jpg,gif}\" -- run-s build:assets",
-    "watch": "run-p remove-build && run-s build:* && run-p start serve watch:*",
+    "watch": "run-s remove-build build:* && run-p start serve watch:*",
     "test": "jest",
     "test-watch": "jest --watchAll",
     "test-coverage": "jest --coverage",
@@ -30,12 +30,21 @@
     "remove-build": "rm -rf ./dist",
     "postinstall": "npm run build"
   },
+  "aliasify": {
+    "aliases": {
+      "@shared": "../.tmp/src/shared",
+      "@domain": "../.tmp/src/domain",
+      "@application": "../.tmp/src/application"
+    },
+    "verbose": false
+  },
   "devDependencies": {
     "@types/jest": "^23.3.2",
+    "aliasify": "^2.1.0",
     "browser-sync": "^2.24.7",
     "browserify": "^16.2.3",
     "copyfiles": "^2.1.0",
-    "gameanalytics": "file:./local_modules/gameanalytics",
+    "gameanalytics": "^3.1.2",
     "jest": "^23.6.0",
     "localforage": "^1.7.3",
     "node-sass": "^4.9.3",

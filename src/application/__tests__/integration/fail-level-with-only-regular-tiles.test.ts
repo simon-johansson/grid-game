@@ -1,3 +1,4 @@
+import Interactor, { IPresenters } from "@application/Interactor";
 import {
   getAnalyticsMock,
   getNetworkGatewayMock,
@@ -7,7 +8,6 @@ import {
   ITileStateLayout,
   setSelectionAndProcessHelper,
 } from "@shared/__tests__/testUtils";
-import Interactor, { IPresenters } from "../../Interactor";
 
 const tileStateLayout: ITileStateLayout = [[], [], [], [], []];
 const presenters: IPresenters = {

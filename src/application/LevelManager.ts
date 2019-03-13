@@ -1,6 +1,6 @@
-import Level from "../domain/Level";
-import Rules from "../domain/Rules";
-import Tile from "../domain/Tile";
+import Level from "@domain/Level";
+import Rules from "@domain/Rules";
+import Tile from "@domain/Tile";
 import { IGameLevel, IGridLayout, ITileRawState, ITypedGridLayout, TileType } from "./interfaces";
 
 function assertNever(state: never): never {
@@ -68,6 +68,9 @@ export default class LevelManager {
     private currentLevelIndex: number = 0,
     private completedLevels: string[] = [],
   ) {
+    if (typeof this.currentLevelIndex !== 'number') this.currentLevelIndex = 0;
+    if (!this.completedLevels) this.completedLevels = [];
+
     if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
       throw new Error("Supplied level index is out of bounds");
     }

@@ -1,9 +1,9 @@
-import Grid from "../domain/Grid";
-import Level, { ITypedGridLayout } from "../domain/Level";
-import Rules from "../domain/Rules";
-import Selection from "../domain/Selection";
-import Tile from "../domain/Tile";
-import TilePosition from "../domain/TilePosition";
+import Grid from "@domain/Grid";
+import Level, { ITypedGridLayout } from "@domain/Level";
+import Rules from "@domain/Rules";
+import Selection from "@domain/Selection";
+import Tile from "@domain/Tile";
+import TilePosition from "@domain/TilePosition";
 import {
   IAnalytics,
   IGameLevel,
@@ -130,13 +130,13 @@ export default class Interactor {
   }
 
   private async onLevelEnded() {
-      if (this.level.isCleared) {
-        this.analytics.onLevelComplete(this.level);
-        const completedLevels = await this.storage.onLevelComplete(this.level);
-        this.levelManager.onLevelComplete(completedLevels);
-      } else {
-        this.analytics.onLevelFailed(this.level);
-      }
+    if (this.level.isCleared) {
+      this.analytics.onLevelComplete(this.level);
+      const completedLevels = await this.storage.onLevelComplete(this.level);
+      this.levelManager.onLevelComplete(completedLevels);
+    } else {
+      this.analytics.onLevelFailed(this.level);
+    }
   }
 
   private get hasLevelEnded(): boolean {

@@ -1,4 +1,4 @@
-import { ITilePresentationData } from "../../application/interfaces";
+import { ITilePresentationData } from "@application/interfaces";
 import getTileBlockerPresenter from "./TileBlockerPresenter";
 import getTileFlippablePresenter from "./TileFlippablePresenter";
 import TilePresenter from "./TilePresenter";

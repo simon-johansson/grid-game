@@ -1,5 +1,5 @@
-import Interactor, { IPresenters } from "../../application/Interactor";
-import { IGameLevel, ILevelData } from "../../application/interfaces";
+import Interactor, { IPresenters } from "@application/Interactor";
+import { IGameLevel, ILevelData } from "@application/interfaces";
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
 import Component from "./Component";
 

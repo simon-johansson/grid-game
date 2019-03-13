@@ -1,5 +1,5 @@
-import Interactor from "../application/Interactor";
-import { IGameLevel, ILevelData } from "../application/interfaces";
+import Interactor from "@application/Interactor";
+import { IGameLevel, ILevelData } from "@application/interfaces";
 import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";

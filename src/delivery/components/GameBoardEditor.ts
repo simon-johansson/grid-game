@@ -1,5 +1,5 @@
-import Interactor from "../../application/Interactor";
-import { IGameLevel, ILevelData, TileType } from "../../application/interfaces";
+import Interactor from "@application/Interactor";
+import { IGameLevel, ILevelData, TileType } from "@application/interfaces";
 import EditorOptions, { ISelectedOptions } from "./EditorOptions";
 import GameBoard from "./GameBoard";
 

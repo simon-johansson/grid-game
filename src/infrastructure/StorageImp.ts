@@ -1,6 +1,6 @@
+import { IStorage } from "@application/interfaces";
+import Level from "@domain/Level";
 import localforage from "localforage";
-import { IStorage } from "../application/interfaces";
-import Level from "../domain/Level";
 
 export default class StorageIml implements IStorage {
   private currentLevelKey = "currentLevel";
@@ -34,7 +34,7 @@ export default class StorageIml implements IStorage {
     return localforage.setItem(this.onLevelCompleteKey, completedLevels);
   }
 
-  public getCompletedLevels(): Promise<string[]> {
+  public getCompletedLevels(): Promise<string[] | null> {
     return localforage.getItem<string[]>(this.onLevelCompleteKey);
   }
 

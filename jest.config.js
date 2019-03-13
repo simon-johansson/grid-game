@@ -18,6 +18,7 @@ module.exports = {
   "moduleNameMapper": {
     '@shared/(.*)': '<rootDir>/src/shared/$1',
     '@domain/(.*)': '<rootDir>/src/domain/$1',
+    '@application/(.*)': '<rootDir>/src/application/$1',
   },
   "collectCoverage": false,
   "coverageDirectory": "coverage/",

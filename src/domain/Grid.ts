@@ -1,4 +1,4 @@
-import { IGameRules } from "../application/interfaces";
+import Rules from "./Rules";
 import Tile, { TileType } from "./Tile";
 import TileSpan from "./TileSpan";
 
@@ -7,7 +7,7 @@ interface ISelectedTile extends Tile {
 }
 
 export default class Grid {
-  constructor(public tiles: Tile[], private rules: IGameRules) {}
+  constructor(public tiles: Tile[], private rules: Rules) {}
 
   public applySelection(selection: TileSpan, tileState?: TileType): void {
     this.tiles.forEach(tile => tile.applySelection(selection, tileState));
