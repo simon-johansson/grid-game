@@ -68,6 +68,9 @@ export default class LevelManager {
     private currentLevelIndex: number = 0,
     private completedLevels: string[] = [],
   ) {
+    if (typeof this.currentLevelIndex !== 'number') this.currentLevelIndex = 0;
+    if (!this.completedLevels) this.completedLevels = [];
+
     if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
       throw new Error("Supplied level index is out of bounds");
     }

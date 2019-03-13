@@ -34,7 +34,7 @@ export default class StorageIml implements IStorage {
     return localforage.setItem(this.onLevelCompleteKey, completedLevels);
   }
 
-  public getCompletedLevels(): Promise<string[]> {
+  public getCompletedLevels(): Promise<string[] | null> {
     return localforage.getItem<string[]>(this.onLevelCompleteKey);
   }
 
