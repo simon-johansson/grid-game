@@ -6,6 +6,7 @@
     "module": "commonjs",
     "removeComments": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
     "lib": ["es6", "dom"],
     "esModuleInterop": true,
     "experimentalDecorators": true,

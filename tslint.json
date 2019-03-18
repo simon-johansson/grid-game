@@ -4,7 +4,8 @@
     "object-literal-sort-keys": false,
     "no-empty": false,
     "no-console": false,
-    "curly": [true, "ignore-same-line"]
+    "curly": [true, "ignore-same-line"],
+    "typedef": [true, "call-signature"]
   },
   "linterOptions": {
     "exclude": ["node_modules/**/*.ts"]
