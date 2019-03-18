@@ -3,15 +3,75 @@
   top: 0;
   bottom: auto;
   right: 10px;
-  background: $black;
+  background: $lightGray;
+  color: $black;
+  font-weight: bold;
   font-family: $fontFamily;
+  display: flex;
+
+  &::before {
+    content: "";
+    position: relative;
+    display: inline-block;
+    background-image: url(/assets/conversation@2x.png);
+    background-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
 }
 
 #doorbell {
   font-family: $fontFamily;
 
+  #doorbell-form {
+    border-radius: 8px;
+    padding-top: 16px;
+
+    textarea,
+    input {
+      border: 1px solid $lightGray;
+      box-sizing: border-box;
+      color: $black;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      height: 150px;
+    }
+
+    input {
+      // padding: 20px 10px;
+      height: 48px;
+    }
+  }
+
+  #doorbell-title {
+    border: none;
+    font-size: 24px;
+    color: $black;
+  }
+
   #doorbell-powered-by {
     display: none;
+  }
+
+  #doorbell-close {
+    color: $black;
+    font-weight: normal;
+    font-size: 40px;
+    opacity: 1;
+    font-weight: 200;
+    top: 10px;
+
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
   }
 
   .btn.btn-primary {
@@ -19,5 +79,12 @@
     border: none;
     color: $black;
     font-weight: bold;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0;
   }
+}
+
+#doorbell-background {
+  opacity: 0.64;
 }
