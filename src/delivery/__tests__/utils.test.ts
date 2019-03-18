@@ -7,10 +7,17 @@ const setQueryString = (query: string): void => {
 
 describe("QueryStringHandler", () => {
   const levelQs = "level=5";
-  const layoutQs =
-    'layout=[["r","r","b","r","r"],["r","r","b","r","r"],["r","r","b","r","r"],["r","r","b","r","r"],["r","r","b","r","r"]]';
-  const rulesQs = "toggleOnOverlap=false&minSelection=4";
   const editQs = "edit=true";
+  const layout = [
+    ["r", "r", "b", "r", "r"],
+    ["r", "r", "b", "r", "r"],
+    ["r", "r", "b", "r", "r"],
+    ["r", "r", "b", "r", "r"],
+    ["r", "r", "b", "r", "r"],
+  ] as IGridLayout;
+  const rules = { toggleOnOverlap: false, minSelection: 4};
+  const moves = 3;
+  const customLevelQs = `custom=${JSON.stringify({ layout, rules, moves })}`;
 
   beforeEach(() => {
     setQueryString("");
@@ -19,193 +26,62 @@ describe("QueryStringHandler", () => {
   test("can get level", () => {
     setQueryString(levelQs);
     const qs = new QueryStringHandler();
-    expect(qs.level).toEqual(5);
+    expect(qs.getLevelNumber()).toEqual(5);
   });
 
-  test("level is null if not set", () => {
+  test("level is undefined if not set", () => {
     const qs = new QueryStringHandler();
-    expect(qs.level).toEqual(null);
+    expect(qs.getLevelNumber()).toEqual(undefined);
   });
 
   test("can set level", () => {
     const qs = new QueryStringHandler();
-    qs.level = 4;
-    expect(qs.level).toEqual(4);
+    qs.setLevelNumber(4);
+    expect(qs.getLevelNumber()).toEqual(4);
     expect(window.location.search).toEqual("?level=4");
   });
 
-  test("can get layout", () => {
-    const expected = [
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"]
-    ];
-    setQueryString(layoutQs);
+  test("can get custom level", () => {
+    setQueryString(customLevelQs);
     const qs = new QueryStringHandler();
-    expect(qs.layout).toEqual(expected);
+    expect(qs.getCustomLevel()).toEqual({ layout, rules, moves });
   });
 
-  test("layout is null if not set", () => {
+  test("custom level is undefined if not set", () => {
     const qs = new QueryStringHandler();
-    expect(qs.layout).toEqual(null);
+    expect(qs.getCustomLevel()).toEqual(undefined);
   });
 
   test("can set layout", () => {
     const qs = new QueryStringHandler();
-    const layout: IGridLayout = [
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"],
-      ["r", "r", "b", "r", "r"]
-    ];
-    qs.layout = layout;
-    expect(qs.layout).toEqual(layout);
-    expect(decodeURIComponent(window.location.search)).toEqual(`?${layoutQs}`);
-  });
-
-  test("can get rules object", () => {
-    setQueryString(rulesQs);
-    const expected = {
-      toggleOnOverlap: false,
-      minSelection: 4
-    };
-    const qs = new QueryStringHandler();
-    expect(qs.rules).toEqual(expected);
-  });
-
-  test("can get rules object with only one rule present", () => {
-    setQueryString("toggleOnOverlap=false");
-    const qs = new QueryStringHandler();
-    expect(qs.rules).toEqual({
-      toggleOnOverlap: false
-    });
-  });
-
-  test("can get rules object without any rule present", () => {
-    setQueryString("");
-    const qs = new QueryStringHandler();
-    expect(qs.rules).toEqual({});
-  });
-
-  test("can get seperate rules", () => {
-    setQueryString(rulesQs);
-    const qs = new QueryStringHandler();
-    expect(qs.toggleOnOverlap).toEqual(false);
-    expect(qs.minSelection).toEqual(4);
-  });
-
-  test("seperate rules are null if not set", () => {
-    const qs = new QueryStringHandler();
-    expect(qs.toggleOnOverlap).toEqual(null);
-    expect(qs.minSelection).toEqual(null);
-  });
-
-  test("can set seperate rules", () => {
-    const qs = new QueryStringHandler();
-    qs.toggleOnOverlap = true;
-    qs.minSelection = 4;
-    expect(qs.toggleOnOverlap).toEqual(true);
-    expect(qs.minSelection).toEqual(4);
-    expect(window.location.search).toEqual("?toggleOnOverlap=true&minSelection=4");
-  });
-
-  test("can get moves", () => {
-    setQueryString("moves=3");
-    const qs = new QueryStringHandler();
-    expect(qs.moves).toEqual(3);
-  });
-
-  test("moves are null if not set", () => {
-    const qs = new QueryStringHandler();
-    expect(qs.moves).toEqual(null);
-  });
-
-  test("can set moves", () => {
-    const qs = new QueryStringHandler();
-    qs.moves = 4;
-    expect(qs.moves).toEqual(4);
-    expect(window.location.search).toEqual("?moves=4");
+    qs.setCustomLevel({ layout, rules, moves });
+    expect(decodeURIComponent(window.location.search)).toEqual(`?${customLevelQs}`);
   });
 
   test("can get edit mode", () => {
     setQueryString(editQs);
     const qs = new QueryStringHandler();
-    expect(qs.edit).toEqual(true);
+    expect(qs.getIsEditMode()).toEqual(true);
   });
 
-  test("edit is null if not set", () => {
+  test("edit is undefined if not set", () => {
     const qs = new QueryStringHandler();
-    expect(qs.edit).toEqual(null);
+    expect(qs.getIsEditMode()).toEqual(undefined);
   });
 
   test("can get multiple values", () => {
-    setQueryString(`${levelQs}&${rulesQs}&${editQs}`);
+    setQueryString(`${customLevelQs}&${editQs}`);
     const qs = new QueryStringHandler();
-    expect(qs.level).toEqual(5);
-    expect(qs.toggleOnOverlap).toEqual(false);
-    expect(qs.minSelection).toEqual(4);
-    expect(qs.edit).toEqual(true);
+    expect(qs.getCustomLevel()).toEqual({ layout, rules, moves });
+    expect(qs.getIsEditMode()).toEqual(true);
   });
 
   test("can replace value in query string", () => {
-    setQueryString(`${levelQs}&${rulesQs}&${editQs}`);
+    setQueryString(`${customLevelQs}&${editQs}`);
     const qs = new QueryStringHandler();
-    qs.level = 6;
-    qs.edit = false;
-    expect(qs.level).toEqual(6);
-    expect(qs.edit).toEqual(false);
-    expect(window.location.search).toEqual("?level=6&toggleOnOverlap=false&minSelection=4&edit=false");
-  });
-
-  test("can add value in existing query string", () => {
-    setQueryString(`${editQs}`);
-    const qs = new QueryStringHandler();
-    qs.level = 6;
-    expect(qs.level).toEqual(6);
-    expect(qs.edit).toEqual(true);
-    expect(window.location.search).toEqual("?edit=true&level=6");
-  });
-
-  test("can add value in existing query string", () => {
-    setQueryString(`${levelQs}&${rulesQs}&${editQs}`);
-    const qs = new QueryStringHandler();
-    qs.level = null;
-    expect(qs.level).toEqual(null);
-    expect(window.location.search).toEqual("?toggleOnOverlap=false&minSelection=4&edit=true");
-  });
-});
-
-describe.skip("LevelManager", () => {
-  test("get initial level number", () => {});
-
-  test("get current level", () => {});
-
-  test("get current level with custom rules set in query string", () => {});
-
-  test("get current level with custom level number set in query string", () => {});
-
-  test("get current level with custom layout set in query string", () => {});
-
-  describe(".decrementCurrentLevel", () => {
-    test("can decrement if not on first level", () => {});
-
-    test("can not decrement past first level", () => {});
-  });
-
-  describe(".incrementCurrentLevel", () => {
-    test("can increment if not on last level", () => {});
-
-    test("can not increment past last level", () => {});
-  });
-
-  describe(".canProcedeToNextLevel", () => {
-    test("can procede if not on last level and no custom level set", () => {});
-
-    test("can not procede if on last level", () => {});
-
-    test("can not procede if custom layout set", () => {});
+    qs.setCustomLevel({ layout, rules, moves: 5 });
+    qs.setIsEditMode(false);
+    expect(qs.getCustomLevel()).toEqual({ layout, rules, moves: 5 });
+    expect(qs.getIsEditMode()).toEqual(false);
   });
 });

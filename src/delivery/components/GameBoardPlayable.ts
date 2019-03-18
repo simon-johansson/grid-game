@@ -3,7 +3,11 @@ import { IGameLevel, ILevelData } from "@application/interfaces";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardPlayable extends GameBoard {
-  constructor(interactor: Interactor, queryStringLevel: IGameLevel, onGameStateUpdate: (state: ILevelData) => void) {
+  constructor(
+    interactor: Interactor,
+    queryStringLevel: IGameLevel | undefined,
+    onGameStateUpdate: (state: ILevelData) => void,
+  ) {
     super(interactor, queryStringLevel, onGameStateUpdate);
   }
 
@@ -25,7 +29,7 @@ export default class GameBoardPlayable extends GameBoard {
   }
 
   protected processSelectionEnd(): void {
-    const level = this.interactor.processSelection()
+    const level = this.interactor.processSelection();
     this.interactor.removeSelection();
     this.onGameStateUpdate(level);
   }

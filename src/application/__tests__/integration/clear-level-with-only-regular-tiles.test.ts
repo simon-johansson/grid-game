@@ -53,7 +53,7 @@ describe("clear level with only regular tiles", () => {
 
   test("select whole grid", () => {
     setSelection(0, 0, 100, 100);
-    const { startTile, endTile } = selectionData.tileSpan;
+    const { startTile, endTile } = selectionData.tileSpan!;
     expect(startTile.rowIndex).toEqual(0);
     expect(startTile.colIndex).toEqual(0);
     expect(endTile.rowIndex).toEqual(4);

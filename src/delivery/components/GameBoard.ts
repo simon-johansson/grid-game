@@ -7,7 +7,7 @@ import Component from "./Component";
 // TODO: Vad är protecterd? Behöver det vara det?
 // TODO: Behöver jag unbind events? Memory leak?
 export default abstract class GameBoard extends Component<{}> {
-  protected wrapperElement: HTMLElement = document.getElementById("canvas-container");
+  protected wrapperElement: HTMLElement = document.getElementById("canvas-container") as HTMLElement;
   protected tileCanvasClass = "tile-canvas";
   protected selectionCanvasClass = "selection-canvas";
   protected innerWrapperClass = "inner-wrapper";
@@ -15,7 +15,7 @@ export default abstract class GameBoard extends Component<{}> {
 
   constructor(
     protected interactor: Interactor,
-    private customLevel: IGameLevel,
+    private customLevel: IGameLevel | undefined,
     protected onGameStateUpdate: (state: ILevelData) => void,
   ) {
     super();
@@ -27,7 +27,7 @@ export default abstract class GameBoard extends Component<{}> {
     });
   }
 
-  public goToNextLevel() {
+  public goToNextLevel(): Promise<void> {
     this.prepareNewLevel("next");
     this.onGameStateUpdate(this.interactor.startNextLevel(this.getPresenters()));
     return this.showNewLevel("next").then(() => {
@@ -35,7 +35,7 @@ export default abstract class GameBoard extends Component<{}> {
     });
   }
 
-  public goToPrevLevel() {
+  public goToPrevLevel(): Promise<void> {
     this.prepareNewLevel("prev");
     this.onGameStateUpdate(this.interactor.startPrevLevel(this.getPresenters()));
     return this.showNewLevel("prev").then(() => {
@@ -43,7 +43,7 @@ export default abstract class GameBoard extends Component<{}> {
     });
   }
 
-  public restartLevel() {
+  public restartLevel(): Promise<void> {
     this.prepareNewLevel("restart");
     this.startLevel();
     return this.showNewLevel("restart").then(() => {
@@ -63,10 +63,11 @@ export default abstract class GameBoard extends Component<{}> {
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
 
-  private startLevel() {
+  private startLevel(): void {
     // TODO: Går det att göra denna kolla snyggare?
     let state;
-    if (this.customLevel.layout) {
+
+    if (this.customLevel) {
       state = this.interactor.startCustomLevel(this.getPresenters(), this.customLevel);
     } else {
       state = this.interactor.startCurrentLevel(this.getPresenters());
@@ -86,13 +87,13 @@ export default abstract class GameBoard extends Component<{}> {
     return this.getEl(this.tileCanvasClass) as HTMLCanvasElement;
   }
   private tileCanvasContext(): CanvasRenderingContext2D {
-    return this.tileCanvas.getContext("2d");
+    return this.tileCanvas.getContext("2d") as CanvasRenderingContext2D;
   }
   private get selectionCanvas(): HTMLCanvasElement {
     return this.getEl(this.selectionCanvasClass) as HTMLCanvasElement;
   }
   private selectionCanvasContext(): CanvasRenderingContext2D {
-    return this.selectionCanvas.getContext("2d");
+    return this.selectionCanvas.getContext("2d") as CanvasRenderingContext2D;
   }
 
   private get canvasSize(): number {
@@ -104,10 +105,10 @@ export default abstract class GameBoard extends Component<{}> {
     return Math.floor(this.tileCanvas.width / 5);
   }
 
-  private prepareNewLevel(direction: "prev" | "next" | "restart") {
-    this.getEl(this.innerWrapperClass).className = `${this.innerWrapperClass}-old`;
-    this.getEl(this.tileCanvasClass).className = `${this.tileCanvasClass}-old`;
-    this.getEl(this.selectionCanvasClass).className = `${this.selectionCanvasClass}-old`;
+  private prepareNewLevel(direction: "prev" | "next" | "restart"): void {
+    this.getEl(this.innerWrapperClass)!.className = `${this.innerWrapperClass}-old`;
+    this.getEl(this.tileCanvasClass)!.className = `${this.tileCanvasClass}-old`;
+    this.getEl(this.selectionCanvasClass)!.className = `${this.selectionCanvasClass}-old`;
     this.createWrapperAndCanvas(direction);
     this.setCanvasSize();
   }
@@ -123,18 +124,18 @@ export default abstract class GameBoard extends Component<{}> {
       directionOutClass += "-left";
     }
 
-    newWrapper.classList.remove("fade-in", "fade-in-right", "fade-in-left");
+    newWrapper!.classList.remove("fade-in", "fade-in-right", "fade-in-left");
 
     // TODO: Gör kollen på den nya wrappern istället
     const promise = new Promise(resolve => {
-      oldWrapper.addEventListener("transitionend", resolve, false);
-    }).then(() => oldWrapper.remove());
-    oldWrapper.classList.add(directionOutClass);
+      oldWrapper!.addEventListener("transitionend", resolve, false);
+    }).then(() => oldWrapper!.remove());
+    oldWrapper!.classList.add(directionOutClass);
 
     return promise;
   }
 
-  private createWrapperAndCanvas(direction: "prev" | "next" | "restart") {
+  private createWrapperAndCanvas(direction: "prev" | "next" | "restart"): void {
     const wrapper = document.createElement("div");
     let directionInClass = "fade-in";
     if (direction === "prev") {
@@ -156,7 +157,7 @@ export default abstract class GameBoard extends Component<{}> {
     this.wrapperElement.appendChild(wrapper);
   }
 
-  private setCanvasSize() {
+  private setCanvasSize(): void {
     const { clientWidth, clientHeight } = document.body;
     const mediaQuerySmall = 768;
     const defaultGameBoardSize = 500;

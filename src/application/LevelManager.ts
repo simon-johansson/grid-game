@@ -63,13 +63,16 @@ export default class LevelManager {
     return layout as IGridLayout;
   }
 
+  private currentLevelIndex: number;
+  private completedLevels: string[];
+
   constructor(
     private levels: IGameLevel[],
-    private currentLevelIndex: number = 0,
-    private completedLevels: string[] = [],
+    currentLevelIndex: number | null = 0,
+    completedLevels: string[] | null = [],
   ) {
-    if (typeof this.currentLevelIndex !== 'number') this.currentLevelIndex = 0;
-    if (!this.completedLevels) this.completedLevels = [];
+    this.currentLevelIndex = currentLevelIndex === null ? 0 : currentLevelIndex;
+    this.completedLevels = completedLevels === null ? [] : completedLevels;
 
     if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
       throw new Error("Supplied level index is out of bounds");

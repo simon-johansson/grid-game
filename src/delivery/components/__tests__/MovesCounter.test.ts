@@ -2,7 +2,7 @@ import MovesCounter from "../MovesCounter";
 
 describe("component/MovesCounter", () => {
   let mc: MovesCounter;
-  const getTextContent = (): string => document.getElementById("moves-counter").textContent;
+  const getTextContent = (): string => document.getElementById("moves-counter")!.textContent!;
 
   beforeEach(() => {
     document.body.innerHTML = '<div id="moves-counter"></div>';

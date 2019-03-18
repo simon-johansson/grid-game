@@ -23,7 +23,7 @@ export type IGridLayout = Board5x5<ITileRawState>;
 
 export interface IGameLevel {
   layout: IGridLayout;
-  moves?: number;
+  moves: number;
   rules?: IGameRules;
   id?: string;
 }
@@ -52,8 +52,8 @@ export interface IAnalytics {
 
 export interface IStorage {
   setCurrentLevel: (level: Level) => void;
-  getCurrentLevel: () => Promise<number>;
+  getCurrentLevel: () => Promise<number | null>;
   onLevelComplete: (level: Level) => Promise<string[]>;
-  getCompletedLevels: () => Promise<string[]>;
+  getCompletedLevels: () => Promise<string[] | null>;
   onFail: (level: Level) => void;
 }
