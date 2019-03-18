@@ -10,10 +10,10 @@ const counterWrapperClass = "counter-number-wrapper";
 const counterClass = "counter-number";
 
 export default class MovesLeft extends Component<IProps> {
-  protected wrapperElement: HTMLElement = document.getElementById("moves-counter");
+  protected wrapperElement: HTMLElement = document.getElementById("moves-counter") as HTMLElement;
 
   public get counterWrapperElement(): HTMLElement {
-    return this.getEl(counterWrapperClass);
+    return this.getEl(counterWrapperClass) as HTMLElement;
   }
 
   public get counterClassElements(): NodeList {
@@ -39,7 +39,7 @@ export default class MovesLeft extends Component<IProps> {
       "failed"}`;
   }
 
-  private removeNumberElement() {
+  private removeNumberElement(): void {
     if (this.counterClassElements.length) {
       [].forEach.call(this.counterClassElements, (el: Element) => {
         el.classList.remove("new");

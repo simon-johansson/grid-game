@@ -28,8 +28,8 @@ export default class StorageIml implements IStorage {
   public async onLevelComplete(level: Level): Promise<string[]> {
     let completedLevels = await this.getCompletedLevels();
     completedLevels = completedLevels || [];
-    if (completedLevels.indexOf(level.id) === -1) {
-      completedLevels.push(level.id);
+    if (completedLevels.indexOf(level.id!) === -1) {
+      completedLevels.push(level.id!);
     }
     return localforage.setItem(this.onLevelCompleteKey, completedLevels);
   }

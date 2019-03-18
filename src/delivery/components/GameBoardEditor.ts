@@ -9,7 +9,7 @@ export default class GameBoardEditor extends GameBoard {
 
   constructor(
     interactor: Interactor,
-    queryStringLevel: IGameLevel,
+    queryStringLevel: IGameLevel | undefined,
     onGameStateUpdate: (state: ILevelData) => void,
     private onEdit: (state: IGameLevel) => void,
   ) {

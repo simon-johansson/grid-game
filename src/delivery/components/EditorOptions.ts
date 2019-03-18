@@ -16,7 +16,7 @@ export interface ISelectedOptions {
 }
 
 export default class EditorOptions extends Component<{}> {
-  protected wrapperElement: HTMLElement = document.getElementById("editor-options");
+  protected wrapperElement: HTMLElement = document.getElementById("editor-options") as HTMLElement;
   private queryString = new QueryStringHandler();
   private options: ISelectedOptions = {
     tile: TileType.Regular,
@@ -29,15 +29,11 @@ export default class EditorOptions extends Component<{}> {
 
   constructor(private onNewOptionsSet: (options: ISelectedOptions) => void) {
     super();
-    const { moves, minSelection, toggleOnOverlap } = this.queryString;
-    if (moves !== null) {
-      this.options.moves = moves;
-    }
-    if (minSelection !== null) {
-      this.options.rules.minSelection = minSelection;
-    }
-    if (toggleOnOverlap !== null) {
-      this.options.rules.toggleOnOverlap = toggleOnOverlap;
+    const customLevel = this.queryString.getCustomLevel();
+    if (customLevel) {
+      this.options.moves = customLevel.moves;
+      this.options.rules.minSelection = customLevel.rules!.minSelection;
+      this.options.rules.toggleOnOverlap = customLevel.rules!.toggleOnOverlap;
     }
     this.render({});
     // onNewOptionsSet(this.options);
@@ -70,7 +66,7 @@ export default class EditorOptions extends Component<{}> {
   `;
   }
 
-  protected componentDidMount() {
+  protected componentDidMount(): void {
     this.bindEvent(regularTileClass, this.setTileOptions.bind(this, TileType.Regular, regularTileClass));
     this.bindEvent(clearedTileClass, this.setTileOptions.bind(this, TileType.Cleared, clearedTileClass));
     this.bindEvent(blockerTileClass, this.setTileOptions.bind(this, TileType.Blocker, blockerTileClass));
@@ -102,9 +98,9 @@ export default class EditorOptions extends Component<{}> {
     this.onNewOptionsSet(this.options);
   };
 
-  private setTileClass(elementClass: string) {
+  private setTileClass(elementClass: string): void {
     [regularTileClass, clearedTileClass, blockerTileClass].forEach(el => {
-      const classList = this.getEl(el).classList;
+      const classList = this.getEl(el)!.classList;
       elementClass === el ? classList.add("selected") : classList.remove("selected");
     });
   }

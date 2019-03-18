@@ -25,13 +25,13 @@ export default class AnalyticsIml implements IAnalytics {
     }
   }
 
-  public startLevel(level: Level) {
+  public startLevel(level: Level): void {
     if (level.name !== undefined) {
       GameAnalytics.addProgressionEvent(EGAProgressionStatus.Start, level.name.toString());
     }
   }
 
-  public onSelection(level: Level) {
+  public onSelection(level: Level): void {
     // On level complete
     if (level.isCleared && level.name) {
       GameAnalytics.addProgressionEvent(
@@ -45,15 +45,15 @@ export default class AnalyticsIml implements IAnalytics {
     }
   }
 
-  public onLevelComplete(level: Level) {
-    GameAnalytics.addProgressionEvent(EGAProgressionStatus.Complete, level.name.toString());
+  public onLevelComplete(level: Level): void {
+    GameAnalytics.addProgressionEvent(EGAProgressionStatus.Complete, level.name!.toString());
   }
 
-  public onLevelFailed(level: Level) {
-    GameAnalytics.addProgressionEvent(EGAProgressionStatus.Fail, level.name.toString());
+  public onLevelFailed(level: Level): void {
+    GameAnalytics.addProgressionEvent(EGAProgressionStatus.Fail, level.name!.toString());
   }
 
-  public onError(error: string) {
+  public onError(error: string): void {
     GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
   }
 }

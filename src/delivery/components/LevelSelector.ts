@@ -8,15 +8,15 @@ const editBtnClass = "edit";
 const currentLevelClass = "current-level";
 
 export interface IProps {
-  currentLevel: number;
-  isLastLevel: boolean;
-  isFirstLevel: boolean;
+  currentLevel: number | undefined;
+  isLastLevel: boolean | undefined;
+  isFirstLevel: boolean | undefined;
   isEditing: boolean;
   isReviewing: boolean;
 }
 
 export default class LevelSelector extends Component<IProps> {
-  protected wrapperElement: HTMLElement = document.getElementById("level-selection");
+  protected wrapperElement: HTMLElement = document.getElementById("level-selection") as HTMLElement;
 
   constructor(
     private onPrevLevel: () => void,
@@ -58,7 +58,7 @@ export default class LevelSelector extends Component<IProps> {
   `;
   }
 
-  protected componentDidMount() {
+  protected componentDidMount(): void {
     this.bindEvent(prevBtnClass, this.onPrevLevel);
     this.bindEvent(nextBtnClass, this.onNextLevel);
     this.bindEvent(restartBtnClass, this.onRestart);
@@ -66,21 +66,21 @@ export default class LevelSelector extends Component<IProps> {
     this.bindEvent(editBtnClass, this.onEditLevel);
   }
 
-  protected update({ currentLevel, isFirstLevel, isLastLevel, isEditing, isReviewing }: IProps) {
+  protected update({ currentLevel, isFirstLevel, isLastLevel, isEditing, isReviewing }: IProps): void {
     if (isEditing) this.updateEditingView();
     else if (isReviewing) this.updateReviewingView();
-    else this.updatePlayingView(currentLevel, isFirstLevel, isLastLevel);
+    else this.updatePlayingView(currentLevel!, isFirstLevel!, isLastLevel!);
   }
 
   private updateEditingView(): void {
-    this.getEl(currentLevelClass).textContent = "Level editor";
+    this.getEl(currentLevelClass)!.textContent = "Level editor";
   }
   private updateReviewingView(): void {
-    this.getEl(currentLevelClass).textContent = "Review level";
+    this.getEl(currentLevelClass)!.textContent = "Review level";
   }
   private updatePlayingView(currentLevel: number, isFirstLevel: boolean, isLastLevel: boolean): void {
-    this.getEl(currentLevelClass).textContent = `Level ${currentLevel + 1}`;
-    this.getEl(prevBtnClass).className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
-    this.getEl(nextBtnClass).className = `${nextBtnClass} ${isLastLevel && "disable"}`;
+    this.getEl(currentLevelClass)!.textContent = `Level ${currentLevel + 1}`;
+    this.getEl(prevBtnClass)!.className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
+    this.getEl(nextBtnClass)!.className = `${nextBtnClass} ${isLastLevel && "disable"}`;
   }
 }

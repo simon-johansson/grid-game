@@ -18,20 +18,20 @@ describe("Selection", () => {
     test("setting start point results in one tile selected", () => {
       selection.setStartPoint({ x: 0, y: 0 });
 
-      expect(selection.tileSpan.startTile.rowIndex).toEqual(0);
-      expect(selection.tileSpan.startTile.colIndex).toEqual(0);
-      expect(selection.tileSpan.endTile.rowIndex).toEqual(0);
-      expect(selection.tileSpan.endTile.colIndex).toEqual(0);
+      expect(selection.tileSpan!.startTile.rowIndex).toEqual(0);
+      expect(selection.tileSpan!.startTile.colIndex).toEqual(0);
+      expect(selection.tileSpan!.endTile.rowIndex).toEqual(0);
+      expect(selection.tileSpan!.endTile.colIndex).toEqual(0);
     });
 
     test("setting end point results in selection span", () => {
       selection.setStartPoint({ x: 0, y: 0 });
       selection.setEndPoint({ x: 50, y: 50 });
 
-      expect(selection.tileSpan.startTile.rowIndex).toEqual(0);
-      expect(selection.tileSpan.startTile.colIndex).toEqual(0);
-      expect(selection.tileSpan.endTile.rowIndex).toEqual(2);
-      expect(selection.tileSpan.endTile.colIndex).toEqual(2);
+      expect(selection.tileSpan!.startTile.rowIndex).toEqual(0);
+      expect(selection.tileSpan!.startTile.colIndex).toEqual(0);
+      expect(selection.tileSpan!.endTile.rowIndex).toEqual(2);
+      expect(selection.tileSpan!.endTile.colIndex).toEqual(2);
     });
 
     test("expanding selection by setting new end point", () => {
@@ -39,10 +39,10 @@ describe("Selection", () => {
       selection.setEndPoint({ x: 50, y: 50 });
       selection.setEndPoint({ x: 100, y: 100 });
 
-      expect(selection.tileSpan.startTile.rowIndex).toEqual(0);
-      expect(selection.tileSpan.startTile.colIndex).toEqual(0);
-      expect(selection.tileSpan.endTile.rowIndex).toEqual(4);
-      expect(selection.tileSpan.endTile.colIndex).toEqual(4);
+      expect(selection.tileSpan!.startTile.rowIndex).toEqual(0);
+      expect(selection.tileSpan!.startTile.colIndex).toEqual(0);
+      expect(selection.tileSpan!.endTile.rowIndex).toEqual(4);
+      expect(selection.tileSpan!.endTile.colIndex).toEqual(4);
     });
 
     test("decreasing selection by setting new end point", () => {
@@ -50,10 +50,10 @@ describe("Selection", () => {
       selection.setEndPoint({ x: 100, y: 50 });
       selection.setEndPoint({ x: 30, y: 30 });
 
-      expect(selection.tileSpan.startTile.rowIndex).toEqual(0);
-      expect(selection.tileSpan.startTile.colIndex).toEqual(0);
-      expect(selection.tileSpan.endTile.rowIndex).toEqual(1);
-      expect(selection.tileSpan.endTile.colIndex).toEqual(1);
+      expect(selection.tileSpan!.startTile.rowIndex).toEqual(0);
+      expect(selection.tileSpan!.startTile.colIndex).toEqual(0);
+      expect(selection.tileSpan!.endTile.rowIndex).toEqual(1);
+      expect(selection.tileSpan!.endTile.colIndex).toEqual(1);
     });
   });
 

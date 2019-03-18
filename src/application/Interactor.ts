@@ -43,7 +43,7 @@ export default class Interactor {
 
   constructor(private network: INetworkGateway, private analytics: IAnalytics, private storage: IStorage) {}
 
-  public async loadLevels() {
+  public async loadLevels(): Promise<void> {
     try {
       const levels = await this.network.getLevels();
       const currentLevel = await this.storage.getCurrentLevel();
@@ -111,7 +111,7 @@ export default class Interactor {
     this.analytics.startLevel(this.level);
   }
 
-  private createEnteties(presenters: IPresenters) {
+  private createEnteties(presenters: IPresenters): void {
     const { grid, rules } = this.level;
     const tiles = createTiles(presenters.tile, grid.layout, rules);
     this.grid = new Grid(tiles, rules);
@@ -119,17 +119,17 @@ export default class Interactor {
   }
 
   private applySelectionToGrid(tileState?: TileType): void {
-    this.grid.applySelection(this.selection.tileSpan, tileState);
+    this.grid.applySelection(this.selection.tileSpan!, tileState);
     if (!tileState) this.selection.isValid = this.grid.isSelectedTilesClearable;
   }
 
-  private clearTiles() {
+  private clearTiles(): void {
     this.grid.toggleClearedOnSelectedTiles();
     this.level.onValidSelection();
     this.level.isCleared = this.grid.isGridCleared;
   }
 
-  private async onLevelEnded() {
+  private async onLevelEnded(): Promise<void> {
     if (this.level.isCleared) {
       this.analytics.onLevelComplete(this.level);
       const completedLevels = await this.storage.onLevelComplete(this.level);

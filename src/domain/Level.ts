@@ -42,7 +42,7 @@ export default class Level {
     };
   }
 
-  public onValidSelection() {
+  public onValidSelection(): void {
       this.selections.made++;
 
       if (this.selections.left) {

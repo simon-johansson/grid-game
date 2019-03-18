@@ -18,12 +18,12 @@ export default class UserInterface {
   private queryString = new QueryStringHandler();
 
   constructor(interactor: Interactor) {
-    this.isEditing = this.queryString.edit;
-    this.isReviewing = !!this.queryString.layout && !this.isEditing;
+    this.isEditing = !!this.queryString.getIsEditMode();
+    this.isReviewing = !!this.queryString.getCustomLevel() && !this.isEditing;
     this.createComponents(interactor);
   }
 
-  private createComponents(interactor: Interactor) {
+  private createComponents(interactor: Interactor): void {
     this.LevelSelectorComponent = new LevelSelector(
       this.prevLevel.bind(this),
       this.nextLevel.bind(this),
@@ -35,7 +35,7 @@ export default class UserInterface {
     if (this.isEditing) {
       this.GameBoardEditorComponent = new GameBoardEdit(
         interactor,
-        this.getQueryStringLevel(),
+        this.queryString.getCustomLevel(),
         this.onEditStateUpdate.bind(this),
         this.onEditMade.bind(this),
       );
@@ -43,34 +43,21 @@ export default class UserInterface {
       this.MovesCounterComponent = new MovesCounter();
       this.GameBoardPlaybaleComponent = new GameBoardPlayable(
         interactor,
-        this.getQueryStringLevel(),
+        this.queryString.getCustomLevel(),
         this.onPlayStateUpdate.bind(this),
       );
     }
   }
 
-  // TODO: Flytta denna logik till QueryStringHandler
-  private getQueryStringLevel(): IGameLevel {
-    return {
-      layout: this.queryString.layout,
-      moves: this.queryString.moves,
-      rules: this.queryString.rules,
-    };
-  }
-
-  private onEditStateUpdate(level: ILevelData) {
+  private onEditStateUpdate(level: ILevelData): void {
     this.updateComponents(level);
   }
 
-  private onEditMade(level: IGameLevel) {
-    // TODO: skicka in en hel IGameLevel här istället
-    this.queryString.layout = level.layout;
-    this.queryString.minSelection = level.rules.minSelection;
-    this.queryString.toggleOnOverlap = level.rules.toggleOnOverlap;
-    this.queryString.moves = level.moves;
+  private onEditMade(level: IGameLevel): void {
+    this.queryString.setCustomLevel(level);
   }
 
-  private onPlayStateUpdate(level: ILevelData) {
+  private onPlayStateUpdate(level: ILevelData): void {
     const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
     this.updateComponents(level);
 
@@ -85,7 +72,7 @@ export default class UserInterface {
     }
   }
 
-  private async restartLevel() {
+  private async restartLevel(): Promise<void> {
     if (!this.isTransitioningBetweenLevels) {
       this.isTransitioningBetweenLevels = true;
       await this.GameBoardPlaybaleComponent.restartLevel();
@@ -93,7 +80,7 @@ export default class UserInterface {
     }
   }
 
-  private async prevLevel() {
+  private async prevLevel(): Promise<void> {
     if (!this.isTransitioningBetweenLevels) {
       this.isTransitioningBetweenLevels = true;
       await this.GameBoardPlaybaleComponent.goToPrevLevel();
@@ -101,7 +88,7 @@ export default class UserInterface {
     }
   }
 
-  private async nextLevel() {
+  private async nextLevel(): Promise<void> {
     if (!this.isTransitioningBetweenLevels) {
       this.isTransitioningBetweenLevels = true;
       await this.GameBoardPlaybaleComponent.goToNextLevel();
@@ -109,13 +96,13 @@ export default class UserInterface {
     }
   }
 
-  private reviewLevel() {
-    this.queryString.edit = false;
+  private reviewLevel(): void {
+    this.queryString.setIsEditMode(false);
     window.location.reload();
   }
 
-  private editLevel() {
-    this.queryString.edit = true;
+  private editLevel(): void {
+    this.queryString.setIsEditMode(true);
     window.location.reload();
   }
 
@@ -141,7 +128,7 @@ export default class UserInterface {
       isFirstLevel: level.isFirstLevel,
       isLastLevel: level.isLastLevel,
       isEditing: this.isEditing,
-      isReviewing: !!this.queryString.layout && !this.isEditing,
+      isReviewing: !!this.queryString.getCustomLevel() && !this.isEditing,
     });
   }
 }

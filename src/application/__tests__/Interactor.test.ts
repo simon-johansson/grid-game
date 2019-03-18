@@ -138,7 +138,7 @@ describe("Interactor", () => {
     test("can set start of selection", () => {
       interactor.startCustomLevel(presenters, levels[0]);
       interactor.setSelectionStart(0, 0);
-      const { startTile, endTile } = selectionData.tileSpan;
+      const { startTile, endTile } = selectionData.tileSpan!;
       expect(selectionHasRendered).toEqual(true);
       expect(startTile.rowIndex).toEqual(0);
       expect(startTile.colIndex).toEqual(0);
@@ -156,7 +156,7 @@ describe("Interactor", () => {
       interactor.startCustomLevel(presenters, levels[0]);
       interactor.setSelectionStart(0, 0);
       interactor.setSelectionEnd(100, 100);
-      const { startTile, endTile } = selectionData.tileSpan;
+      const { startTile, endTile } = selectionData.tileSpan!;
       expect(selectionHasRendered).toEqual(true);
       expect(startTile.rowIndex).toEqual(0);
       expect(startTile.colIndex).toEqual(0);
