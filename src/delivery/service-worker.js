@@ -10,8 +10,8 @@ self.addEventListener("install", function(event) {
           "/index.html",
           "/styles/styles.css",
           "/vendor/doorbell.js",
-          "/vendor/require.js",
-          "/app.js"
+          "/app.js",
+          "/favicon.ico",
         ]);
       })
       .then(function() {
