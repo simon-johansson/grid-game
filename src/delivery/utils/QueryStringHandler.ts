@@ -1,13 +1,6 @@
 import { IGameLevel } from "@application/interfaces";
 
 export default class QueryStringHandler {
-  private queryString: string;
-  private params: URLSearchParams;
-
-  constructor() {
-    this.queryString = window.location.search;
-    this.params = new URLSearchParams(this.queryString);
-  }
 
   public getCustomLevel(): IGameLevel | undefined {
     return this.getParam<IGameLevel>("custom");
@@ -34,23 +27,30 @@ export default class QueryStringHandler {
   }
 
   private getParam<T>(param: string): T | undefined {
+    const params = this.params;
+
     try {
-      const str = this.params.get(param);
+      const str = params.get(param);
       return str !== null ? JSON.parse(str) : undefined;
     } catch (error) {
       console.log(error);
-
       return undefined;
     }
   }
 
   private setParam(name: string, value?: any): void {
+    const params = this.params;
+
     if (value === null) {
-      this.params.delete(name);
+      params.delete(name);
     } else {
-      this.params.set(name, JSON.stringify(value));
+      params.set(name, JSON.stringify(value));
     }
     const pathname = window.location.pathname;
-    window.history.pushState({}, "", decodeURIComponent(`${pathname}?${this.params}`));
+    window.history.pushState({}, "", decodeURIComponent(`${pathname}?${params}`));
+  }
+
+  private get params(): URLSearchParams {
+    return new URLSearchParams(window.location.search);
   }
 }
