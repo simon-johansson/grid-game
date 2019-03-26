@@ -196,6 +196,6 @@ export default class Interactor {
   }
 
   private get hasLevelEnded(): boolean {
-    return !this.level.selections.left && typeof this.level.name !== undefined;
+    return !this.level.selections.left && this.level.name !== undefined;
   }
 }
