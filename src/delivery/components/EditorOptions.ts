@@ -55,9 +55,9 @@ export default class EditorOptions extends Component<IProps> {
   }
 
   protected componentDidMount(): void {
-    this.bindEvent(regularTileClass, this.setTileOptions.bind(this, TileType.Regular, regularTileClass));
-    this.bindEvent(clearedTileClass, this.setTileOptions.bind(this, TileType.Cleared, clearedTileClass));
-    this.bindEvent(blockerTileClass, this.setTileOptions.bind(this, TileType.Blocker, blockerTileClass));
+    this.bindClickEvent(regularTileClass, this.setTileOptions.bind(this, TileType.Regular, regularTileClass));
+    this.bindClickEvent(clearedTileClass, this.setTileOptions.bind(this, TileType.Cleared, clearedTileClass));
+    this.bindClickEvent(blockerTileClass, this.setTileOptions.bind(this, TileType.Blocker, blockerTileClass));
     this.bindChangeEvent(movesClass, this.setMovesOption.bind(this));
     this.bindChangeEvent(minSelectionClass, this.setMinSelectionOption.bind(this));
     this.bindChangeEvent(overlapClass, this.setToggleOnOverlapOption.bind(this));

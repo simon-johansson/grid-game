@@ -1,22 +1,19 @@
 import Interactor, { IPresenters } from "@application/Interactor";
-import { IGameLevel, ILevelData } from "@application/interfaces";
+import { ILevelData } from "@application/interfaces";
+import Component from "../components/Component";
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
-import Component from "./Component";
 
 // TODO: Ändra ordningen av metoderna, bör vara logiskt
-// TODO: Vad är protecterd? Behöver det vara det?
 // TODO: Behöver jag unbind events? Memory leak?
 export default abstract class GameBoard extends Component<{}> {
   protected wrapperElement: HTMLElement = document.getElementById("canvas-container") as HTMLElement;
   protected tileCanvasClass = "tile-canvas";
   protected selectionCanvasClass = "selection-canvas";
   protected innerWrapperClass = "inner-wrapper";
-  protected isSelecting: boolean = false;
+  private isSelecting: boolean = false;
+  private isTransitioningBetweenLevels: boolean = false;
 
-  constructor(
-    protected interactor: Interactor,
-    protected onGameStateUpdate: (state: ILevelData) => void,
-  ) {
+  constructor(protected interactor: Interactor) {
     super();
     this.render({});
     this.setCanvasSize();
@@ -26,40 +23,50 @@ export default abstract class GameBoard extends Component<{}> {
     });
   }
 
-  public goToNextLevel(): Promise<void> {
-    this.prepareNewLevel("next");
-    this.onGameStateUpdate(this.interactor.startNextLevel(this.getPresenters()));
-    return this.showNewLevel("next").then(() => {
-      this.bindEvents();
-    });
+  protected goToNextLevel(): Promise<void> | undefined {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("next");
+      this.updateComponents(this.interactor.startNextLevel(this.getPresenters()));
+      return this.showNewLevel("next").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
   }
 
-  public goToPrevLevel(): Promise<void> {
-    this.prepareNewLevel("prev");
-    this.onGameStateUpdate(this.interactor.startPrevLevel(this.getPresenters()));
-    return this.showNewLevel("prev").then(() => {
-      this.bindEvents();
-    });
+  protected goToPrevLevel(): Promise<void> | undefined {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("prev");
+      this.updateComponents(this.interactor.startPrevLevel(this.getPresenters()));
+      return this.showNewLevel("prev").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
   }
 
-  public restartLevel(): Promise<void> {
-    this.prepareNewLevel("restart");
-    this.startLevel();
-    return this.showNewLevel("restart").then(() => {
-      this.bindEvents();
-    });
-  }
-
-  protected abstract HTML(props: {}): string;
-
-  protected update(props: {}): void {
-    // console.log('update');
+  protected restartLevel(): Promise<void> | undefined {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("restart");
+      this.startLevel();
+      return this.showNewLevel("restart").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
   }
 
   protected abstract startLevel(): void;
   protected abstract processSelectionStart(x: number, y: number): void;
   protected abstract processSelectionMove(x: number, y: number): void;
   protected abstract processSelectionEnd(): void;
+  protected abstract updateComponents(level: ILevelData): void;
+
+  protected abstract HTML(props: {}): string;
+  protected update(props: {}): void {}
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
 

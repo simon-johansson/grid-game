@@ -1,25 +1,34 @@
 import Interactor from "@application/Interactor";
-import { IGameLevel, ILevelData, TileType } from "@application/interfaces";
-import EditorOptions from "./EditorOptions";
+import { ILevelData, TileType } from "@application/interfaces";
+import EditorOptions from "../components/EditorOptions";
+import LevelSelector from "../components/LevelSelector";
 import GameBoard from "./GameBoard";
 
 export default class GameBoardEditor extends GameBoard {
   private EditorOptionsComponent: EditorOptions;
+  private LevelSelectorComponent: LevelSelector;
   private activeTileType: TileType;
 
-  constructor(interactor: Interactor, onGameStateUpdate: (state: ILevelData) => void) {
-    super(interactor, onGameStateUpdate);
+  constructor(interactor: Interactor) {
+    super(interactor);
+
     this.EditorOptionsComponent = new EditorOptions(
       this.onNewOptionsSet.bind(this),
       interactor.setCustomRules.bind(interactor),
       interactor.setCustomMoves.bind(interactor),
     );
+    this.LevelSelectorComponent = new LevelSelector(
+      () => {},
+      () => {},
+      this.restartLevel.bind(this),
+      interactor.goToPlayMode.bind(interactor),
+      interactor.goToEditMode.bind(interactor),
+    );
   }
 
   protected startLevel(): void {
     const state = this.interactor.startEditorLevel(this.getPresenters());
-    this.EditorOptionsComponent.render({ level: state });
-    this.onGameStateUpdate(state);
+    this.updateComponents(state);
   }
 
   protected HTML(props: {}): string {
@@ -41,6 +50,15 @@ export default class GameBoardEditor extends GameBoard {
 
   protected processSelectionEnd(): void {
     this.interactor.removeSelection();
+  }
+
+  protected updateComponents(level: ILevelData): void {
+    this.EditorOptionsComponent.render({ level });
+
+    this.LevelSelectorComponent.render({
+      isEditing: true,
+      isReviewing: false,
+    });
   }
 
   private onNewOptionsSet = (tile: TileType) => {
