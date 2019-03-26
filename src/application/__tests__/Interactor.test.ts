@@ -2,12 +2,14 @@ import Interactor, { IPresenters } from "@application/Interactor";
 import { IGameLevel } from "@application/interfaces";
 import Rules from "@domain/Rules";
 import { ISelectionPresentationData } from "@domain/Selection";
+import { TileType } from "@domain/Tile";
 import {
   blockerLayout,
   clearedLayout,
   defaultLayout,
   getAnalyticsMock,
   getNetworkGatewayMock,
+  getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
   getTilePresenter,
@@ -25,7 +27,7 @@ const levels: IGameLevel[] = [
   { ...levelDefaults, layout: blockerLayout },
   { ...levelDefaults, layout: mixedLayout },
 ];
-
+let querystringLevel: any = {};
 let selectionHasRendered: boolean;
 let selectionData: ISelectionPresentationData;
 let tilesHasRendered: boolean;
@@ -43,21 +45,36 @@ describe("Interactor", () => {
   let interactor: Interactor;
 
   beforeEach(async done => {
-    interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
+    interactor = new Interactor(
+      getNetworkGatewayMock(levels),
+      getAnalyticsMock(),
+      getStorageMock(),
+      getQuerystringMock(querystringLevel),
+    );
     await interactor.loadLevels();
     done();
   });
 
   describe("#loadLevels", () => {
     test("throw if try to play without loading levels", () => {
-      interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
+      interactor = new Interactor(
+        getNetworkGatewayMock(levels),
+        getAnalyticsMock(),
+        getStorageMock(),
+        getQuerystringMock(),
+      );
       expect(() => {
         interactor.startCurrentLevel(presenters);
       }).toThrow();
     });
 
     test("can play start levels after load", () => {
-      interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
+      interactor = new Interactor(
+        getNetworkGatewayMock(levels),
+        getAnalyticsMock(),
+        getStorageMock(),
+        getQuerystringMock(),
+      );
       return interactor.loadLevels().then(() => {
         expect(() => {
           interactor.startCurrentLevel(presenters);
@@ -130,6 +147,29 @@ describe("Interactor", () => {
     });
   });
 
+  describe("#startEditorLevel", () => {
+    beforeEach(() => {
+      tilesHasRendered = false;
+    });
+
+    afterEach(() => {
+      querystringLevel = {};
+    });
+
+    test("can start empty editor level", () => {
+      const state = interactor.startEditorLevel(presenters);
+      expect(state.isCustom).toEqual(true);
+      expect(tilesHasRendered).toEqual(true);
+    });
+
+    test("level is represented in querystring", () => {
+      interactor.startEditorLevel(presenters);
+      expect(querystringLevel.moves).toEqual(1);
+      expect(querystringLevel.rules).not.toEqual(undefined);
+      expect(querystringLevel.layout).not.toEqual(undefined);
+    });
+  });
+
   describe("#setSelectionStart", () => {
     beforeEach(() => {
       selectionHasRendered = false;
@@ -145,6 +185,20 @@ describe("Interactor", () => {
       expect(endTile.rowIndex).toEqual(0);
       expect(endTile.colIndex).toEqual(0);
     });
+
+    test("can set start of selection with edit tile", () => {
+      interactor.startEditorLevel(presenters);
+      interactor.setSelectionStart(0, 0, TileType.Blocker);
+      const expected = [
+        ["b", "r", "r", "r", "r"],
+        ["r", "r", "r", "r", "r"],
+        ["r", "r", "r", "r", "r"],
+        ["r", "r", "r", "r", "r"],
+        ["r", "r", "r", "r", "r"],
+      ];
+      expect(querystringLevel.layout).toEqual(expected);
+      expect(interactor.getGridLayout()).toEqual(expected);
+    });
   });
 
   describe("#setSelectionEnd", () => {
@@ -152,7 +206,7 @@ describe("Interactor", () => {
       selectionHasRendered = false;
     });
 
-    test("can set start of selection", () => {
+    test("can set end of selection", () => {
       interactor.startCustomLevel(presenters, levels[0]);
       interactor.setSelectionStart(0, 0);
       interactor.setSelectionEnd(100, 100);
@@ -162,6 +216,21 @@ describe("Interactor", () => {
       expect(startTile.colIndex).toEqual(0);
       expect(endTile.rowIndex).toEqual(4);
       expect(endTile.colIndex).toEqual(4);
+    });
+
+    test("can set end of selection with edit tile", () => {
+      interactor.startEditorLevel(presenters);
+      interactor.setSelectionStart(0, 0, TileType.Cleared);
+      interactor.setSelectionEnd(100, 100, TileType.Cleared);
+      const expected = [
+        ["f", "f", "f", "f", "f"],
+        ["f", "f", "f", "f", "f"],
+        ["f", "f", "f", "f", "f"],
+        ["f", "f", "f", "f", "f"],
+        ["f", "f", "f", "f", "f"],
+      ];
+      expect(querystringLevel.layout).toEqual(expected);
+      expect(interactor.getGridLayout()).toEqual(expected);
     });
   });
 

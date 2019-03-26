@@ -3,6 +3,21 @@ import Rules from "@domain/Rules";
 import Tile from "@domain/Tile";
 import { IGameLevel, IGridLayout, ITileRawState, ITypedGridLayout, TileType } from "./interfaces";
 
+const defaultEditorLevel: IGameLevel = {
+  layout: [
+    ["r", "r", "r", "r", "r"],
+    ["r", "r", "r", "r", "r"],
+    ["r", "r", "r", "r", "r"],
+    ["r", "r", "r", "r", "r"],
+    ["r", "r", "r", "r", "r"],
+  ],
+  rules: {
+    toggleOnOverlap: true,
+    minSelection: 1,
+  },
+  moves: 1,
+};
+
 function assertNever(state: never): never {
   throw new Error("Unkown minified tile state supplied: " + state);
 }
@@ -53,6 +68,10 @@ export default class LevelManager {
     return new Level(getTypedLayout(layout), moves, rules, name, isFirst, isLast, id, hasCompleted);
   }
 
+  public static newEditorLevel(level?: IGameLevel): Level {
+    return level !== undefined ? LevelManager.newLevel(level) : LevelManager.newLevel(defaultEditorLevel);
+  }
+
   public static getMinifiedLayout(tiles: Tile[]): IGridLayout {
     const layout: ITileRawState[][] = [];
     tiles.forEach(tile => {
@@ -79,8 +98,8 @@ export default class LevelManager {
     }
   }
 
-  public get getCurrentLevel(): Level {
-    return this.level;
+  public getCurrentLevel(customLevel?: IGameLevel): Level {
+    return customLevel ? LevelManager.newLevel(customLevel) : this.level;
   }
 
   public get getNextLevel(): Level {

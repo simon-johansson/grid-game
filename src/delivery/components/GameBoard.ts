@@ -15,7 +15,6 @@ export default abstract class GameBoard extends Component<{}> {
 
   constructor(
     protected interactor: Interactor,
-    private customLevel: IGameLevel | undefined,
     protected onGameStateUpdate: (state: ILevelData) => void,
   ) {
     super();
@@ -57,25 +56,14 @@ export default abstract class GameBoard extends Component<{}> {
     // console.log('update');
   }
 
+  protected abstract startLevel(): void;
   protected abstract processSelectionStart(x: number, y: number): void;
   protected abstract processSelectionMove(x: number, y: number): void;
   protected abstract processSelectionEnd(): void;
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
 
-  private startLevel(): void {
-    // TODO: Går det att göra denna kolla snyggare?
-    let state;
-
-    if (this.customLevel) {
-      state = this.interactor.startCustomLevel(this.getPresenters(), this.customLevel);
-    } else {
-      state = this.interactor.startCurrentLevel(this.getPresenters());
-    }
-    this.onGameStateUpdate(state);
-  }
-
-  private getPresenters(): IPresenters {
+  protected getPresenters(): IPresenters {
     // TODO: this.tileSize bör också vara en function, blir fel anars vid resize
     return {
       selection: getSelectionPresenter(this.selectionCanvasContext.bind(this), this.tileSize),

@@ -1,13 +1,38 @@
-import { IGameLevel } from "@application/interfaces";
+import { IGameLevel, IGameRules, IGridLayout, IQueryString } from "@application/interfaces";
 
-export default class QueryStringHandler {
-
-  public getCustomLevel(): IGameLevel | undefined {
-    return this.getParam<IGameLevel>("custom");
+export default class QueryStringImp implements IQueryString {
+  public getLevel(): IGameLevel | undefined {
+    const layout = this.getLayout();
+    const rules = this.getRules();
+    const moves = this.getMoves();
+    if (layout !== undefined && rules !== undefined && moves !== undefined) {
+      return { layout, rules, moves };
+    }
+    return undefined;
   }
 
-  public setCustomLevel(level: IGameLevel): void {
-    this.setParam("custom", level);
+  public getLayout(): IGridLayout | undefined {
+    return this.getParam<IGridLayout>("layout");
+  }
+
+  public setLayout(layout: IGridLayout): void {
+    this.setParam("layout", layout);
+  }
+
+  public getRules(): IGameRules | undefined {
+    return this.getParam<IGameRules>("rules");
+  }
+
+  public setRules(rules: IGameRules): void {
+    this.setParam("rules", rules);
+  }
+
+  public getMoves(): number | undefined {
+    return this.getParam<number>("moves");
+  }
+
+  public setMoves(moves: number): void {
+    this.setParam("moves", moves);
   }
 
   public getLevelNumber(): number | undefined {

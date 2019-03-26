@@ -4,26 +4,22 @@ import GameBoardEdit from "./components/GameBoardEditor";
 import GameBoardPlayable from "./components/GameBoardPlayable";
 import LevelSelector from "./components/LevelSelector";
 import MovesCounter from "./components/MovesCounter";
-import QueryStringHandler from "./utils/QueryStringHandler";
 
 // TODO: byt ordning på metoderna, ska följa en logisk ordning
 export default class UserInterface {
   private isEditing: boolean;
-  private isReviewing: boolean;
   private isTransitioningBetweenLevels: boolean = false;
   private GameBoardPlaybaleComponent: GameBoardPlayable;
   private GameBoardEditorComponent: GameBoardEdit;
   private LevelSelectorComponent: LevelSelector;
   private MovesCounterComponent: MovesCounter;
-  private queryString = new QueryStringHandler();
 
-  constructor(interactor: Interactor) {
-    this.isEditing = !!this.queryString.getIsEditMode();
-    this.isReviewing = !!this.queryString.getCustomLevel() && !this.isEditing;
-    this.createComponents(interactor);
+  constructor(private interactor: Interactor) {
+    this.isEditing = this.interactor.isInEditMode;
+    this.createComponents();
   }
 
-  private createComponents(interactor: Interactor): void {
+  private createComponents(): void {
     this.LevelSelectorComponent = new LevelSelector(
       this.prevLevel.bind(this),
       this.nextLevel.bind(this),
@@ -33,28 +29,15 @@ export default class UserInterface {
     );
 
     if (this.isEditing) {
-      this.GameBoardEditorComponent = new GameBoardEdit(
-        interactor,
-        this.queryString.getCustomLevel(),
-        this.onEditStateUpdate.bind(this),
-        this.onEditMade.bind(this),
-      );
+      this.GameBoardEditorComponent = new GameBoardEdit(this.interactor, this.onEditStateUpdate.bind(this));
     } else {
       this.MovesCounterComponent = new MovesCounter();
-      this.GameBoardPlaybaleComponent = new GameBoardPlayable(
-        interactor,
-        this.queryString.getCustomLevel(),
-        this.onPlayStateUpdate.bind(this),
-      );
+      this.GameBoardPlaybaleComponent = new GameBoardPlayable(this.interactor, this.onPlayStateUpdate.bind(this));
     }
   }
 
   private onEditStateUpdate(level: ILevelData): void {
     this.updateComponents(level);
-  }
-
-  private onEditMade(level: IGameLevel): void {
-    this.queryString.setCustomLevel(level);
   }
 
   private onPlayStateUpdate(level: ILevelData): void {
@@ -97,17 +80,15 @@ export default class UserInterface {
   }
 
   private reviewLevel(): void {
-    this.queryString.setIsEditMode(false);
-    window.location.reload();
+    this.interactor.goToPlayMode();
   }
 
   private editLevel(): void {
-    this.queryString.setIsEditMode(true);
-    window.location.reload();
+    this.interactor.goToEditMode();
   }
 
-  private shouldProcedeToNextLevel({ isCleared, isLastLevel }: ILevelData): boolean {
-    return isCleared && !isLastLevel && !this.isReviewing;
+  private shouldProcedeToNextLevel({ isCleared, isLastLevel, isCustom }: ILevelData): boolean {
+    return isCleared && !isLastLevel && !isCustom;
   }
 
   private shouldRestartCurrentLevel(level: ILevelData): boolean {
@@ -128,7 +109,7 @@ export default class UserInterface {
       isFirstLevel: level.isFirstLevel,
       isLastLevel: level.isLastLevel,
       isEditing: this.isEditing,
-      isReviewing: !!this.queryString.getCustomLevel() && !this.isEditing,
+      isReviewing: level.isCustom && !this.isEditing,
     });
   }
 }
