@@ -99,7 +99,11 @@ export default class LevelManager {
   }
 
   public getCurrentLevel(customLevel?: IGameLevel): Level {
-    return customLevel ? LevelManager.newLevel(customLevel) : this.level;
+    if (customLevel) {
+      console.log(JSON.stringify(customLevel));
+      return LevelManager.newLevel(customLevel);
+    }
+    return this.level;
   }
 
   public get getNextLevel(): Level {
