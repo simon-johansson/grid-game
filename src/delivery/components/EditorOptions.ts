@@ -23,6 +23,7 @@ export default class EditorOptions extends Component<IProps> {
     private onSetCustomMoves: (moves: number) => void,
   ) {
     super();
+    this.onSetTileType(this.tile);
   }
 
   protected HTML({ level }: IProps): string {
