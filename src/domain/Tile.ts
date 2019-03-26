@@ -47,14 +47,14 @@ export default class Tile {
     return 0;
   }
 
-  public toggleCleared() {
+  public toggleCleared(): void {
     if (this.isClearable) {
       const type = !this.isCleared ? TileType.Cleared : TileType.Regular;
       this.setTileType(type);
     }
   }
 
-  public deselect() {
+  public deselect(): void {
     this.setSelected(false);
   }
 
@@ -83,14 +83,14 @@ export default class Tile {
     }
   }
 
-  private setSelected(selected: boolean) {
+  private setSelected(selected: boolean): void {
     if (this.selected !== selected) {
       this.selected = selected;
       this.render();
     }
   }
 
-  private render() {
+  private render(): void {
     this.presenter.render(this);
   }
 }
