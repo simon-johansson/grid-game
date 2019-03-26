@@ -2,6 +2,7 @@ import Interactor, { IPresenters } from "@application/Interactor";
 import {
   getAnalyticsMock,
   getNetworkGatewayMock,
+  getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
   getTilePresenter,
@@ -14,7 +15,7 @@ const presenters: IPresenters = {
   selection: getSelectionPresenter(),
   tile: getTilePresenter(() => {}, tileStateLayout),
 };
-const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock(), getStorageMock());
+const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock(), getStorageMock(), getQuerystringMock());
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
 describe("fail level with only regular tiles", () => {

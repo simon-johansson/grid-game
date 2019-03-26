@@ -14,12 +14,21 @@ describe("Level", () => {
 
   beforeEach(() => {
     level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules);
-  })
+  });
 
   test(".grid", () => {
     expect(level.grid.layout).toEqual(get5x5TypedLayout(TileType.Regular));
     expect(level.grid.numberOfCols).toEqual(5);
     expect(level.grid.numberOfRows).toEqual(5);
+  });
+
+  test(".isCustom true if name is not supplied", () => {
+    expect(level.isCustom).toEqual(true);
+  });
+
+  test(".isCustom false if name is supplied", () => {
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, 3);
+    expect(level.isCustom).toEqual(false);
   });
 
   describe("#onValidSelection()", () => {

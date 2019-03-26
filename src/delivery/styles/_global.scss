@@ -37,6 +37,9 @@ body {
   }
 
   @include respond-above(sm) {
-    height: 800px;
+    @media (min-height: 1000px) {
+      // background: red;
+      height: 800px;
+    }
   }
 }

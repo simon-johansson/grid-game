@@ -54,6 +54,18 @@ describe("LevelManager", () => {
     test.skip("get layout width typed mixed tiles", () => {});
   });
 
+  describe("#newEditorLevel", () => {
+    test("get default editor level if no level is supplied", () => {
+      const level = LevelManager.newEditorLevel();
+      expect(level.grid.layout).toEqual(get5x5TypedLayout(TileType.Regular));
+    });
+
+    test("get custom editor level if level is supplied", () => {
+      const level = LevelManager.newEditorLevel(levels[2]);
+      expect(level.grid.layout).toEqual(get5x5TypedLayout(TileType.Blocker));
+    });
+  });
+
   describe("#getMinifiedLayout", () => {
     test("get minified layout of regular tiles", () => {
       const tiles = createTiles(get5x5TypedLayout(TileType.Regular));
@@ -70,7 +82,7 @@ describe("LevelManager", () => {
     test.skip("get minified layout of mixed tiles", () => {});
   });
 
-  describe(".getCurrentLevel", () => {
+  describe(".getCurrentLevel()", () => {
     let levelManager: LevelManager;
 
     beforeEach(() => {
@@ -78,7 +90,7 @@ describe("LevelManager", () => {
     });
 
     test("get first level if init level index is not supplied", () => {
-      const level = levelManager.getCurrentLevel;
+      const level = levelManager.getCurrentLevel();
       expect(level.name).toEqual(0);
       expect(level.isFirstLevel).toEqual(true);
       expect(level.isLastLevel).toEqual(false);
@@ -86,15 +98,21 @@ describe("LevelManager", () => {
 
     test("get level of init level index if supplied", () => {
       levelManager = new LevelManager(levels, 1);
-      const level = levelManager.getCurrentLevel;
+      const level = levelManager.getCurrentLevel();
       expect(level.name).toEqual(1);
       expect(level.isFirstLevel).toEqual(false);
       expect(level.isLastLevel).toEqual(false);
     });
 
+    test("get custom level if supplied", () => {
+      const level = levelManager.getCurrentLevel(levels[2]);
+      expect(level.isCustom).toEqual(true);
+      expect(level.grid.layout).toEqual(get5x5TypedLayout(TileType.Blocker));
+    });
+
     test("level should be set as completed if id is present in storage", () => {
       levelManager = new LevelManager(levels, 2, ["2"]);
-      const level = levelManager.getCurrentLevel;
+      const level = levelManager.getCurrentLevel();
       expect(level.hasCompleted).toEqual(true);
     });
   });

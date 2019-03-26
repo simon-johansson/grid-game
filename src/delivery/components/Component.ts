@@ -23,8 +23,7 @@ export default abstract class Component<Props> {
     return;
   }
 
-  // TODO: byt till bindClickEvent
-  protected bindEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
+  protected bindClickEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
     const el = this.wrapperElement.querySelector("." + classSelector);
     if (el) el.addEventListener("click", callback);
     else console.error('Can not bind click event to .' + classSelector)

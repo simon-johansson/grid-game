@@ -8,9 +8,9 @@ const editBtnClass = "edit";
 const currentLevelClass = "current-level";
 
 export interface IProps {
-  currentLevel: number | undefined;
-  isLastLevel: boolean | undefined;
-  isFirstLevel: boolean | undefined;
+  currentLevel?: number;
+  isLastLevel?: boolean;
+  isFirstLevel?: boolean;
   isEditing: boolean;
   isReviewing: boolean;
 }
@@ -59,11 +59,11 @@ export default class LevelSelector extends Component<IProps> {
   }
 
   protected componentDidMount(): void {
-    this.bindEvent(prevBtnClass, this.onPrevLevel);
-    this.bindEvent(nextBtnClass, this.onNextLevel);
-    this.bindEvent(restartBtnClass, this.onRestart);
-    this.bindEvent(reviewBtnClass, this.onReviewLevel);
-    this.bindEvent(editBtnClass, this.onEditLevel);
+    this.bindClickEvent(prevBtnClass, this.onPrevLevel);
+    this.bindClickEvent(nextBtnClass, this.onNextLevel);
+    this.bindClickEvent(restartBtnClass, this.onRestart);
+    this.bindClickEvent(reviewBtnClass, this.onReviewLevel);
+    this.bindClickEvent(editBtnClass, this.onEditLevel);
   }
 
   protected update({ currentLevel, isFirstLevel, isLastLevel, isEditing, isReviewing }: IProps): void {

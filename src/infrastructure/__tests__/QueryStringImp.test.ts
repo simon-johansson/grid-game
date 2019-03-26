@@ -1,11 +1,11 @@
 import { IGridLayout } from "@application/interfaces";
-import QueryStringHandler from "../utils/QueryStringHandler";
+import QueryStringHandler from "../QueryStringImp";
 
 const setQueryString = (query: string): void => {
   window.history.replaceState({}, "", `?${query}`);
 };
 
-describe("QueryStringHandler", () => {
+describe("QueryStringImp", () => {
   const levelQs = "level=5";
   const editQs = "edit=true";
   const layout = [
@@ -15,9 +15,9 @@ describe("QueryStringHandler", () => {
     ["r", "r", "b", "r", "r"],
     ["r", "r", "b", "r", "r"],
   ] as IGridLayout;
-  const rules = { toggleOnOverlap: false, minSelection: 4};
+  const rules = { toggleOnOverlap: false, minSelection: 4 };
   const moves = 3;
-  const customLevelQs = `custom=${JSON.stringify({ layout, rules, moves })}`;
+  const customLevelQs = `layout=${JSON.stringify(layout)}&rules=${JSON.stringify(rules)}&moves=${moves}`;
 
   beforeEach(() => {
     setQueryString("");
@@ -44,18 +44,18 @@ describe("QueryStringHandler", () => {
   test("can get custom level", () => {
     setQueryString(customLevelQs);
     const qs = new QueryStringHandler();
-    expect(qs.getCustomLevel()).toEqual({ layout, rules, moves });
+    expect(qs.getLevel()).toEqual({ layout, rules, moves });
   });
 
   test("custom level is undefined if not set", () => {
     const qs = new QueryStringHandler();
-    expect(qs.getCustomLevel()).toEqual(undefined);
+    expect(qs.getLevel()).toEqual(undefined);
   });
 
   test("can set layout", () => {
     const qs = new QueryStringHandler();
-    qs.setCustomLevel({ layout, rules, moves });
-    expect(decodeURIComponent(window.location.search)).toEqual(`?${customLevelQs}`);
+    qs.setLayout(layout);
+    expect(decodeURIComponent(window.location.search)).toEqual(`?layout=${JSON.stringify(layout)}`);
   });
 
   test("can get edit mode", () => {
@@ -72,16 +72,16 @@ describe("QueryStringHandler", () => {
   test("can get multiple values", () => {
     setQueryString(`${customLevelQs}&${editQs}`);
     const qs = new QueryStringHandler();
-    expect(qs.getCustomLevel()).toEqual({ layout, rules, moves });
+    expect(qs.getLevel()).toEqual({ layout, rules, moves });
     expect(qs.getIsEditMode()).toEqual(true);
   });
 
   test("can replace value in query string", () => {
     setQueryString(`${customLevelQs}&${editQs}`);
     const qs = new QueryStringHandler();
-    qs.setCustomLevel({ layout, rules, moves: 5 });
+    qs.setMoves(5);
     qs.setIsEditMode(false);
-    expect(qs.getCustomLevel()).toEqual({ layout, rules, moves: 5 });
+    expect(qs.getLevel()).toEqual({ layout, rules, moves: 5 });
     expect(qs.getIsEditMode()).toEqual(false);
   });
 });

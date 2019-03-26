@@ -5,6 +5,7 @@ import {
   defaultLayout,
   getAnalyticsMock,
   getNetworkGatewayMock,
+  getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
   getTilePresenter,
@@ -18,7 +19,12 @@ const presenters: IPresenters = {
   tile: getTilePresenter(() => {}, tileStateLayout),
 };
 const levels: IGameLevel[] = [{ layout: defaultLayout, moves: 2, rules: new Rules() }];
-const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
+const interactor = new Interactor(
+  getNetworkGatewayMock(levels),
+  getAnalyticsMock(),
+  getStorageMock(),
+  getQuerystringMock(),
+);
 interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
