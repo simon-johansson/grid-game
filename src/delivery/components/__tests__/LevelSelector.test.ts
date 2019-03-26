@@ -16,7 +16,7 @@ describe("component/LevelSelector", () => {
       isEditing: false,
       isReviewing: false
     });
-    const content = document.getElementById("level-selection").textContent;
+    const content = document.getElementById("level-selection")!.textContent;
     expect(content).toContain("Level 4");
   });
 
@@ -28,7 +28,7 @@ describe("component/LevelSelector", () => {
       isEditing: true,
       isReviewing: false
     });
-    const content = document.getElementById("level-selection").textContent;
+    const content = document.getElementById("level-selection")!.textContent;
     expect(content).toContain("Level editor");
   });
 
@@ -40,7 +40,7 @@ describe("component/LevelSelector", () => {
       isEditing: false,
       isReviewing: true
     });
-    const content = document.getElementById("level-selection").textContent;
+    const content = document.getElementById("level-selection")!.textContent;
     expect(content).toContain("Review level");
   });
 });

@@ -1,6 +1,6 @@
 import Grid from "@domain/Grid";
 import Level, { ITypedGridLayout } from "@domain/Level";
-import Rules from "@domain/Rules";
+import Rules, { IGameRules } from "@domain/Rules";
 import Selection from "@domain/Selection";
 import Tile from "@domain/Tile";
 import TilePosition from "@domain/TilePosition";
@@ -10,6 +10,7 @@ import {
   IGridLayout,
   ILevelData,
   INetworkGateway,
+  IQueryString,
   ISelectionPresenterConstructor,
   IStorage,
   ITilePresenterConstructor,
@@ -41,9 +42,14 @@ export default class Interactor {
   private grid: Grid;
   private selection: Selection;
 
-  constructor(private network: INetworkGateway, private analytics: IAnalytics, private storage: IStorage) {}
+  constructor(
+    private network: INetworkGateway,
+    private analytics: IAnalytics,
+    private storage: IStorage,
+    private querystring: IQueryString,
+  ) {}
 
-  public async loadLevels() {
+  public async loadLevels(): Promise<void> {
     try {
       const levels = await this.network.getLevels();
       const currentLevel = await this.storage.getCurrentLevel();
@@ -56,7 +62,8 @@ export default class Interactor {
   }
 
   public startCurrentLevel(presenters: IPresenters): ILevelData {
-    this.level = this.levelManager.getCurrentLevel;
+    const querystringLevel = this.querystring.getLevel();
+    this.level = this.levelManager.getCurrentLevel(querystringLevel);
     this.startLevel(presenters);
     return this.level;
   }
@@ -73,9 +80,18 @@ export default class Interactor {
     return this.level;
   }
 
+  // TODO: Ta bort? används bara för tester
   public startCustomLevel(presenters: IPresenters, level: IGameLevel): ILevelData {
     this.level = LevelManager.newLevel(level);
     this.startLevel(presenters);
+    return this.level;
+  }
+
+  public startEditorLevel(presenters: IPresenters): ILevelData {
+    const querystringLevel = this.querystring.getLevel();
+    this.level = LevelManager.newEditorLevel(querystringLevel);
+    this.startLevel(presenters);
+    this.setQuerystringLevel();
     return this.level;
   }
 
@@ -105,13 +121,35 @@ export default class Interactor {
     return LevelManager.getMinifiedLayout(this.grid.tiles);
   }
 
+  public setCustomRules(rules: IGameRules): void {
+    this.querystring.setRules(rules);
+  }
+
+  public setCustomMoves(moves: number): void {
+    this.querystring.setMoves(moves);
+  }
+
+  public get isInEditMode(): boolean {
+    return !!this.querystring.getIsEditMode();
+  }
+
+  public goToEditMode(): void {
+    this.querystring.setIsEditMode(true);
+    window.location.reload();
+  }
+
+  public goToPlayMode(): void {
+    this.querystring.setIsEditMode(false);
+    window.location.reload();
+  }
+
   private startLevel(presenters: IPresenters): void {
     this.createEnteties(presenters);
     this.storage.setCurrentLevel(this.level);
     this.analytics.startLevel(this.level);
   }
 
-  private createEnteties(presenters: IPresenters) {
+  private createEnteties(presenters: IPresenters): void {
     const { grid, rules } = this.level;
     const tiles = createTiles(presenters.tile, grid.layout, rules);
     this.grid = new Grid(tiles, rules);
@@ -119,17 +157,35 @@ export default class Interactor {
   }
 
   private applySelectionToGrid(tileState?: TileType): void {
-    this.grid.applySelection(this.selection.tileSpan, tileState);
-    if (!tileState) this.selection.isValid = this.grid.isSelectedTilesClearable;
+    this.grid.applySelection(this.selection.tileSpan!, tileState);
+    tileState ? this.onAppliedEditSelection() : this.onAppliedPlaySelection();
   }
 
-  private clearTiles() {
+  private onAppliedEditSelection(): void {
+    this.setCustomLayout();
+  }
+
+  private onAppliedPlaySelection(): void {
+    this.selection.isValid = this.grid.isSelectedTilesClearable;
+  }
+
+  private setQuerystringLevel(): void {
+    this.setCustomRules(this.level.rules);
+    this.setCustomMoves(this.level.selections.left);
+    this.setCustomLayout();
+  }
+
+  private setCustomLayout(): void {
+    this.querystring.setLayout(this.getGridLayout());
+  }
+
+  private clearTiles(): void {
     this.grid.toggleClearedOnSelectedTiles();
     this.level.onValidSelection();
     this.level.isCleared = this.grid.isGridCleared;
   }
 
-  private async onLevelEnded() {
+  private async onLevelEnded(): Promise<void> {
     if (this.level.isCleared) {
       this.analytics.onLevelComplete(this.level);
       const completedLevels = await this.storage.onLevelComplete(this.level);
@@ -140,6 +196,6 @@ export default class Interactor {
   }
 
   private get hasLevelEnded(): boolean {
-    return !this.level.selections.left && typeof this.level.name !== undefined;
+    return !this.level.selections.left && this.level.name !== undefined;
   }
 }

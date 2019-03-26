@@ -4,6 +4,7 @@ import Rules from "@domain/Rules";
 import {
   getAnalyticsMock,
   getNetworkGatewayMock,
+  getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
   getTilePresenter,
@@ -30,7 +31,12 @@ const levels: IGameLevel[] = [
     rules: new Rules(),
   },
 ];
-const interactor = new Interactor(getNetworkGatewayMock(levels), getAnalyticsMock(), getStorageMock());
+const interactor = new Interactor(
+  getNetworkGatewayMock(levels),
+  getAnalyticsMock(),
+  getStorageMock(),
+  getQuerystringMock(),
+);
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
 describe("unclear already cleared tiles", () => {

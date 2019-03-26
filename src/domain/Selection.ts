@@ -1,7 +1,7 @@
 import TileSpan, { ICoordinates } from "./TileSpan";
 
 export interface ISelectionPresentationData {
-  tileSpan: TileSpan;
+  tileSpan: TileSpan | undefined;
   isValid: boolean;
 }
 
@@ -10,7 +10,7 @@ export interface ISelectionPresenter {
 }
 
 export default class Selection {
-  public tileSpan: TileSpan;
+  public tileSpan: TileSpan | undefined;
   private startPoint: ICoordinates;
   private valid: boolean = true;
 
@@ -46,7 +46,7 @@ export default class Selection {
     this.render();
   }
 
-  private render() {
+  private render(): void {
     this.presenter.render(this);
   }
 }

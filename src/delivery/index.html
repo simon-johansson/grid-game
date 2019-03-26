@@ -13,13 +13,13 @@
     <meta property="og:url" content="https://gridgame.net" />
     <meta property="og:description" content="Make the grey tiles green to clear the grid 🤔" />
     <meta property="og:type" content="game" />
-    <meta property="og:image" content="https://gridgame.net/assets/icons/icon-512x512.png" />
+    <meta property="og:image" content="https://gridgame.net/assets/splash/social-media.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="https://gridgame.net" />
     <meta name="twitter:title" content="Grid Game" />
     <meta name="twitter:description" content="Make the grey tiles green to clear the grid 🤔" />
-    <meta name="twitter:image" content="https://gridgame.net/assets/icons/icon-512x512.png" />
+    <meta name="twitter:image" content="https://gridgame.net/assets/splash/social-media.png" />
 
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
 
@@ -64,15 +64,29 @@
       media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
     />
 
+    <script src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="/styles/styles.css" />
     <script>
       if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.addEventListener("controllerchange", function(event) {
+          console.log("Controller loaded");
+          window.location.reload();
+        });
+
         //Register the ServiceWorker
         navigator.serviceWorker
           .register("/service-worker.js", {
             scope: "/",
           })
           .then(function(reg) {
+            // Track updates to the Service Worker.
+            if (!navigator.serviceWorker.controller) {
+              // The window client isn't currently controlled so it's a new service
+              // worker that will activate immediately
+              return;
+            }
+            reg.update();
             console.log("Service worker has been registered for scope:" + reg.scope);
           });
       }
@@ -80,17 +94,11 @@
   </head>
 
   <body>
-
     <!-- TODO: Skapa element i koden istället -->
-    <div id="app">
-      <div id="moves-counter"></div>
-
-      <div id="editor-options"></div>
-
-      <div id="canvas-container"></div>
-
-      <div id="level-selection"></div>
-    </div>
+    <div id="app"></div>
+    <script>
+      // Sentry.init({ dsn: "https://224d81892cac4cd9ad8de7623b2187a3@sentry.io/1420148" });
+    </script>
     <script src="/vendor/doorbell.js"></script>
     <script src="/app.js"></script>
   </body>

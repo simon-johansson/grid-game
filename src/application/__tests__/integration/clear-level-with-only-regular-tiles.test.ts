@@ -3,6 +3,7 @@ import { ISelectionPresentationData } from "@application/interfaces";
 import {
   getAnalyticsMock,
   getNetworkGatewayMock,
+  getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
   getTilePresenter,
@@ -22,7 +23,7 @@ const presenters: IPresenters = {
   }),
   tile: getTilePresenter(() => {}, tileStateLayout, tileSelectionLayout),
 };
-const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock(), getStorageMock());
+const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock(), getStorageMock(), getQuerystringMock());
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 const setSelection = setSelectionHelper(interactor);
 
@@ -53,7 +54,7 @@ describe("clear level with only regular tiles", () => {
 
   test("select whole grid", () => {
     setSelection(0, 0, 100, 100);
-    const { startTile, endTile } = selectionData.tileSpan;
+    const { startTile, endTile } = selectionData.tileSpan!;
     expect(startTile.rowIndex).toEqual(0);
     expect(startTile.colIndex).toEqual(0);
     expect(endTile.rowIndex).toEqual(4);

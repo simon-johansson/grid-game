@@ -17,18 +17,19 @@ interface IGrid {
 
 export default class Level {
   public isCleared: boolean = false;
-  public grid: IGrid;
-  public selections: ISelections;
+  public readonly isCustom: boolean;
+  public readonly grid: IGrid;
+  public readonly selections: ISelections;
 
   constructor(
     layout: ITypedGridLayout,
     moves: number,
-    public rules: Rules,
-    public name?: number,
-    public isFirstLevel?: boolean,
-    public isLastLevel?: boolean,
-    public id?: string,
-    public hasCompleted?: boolean
+    public readonly rules: Rules,
+    public readonly name?: number,
+    public readonly isFirstLevel?: boolean,
+    public readonly isLastLevel?: boolean,
+    public readonly id?: string,
+    public readonly hasCompleted?: boolean
   ) {
     this.grid = {
       layout,
@@ -40,9 +41,11 @@ export default class Level {
       left: moves,
       made: 0,
     };
+
+    this.isCustom = this.name === undefined;
   }
 
-  public onValidSelection() {
+  public onValidSelection(): void {
       this.selections.made++;
 
       if (this.selections.left) {

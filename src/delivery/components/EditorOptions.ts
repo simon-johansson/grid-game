@@ -1,5 +1,4 @@
-import { IGameRules, TileType } from "@application/interfaces";
-import QueryStringHandler from "../utils/QueryStringHandler";
+import { IGameRules, ILevelData, TileType } from "@application/interfaces";
 import Component from "./Component";
 
 const regularTileClass = "regular";
@@ -9,47 +8,33 @@ const movesClass = "moves";
 const minSelectionClass = "minselection";
 const overlapClass = "overlap";
 
-export interface ISelectedOptions {
-  tile: TileType;
-  moves: number;
-  rules: IGameRules;
+export interface IProps {
+  level: ILevelData;
 }
 
-export default class EditorOptions extends Component<{}> {
-  protected wrapperElement: HTMLElement = document.getElementById("editor-options");
-  private queryString = new QueryStringHandler();
-  private options: ISelectedOptions = {
-    tile: TileType.Regular,
-    moves: 3,
-    rules: {
-      minSelection: 1,
-      toggleOnOverlap: true,
-    },
-  };
+export default class EditorOptions extends Component<IProps> {
+  protected wrapperElement: HTMLElement = document.getElementById("editor-options") as HTMLElement;
+  private tile: TileType = TileType.Regular;
+  private rules: IGameRules = {};
 
-  constructor(private onNewOptionsSet: (options: ISelectedOptions) => void) {
+  constructor(
+    private onSetTileType: (tile: TileType) => void,
+    private onSetCustomRules: (rules: IGameRules) => void,
+    private onSetCustomMoves: (moves: number) => void,
+  ) {
     super();
-    const { moves, minSelection, toggleOnOverlap } = this.queryString;
-    if (moves !== null) {
-      this.options.moves = moves;
-    }
-    if (minSelection !== null) {
-      this.options.rules.minSelection = minSelection;
-    }
-    if (toggleOnOverlap !== null) {
-      this.options.rules.toggleOnOverlap = toggleOnOverlap;
-    }
-    this.render({});
-    // onNewOptionsSet(this.options);
+    this.onSetTileType(this.tile);
   }
 
-  protected HTML(props: {}): string {
-    const { toggleOnOverlap, minSelection } = this.options.rules;
+  protected HTML({ level }: IProps): string {
+    const { toggleOnOverlap, minSelection } = level.rules;
+    const moves = level.selections.left;
+    this.setRulesFromLevel(level);
 
     return `
       <div class="moves-picker">
         <label for="moves-input">Number of moves:</label>
-        <input type="number" class="${movesClass}" id="moves-input" value="${this.options.moves}">
+        <input type="number" class="${movesClass}" id="moves-input" value="${moves}">
       </div>
       <div class="minselection-picker">
         <label for="minselection-input">Minimum tiles selected:</label>
@@ -70,41 +55,45 @@ export default class EditorOptions extends Component<{}> {
   `;
   }
 
-  protected componentDidMount() {
-    this.bindEvent(regularTileClass, this.setTileOptions.bind(this, TileType.Regular, regularTileClass));
-    this.bindEvent(clearedTileClass, this.setTileOptions.bind(this, TileType.Cleared, clearedTileClass));
-    this.bindEvent(blockerTileClass, this.setTileOptions.bind(this, TileType.Blocker, blockerTileClass));
+  protected componentDidMount(): void {
+    this.bindClickEvent(regularTileClass, this.setTileOptions.bind(this, TileType.Regular, regularTileClass));
+    this.bindClickEvent(clearedTileClass, this.setTileOptions.bind(this, TileType.Cleared, clearedTileClass));
+    this.bindClickEvent(blockerTileClass, this.setTileOptions.bind(this, TileType.Blocker, blockerTileClass));
     this.bindChangeEvent(movesClass, this.setMovesOption.bind(this));
     this.bindChangeEvent(minSelectionClass, this.setMinSelectionOption.bind(this));
     this.bindChangeEvent(overlapClass, this.setToggleOnOverlapOption.bind(this));
   }
 
-  protected update(props: {}): void {}
+  protected update({ level }: IProps): void {}
+
+  private setRulesFromLevel(level: ILevelData): void {
+    this.rules.minSelection = level.rules.minSelection;
+    this.rules.toggleOnOverlap = level.rules.toggleOnOverlap;
+  }
 
   private setTileOptions = (tileType: TileType, elementClass: string) => {
-    this.options.tile = tileType;
+    this.tile = tileType;
     this.setTileClass(elementClass);
-    this.onNewOptionsSet(this.options);
+    this.onSetTileType(this.tile);
   };
 
   private setMovesOption = (inputEvent: any) => {
-    this.options.moves = JSON.parse(inputEvent.currentTarget.value);
-    this.onNewOptionsSet(this.options);
+    this.onSetCustomMoves(JSON.parse(inputEvent.currentTarget.value));
   };
 
   private setMinSelectionOption = (inputEvent: any) => {
-    this.options.rules.minSelection = JSON.parse(inputEvent.currentTarget.value);
-    this.onNewOptionsSet(this.options);
+    this.rules.minSelection = JSON.parse(inputEvent.currentTarget.value);
+    this.onSetCustomRules(this.rules);
   };
 
   private setToggleOnOverlapOption = (inputEvent: any) => {
-    this.options.rules.toggleOnOverlap = JSON.parse(inputEvent.currentTarget.value);
-    this.onNewOptionsSet(this.options);
+    this.rules.toggleOnOverlap = JSON.parse(inputEvent.currentTarget.value);
+    this.onSetCustomRules(this.rules);
   };
 
-  private setTileClass(elementClass: string) {
+  private setTileClass(elementClass: string): void {
     [regularTileClass, clearedTileClass, blockerTileClass].forEach(el => {
-      const classList = this.getEl(el).classList;
+      const classList = this.getEl(el)!.classList;
       elementClass === el ? classList.add("selected") : classList.remove("selected");
     });
   }

@@ -6,6 +6,7 @@ import {
   IGridLayout,
   ILevelData,
   INetworkGateway,
+  IQueryString,
   ISelectionPresenter,
   ISelectionPresenterConstructor,
   IStorage,
@@ -14,7 +15,7 @@ import {
   ITypedGridLayout,
 } from "@application/interfaces";
 import Level from "@domain/Level";
-import Rules from "@domain/Rules";
+import Rules, { IGameRules } from "@domain/Rules";
 import { ISelectionPresentationData } from "@domain/Selection";
 import Tile, { TileType } from "@domain/Tile";
 import TilePosition from "@domain/TilePosition";
@@ -121,6 +122,20 @@ export const getStorageMock = (data: string[] = []): IStorage => ({
     return Promise.resolve(data);
   },
   onFail: (level: Level) => {},
+});
+
+export const getQuerystringMock = (level: any = {}): IQueryString => ({
+  getLevel: () => undefined,
+  getLayout: () => undefined,
+  setLayout: (layout: IGridLayout) => level.layout = layout,
+  getRules: () => undefined,
+  setRules: (rules: IGameRules) => level.rules = rules,
+  getMoves: () => undefined,
+  setMoves: (moves: number) => level.moves = moves,
+  getLevelNumber: () => undefined,
+  setLevelNumber: (num: number) => undefined,
+  getIsEditMode: () => undefined,
+  setIsEditMode: (bool: boolean) => undefined,
 });
 
 export const presenters: IPresenters = {

@@ -8,12 +8,24 @@ var fileName = "levels.json";
 var cachedLevels;
 
 function getLevels() {
-  return process.env.DOWNLOAD_LEVELS == "true" ? getLevelsFromTrello() : getLevelsFromFile();
+  if (process.env.DOWNLOAD_LEVELS == "true") {
+    return checkConnection().then(isOnline => (isOnline ? getLevelsFromTrello() : getLevelsFromFile()));
+  }
+  return getLevelsFromFile();
 }
 
 // getLevels().then((data) => {
 //   console.log(data);
 // })
+
+function checkConnection() {
+  return new Promise(resolve => {
+    require("dns").lookup("google.com", function(err) {
+      if (err && err.code == "ENOTFOUND") resolve(false);
+      else resolve(true);
+    });
+  });
+}
 
 function saveLevels() {
   getLevelsFromTrello().then(data => {
@@ -25,7 +37,7 @@ function saveLevels() {
 }
 
 async function getLevelsFromTrello() {
-  console.info('Getting levels from Trello');
+  console.info("Getting levels from Trello");
   return await trello.getCardsOnList(trelloListID).then(cards => {
     return cards.map(card => {
       const level = JSON.parse(card.desc);
@@ -38,12 +50,12 @@ async function getLevelsFromTrello() {
 function getLevelsFromFile() {
   return new Promise((resolve, reject) => {
     if (cachedLevels) {
-      console.info('Getting levels from cached file');
+      console.info("Getting levels from cached file");
       return resolve(cachedLevels);
     }
     fs.readFile(path.join(__dirname, fileName), function read(err, data) {
       if (err) return reject(err);
-      console.info('Getting levels from file');
+      console.info("Getting levels from file");
       cachedLevels = JSON.parse(data);
       resolve(cachedLevels);
     });

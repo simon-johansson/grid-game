@@ -13,7 +13,8 @@ export default class Rules {
   public minSelection: minSelectionType = 1;
 
   constructor({ toggleOnOverlap, minSelection }: IGameRules = {}) {
-    this.toggleOnOverlap = isDefined(toggleOnOverlap) ? toggleOnOverlap : this.toggleOnOverlap;
-    this.minSelection = isDefined(minSelection) ? minSelection : this.minSelection;
+    // TODO: Göra snyggare än att casta här?
+    this.toggleOnOverlap = isDefined(toggleOnOverlap) ? (toggleOnOverlap as boolean) : this.toggleOnOverlap;
+    this.minSelection = isDefined(minSelection) ? (minSelection as number) : this.minSelection;
   }
 }

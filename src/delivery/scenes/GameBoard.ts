@@ -1,23 +1,19 @@
 import Interactor, { IPresenters } from "@application/Interactor";
-import { IGameLevel, ILevelData } from "@application/interfaces";
+import { ILevelData } from "@application/interfaces";
+import Component from "../components/Component";
 import { getSelectionPresenter, getTilePresenter } from "../game_presenters/index";
-import Component from "./Component";
 
 // TODO: Ändra ordningen av metoderna, bör vara logiskt
-// TODO: Vad är protecterd? Behöver det vara det?
 // TODO: Behöver jag unbind events? Memory leak?
 export default abstract class GameBoard extends Component<{}> {
-  protected wrapperElement: HTMLElement = document.getElementById("canvas-container");
+  protected wrapperElement: HTMLElement = document.getElementById("canvas-container") as HTMLElement;
   protected tileCanvasClass = "tile-canvas";
   protected selectionCanvasClass = "selection-canvas";
   protected innerWrapperClass = "inner-wrapper";
-  protected isSelecting: boolean = false;
+  private isSelecting: boolean = false;
+  private isTransitioningBetweenLevels: boolean = false;
 
-  constructor(
-    protected interactor: Interactor,
-    private customLevel: IGameLevel,
-    protected onGameStateUpdate: (state: ILevelData) => void,
-  ) {
+  constructor(protected interactor: Interactor) {
     super();
     this.render({});
     this.setCanvasSize();
@@ -27,54 +23,54 @@ export default abstract class GameBoard extends Component<{}> {
     });
   }
 
-  public goToNextLevel() {
-    this.prepareNewLevel("next");
-    this.onGameStateUpdate(this.interactor.startNextLevel(this.getPresenters()));
-    return this.showNewLevel("next").then(() => {
-      this.bindEvents();
-    });
+  protected goToNextLevel(): Promise<void> | undefined {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("next");
+      this.updateComponents(this.interactor.startNextLevel(this.getPresenters()));
+      return this.showNewLevel("next").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
   }
 
-  public goToPrevLevel() {
-    this.prepareNewLevel("prev");
-    this.onGameStateUpdate(this.interactor.startPrevLevel(this.getPresenters()));
-    return this.showNewLevel("prev").then(() => {
-      this.bindEvents();
-    });
+  protected goToPrevLevel(): Promise<void> | undefined {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("prev");
+      this.updateComponents(this.interactor.startPrevLevel(this.getPresenters()));
+      return this.showNewLevel("prev").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
   }
 
-  public restartLevel() {
-    this.prepareNewLevel("restart");
-    this.startLevel();
-    return this.showNewLevel("restart").then(() => {
-      this.bindEvents();
-    });
+  protected restartLevel(): Promise<void> | undefined {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("restart");
+      this.startLevel();
+      return this.showNewLevel("restart").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
   }
 
-  protected abstract HTML(props: {}): string;
-
-  protected update(props: {}): void {
-    // console.log('update');
-  }
-
+  protected abstract startLevel(): void;
   protected abstract processSelectionStart(x: number, y: number): void;
   protected abstract processSelectionMove(x: number, y: number): void;
   protected abstract processSelectionEnd(): void;
+  protected abstract updateComponents(level: ILevelData): void;
+
+  protected abstract HTML(props: {}): string;
+  protected update(props: {}): void {}
 
   protected convertAbsoluteOffsetToProcent = (position: number) => Math.floor((position / this.canvasSize) * 100);
 
-  private startLevel() {
-    // TODO: Går det att göra denna kolla snyggare?
-    let state;
-    if (this.customLevel.layout) {
-      state = this.interactor.startCustomLevel(this.getPresenters(), this.customLevel);
-    } else {
-      state = this.interactor.startCurrentLevel(this.getPresenters());
-    }
-    this.onGameStateUpdate(state);
-  }
-
-  private getPresenters(): IPresenters {
+  protected getPresenters(): IPresenters {
     // TODO: this.tileSize bör också vara en function, blir fel anars vid resize
     return {
       selection: getSelectionPresenter(this.selectionCanvasContext.bind(this), this.tileSize),
@@ -86,13 +82,13 @@ export default abstract class GameBoard extends Component<{}> {
     return this.getEl(this.tileCanvasClass) as HTMLCanvasElement;
   }
   private tileCanvasContext(): CanvasRenderingContext2D {
-    return this.tileCanvas.getContext("2d");
+    return this.tileCanvas.getContext("2d") as CanvasRenderingContext2D;
   }
   private get selectionCanvas(): HTMLCanvasElement {
     return this.getEl(this.selectionCanvasClass) as HTMLCanvasElement;
   }
   private selectionCanvasContext(): CanvasRenderingContext2D {
-    return this.selectionCanvas.getContext("2d");
+    return this.selectionCanvas.getContext("2d") as CanvasRenderingContext2D;
   }
 
   private get canvasSize(): number {
@@ -104,10 +100,10 @@ export default abstract class GameBoard extends Component<{}> {
     return Math.floor(this.tileCanvas.width / 5);
   }
 
-  private prepareNewLevel(direction: "prev" | "next" | "restart") {
-    this.getEl(this.innerWrapperClass).className = `${this.innerWrapperClass}-old`;
-    this.getEl(this.tileCanvasClass).className = `${this.tileCanvasClass}-old`;
-    this.getEl(this.selectionCanvasClass).className = `${this.selectionCanvasClass}-old`;
+  private prepareNewLevel(direction: "prev" | "next" | "restart"): void {
+    this.getEl(this.innerWrapperClass)!.className = `${this.innerWrapperClass}-old`;
+    this.getEl(this.tileCanvasClass)!.className = `${this.tileCanvasClass}-old`;
+    this.getEl(this.selectionCanvasClass)!.className = `${this.selectionCanvasClass}-old`;
     this.createWrapperAndCanvas(direction);
     this.setCanvasSize();
   }
@@ -123,18 +119,18 @@ export default abstract class GameBoard extends Component<{}> {
       directionOutClass += "-left";
     }
 
-    newWrapper.classList.remove("fade-in", "fade-in-right", "fade-in-left");
+    newWrapper!.classList.remove("fade-in", "fade-in-right", "fade-in-left");
 
     // TODO: Gör kollen på den nya wrappern istället
     const promise = new Promise(resolve => {
-      oldWrapper.addEventListener("transitionend", resolve, false);
-    }).then(() => oldWrapper.remove());
-    oldWrapper.classList.add(directionOutClass);
+      oldWrapper!.addEventListener("transitionend", resolve, false);
+    }).then(() => oldWrapper!.remove());
+    oldWrapper!.classList.add(directionOutClass);
 
     return promise;
   }
 
-  private createWrapperAndCanvas(direction: "prev" | "next" | "restart") {
+  private createWrapperAndCanvas(direction: "prev" | "next" | "restart"): void {
     const wrapper = document.createElement("div");
     let directionInClass = "fade-in";
     if (direction === "prev") {
@@ -156,7 +152,7 @@ export default abstract class GameBoard extends Component<{}> {
     this.wrapperElement.appendChild(wrapper);
   }
 
-  private setCanvasSize() {
+  private setCanvasSize(): void {
     const { clientWidth, clientHeight } = document.body;
     const mediaQuerySmall = 768;
     const defaultGameBoardSize = 500;

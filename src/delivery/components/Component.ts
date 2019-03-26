@@ -1,4 +1,3 @@
-
 export default abstract class Component<Props> {
   protected abstract wrapperElement: HTMLElement;
   protected componentIsOnPage = false;
@@ -20,28 +19,31 @@ export default abstract class Component<Props> {
 
   protected abstract update(props: Props): void;
 
-  protected componentDidMount(props: Props) {
+  protected componentDidMount(props: Props): any {
     return;
+  }
+
+  protected bindClickEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
+    const el = this.wrapperElement.querySelector("." + classSelector);
+    if (el) el.addEventListener("click", callback);
+    else console.error('Can not bind click event to .' + classSelector)
   };
 
-  // TODO: byt till bindClickEvent
-  protected bindEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
-    this.wrapperElement.querySelector('.' + classSelector).addEventListener("click", callback);
-  }
-
   protected bindChangeEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
-    this.wrapperElement.querySelector('.' + classSelector).addEventListener("change", callback);
-  }
+    const el = this.wrapperElement.querySelector("." + classSelector);
+    if (el) el.addEventListener("change", callback);
+    else console.error('Can not bind change event to .' + classSelector)
+  };
 
-  protected getEl = (classSelector: string): HTMLElement => {
-    return this.wrapperElement.querySelector('.' + classSelector)
-  }
+  protected getEl = (classSelector: string): HTMLElement | null => {
+    return this.wrapperElement.querySelector("." + classSelector);
+  };
 
   protected getEls = (classSelector: string): NodeList => {
     // TODO: Use getElementsByClassName
     // https://github.com/nefe/You-Dont-Need-jQuery
-    return this.wrapperElement.querySelectorAll('.' + classSelector)
-  }
+    return this.wrapperElement.querySelectorAll("." + classSelector);
+  };
 
   /**
    * Simplistic way of comparing two objects.

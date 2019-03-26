@@ -1,5 +1,5 @@
 import Level from "@domain/Level";
-import { IGameRules } from "@domain/Rules";
+import Rules, { IGameRules } from "@domain/Rules";
 import { ISelectionPresenter } from "@domain/Selection";
 import { ITilePresenter } from "@domain/Tile";
 import { Board5x5 } from "@shared/interfaces";
@@ -23,7 +23,7 @@ export type IGridLayout = Board5x5<ITileRawState>;
 
 export interface IGameLevel {
   layout: IGridLayout;
-  moves?: number;
+  moves: number;
   rules?: IGameRules;
   id?: string;
 }
@@ -34,7 +34,9 @@ export interface ILevelData {
     made: number;
   };
   isCleared: boolean;
+  isCustom: boolean;
   name?: number;
+  rules: Rules;
   isLastLevel?: boolean;
   isFirstLevel?: boolean;
 }
@@ -52,8 +54,22 @@ export interface IAnalytics {
 
 export interface IStorage {
   setCurrentLevel: (level: Level) => void;
-  getCurrentLevel: () => Promise<number>;
+  getCurrentLevel: () => Promise<number | null>;
   onLevelComplete: (level: Level) => Promise<string[]>;
-  getCompletedLevels: () => Promise<string[]>;
+  getCompletedLevels: () => Promise<string[] | null>;
   onFail: (level: Level) => void;
+}
+
+export interface IQueryString {
+  getLevel: () => IGameLevel | undefined;
+  getLayout: () => IGridLayout | undefined;
+  setLayout: (layout: IGridLayout) => void;
+  getRules: () => IGameRules | undefined;
+  setRules: (rules: IGameRules) => void;
+  getMoves: () => number | undefined;
+  setMoves: (moves: number) => void;
+  getLevelNumber: () => number | undefined;
+  setLevelNumber: (level: number) => void;
+  getIsEditMode: () => boolean | undefined;
+  setIsEditMode: (bool: boolean) => void;
 }
