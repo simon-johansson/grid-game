@@ -682,6 +682,51 @@
     "moves": 3,
     "layout": [
       [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "r",
+        "f",
+        "f",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "f",
+        "f",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c8fe3d0f8bdb78e5577c163"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "layout": [
+      [
         "r",
         "r",
         "f",
@@ -1307,54 +1352,54 @@
   {
     "rules": {
       "toggleOnOverlap": true,
-      "minSelection": 4
+      "minSelection": 6
     },
-    "moves": 9,
+    "moves": 4,
     "layout": [
       [
         "r",
         "r",
-        "b",
-        "b",
-        "b"
+        "r",
+        "r",
+        "r"
       ],
       [
         "r",
-        "r",
-        "r",
-        "r",
-        "b"
-      ],
-      [
-        "b",
-        "r",
-        "r",
-        "r",
-        "b"
-      ],
-      [
-        "b",
         "r",
         "r",
         "r",
         "r"
       ],
       [
-        "b",
-        "b",
-        "b",
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
         "r",
         "r"
       ]
     ],
-    "id": "5c6883418a26da5647bd51fd"
+    "id": "5c900cf4be5eca4c35a10dd2"
   },
   {
     "rules": {
       "toggleOnOverlap": true,
       "minSelection": 1
     },
-    "moves": 4,
+    "moves": 3,
     "layout": [
       [
         "f",
@@ -1438,5 +1483,230 @@
       ]
     ],
     "id": "5c7dad1cf2b1782732b1cb13"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "layout": [
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c8fe0510b21dc6cdfe3bf4f"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "layout": [
+      [
+        "b",
+        "r",
+        "f",
+        "r",
+        "b"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "b",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "f",
+        "r",
+        "b"
+      ]
+    ],
+    "id": "5c8fe0c6cf2c3f3690cdb39b"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "layout": [
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ]
+    ],
+    "id": "5c8fe25cdf71186e2f5cbb90"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 5,
+    "layout": [
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ]
+    ],
+    "id": "5c8fe25f43f9e915bbfce67a"
+  },
+  {
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 4
+    },
+    "moves": 9,
+    "layout": [
+      [
+        "r",
+        "r",
+        "b",
+        "b",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "b",
+        "b",
+        "r",
+        "r"
+      ]
+    ],
+    "id": "5c6883418a26da5647bd51fd"
   }
 ]
