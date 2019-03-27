@@ -1,32 +1,25 @@
 import Interactor from "@application/Interactor";
-import GameBoardEdit from "./scenes/GameBoardEditor";
+import GameBoardEditor from "./scenes/GameBoardEditor";
 import GameBoardPlayable from "./scenes/GameBoardPlayable";
 
 export default class UserInterface {
-  private isEditing: boolean;
-
   constructor(private interactor: Interactor) {
-    this.isEditing = this.interactor.isInEditMode;
-    this.createComponents();
+    this.router(interactor.isInEditMode ? "edit" : "play");
   }
 
-  private createComponents(): void {
-    if (this.isEditing) {
-      // TODO: Flytta till scenes istället
-      document.getElementById('app')!.innerHTML = `
-        <div id="editor-options"></div>
-        <div id="canvas-container"></div>
-        <div id="level-selection"></div>
-      `
-      const gameBoardEditor = new GameBoardEdit(this.interactor);
-    } else {
+  private router(path: "play" | "edit" | "overview"): void {
+    switch (path) {
+      case "play":
+        GameBoardPlayable.setScene(this.interactor, this.router.bind(this));
+        break;
 
-      document.getElementById('app')!.innerHTML = `
-        <div id="moves-counter"></div>
-        <div id="canvas-container"></div>
-        <div id="level-selection"></div>
-      `
-      const gameBoardPlaybale = new GameBoardPlayable(this.interactor);
+      case "edit":
+        GameBoardEditor.setScene(this.interactor, this.router.bind(this));
+        break;
+
+      case "overview":
+        console.log("overview");
+        break;
     }
   }
 }
