@@ -12,13 +12,12 @@ export default class GameBoardPlayable extends GameBoard {
     super(interactor);
 
     this.MovesCounterComponent = new MovesCounter();
-    this.LevelSelectorComponent = new LevelSelector(
-      this.goToPrevLevel.bind(this),
-      this.goToNextLevel.bind(this),
-      this.restartLevel.bind(this),
-      interactor.goToPlayMode.bind(interactor),
-      interactor.goToEditMode.bind(interactor),
-    );
+    this.LevelSelectorComponent = new LevelSelector({
+      onPrevLevel: this.goToPrevLevel.bind(this),
+      onNextLevel: this.goToNextLevel.bind(this),
+      onRestart: this.restartLevel.bind(this),
+      onEditLevel: () => router("edit"),
+    });
   }
 
   protected startLevel(): void {

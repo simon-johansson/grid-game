@@ -5,7 +5,7 @@ describe("component/LevelSelector", () => {
 
   beforeEach(() => {
     document.body.innerHTML = '<div id="level-selection"></div>';
-    ls = new LevelSelector(() => {}, () => {}, () => {}, () => {}, () => {});
+    ls = new LevelSelector({});
   });
 
   test("displays correct level number when playing", () => {

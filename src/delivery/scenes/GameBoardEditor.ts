@@ -17,13 +17,9 @@ export default class GameBoardEditor extends GameBoard {
       interactor.setCustomRules.bind(interactor),
       interactor.setCustomMoves.bind(interactor),
     );
-    this.LevelSelectorComponent = new LevelSelector(
-      () => {},
-      () => {},
-      this.restartLevel.bind(this),
-      interactor.goToPlayMode.bind(interactor),
-      interactor.goToEditMode.bind(interactor),
-    );
+    this.LevelSelectorComponent = new LevelSelector({
+      onReviewLevel: () => router("play"),
+    });
   }
 
   protected startLevel(): void {
