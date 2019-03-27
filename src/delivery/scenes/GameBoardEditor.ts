@@ -1,15 +1,26 @@
+/* tslint:disable: no-unused-expression */
 import Interactor from "@application/Interactor";
 import { ILevelData, TileType } from "@application/interfaces";
 import EditorOptions from "../components/EditorOptions";
 import LevelSelector from "../components/LevelSelector";
 import GameBoard from "./GameBoard";
+import setAppHTML from "./setAppHTML";
 
 export default class GameBoardEditor extends GameBoard {
+  public static setScene(interactor: Interactor, router: (path: string) => void): void {
+    setAppHTML(`
+      <div id="editor-options"></div>
+      <div id="canvas-container"></div>
+      <div id="level-selection"></div>
+    `);
+    new GameBoardEditor(interactor, router);
+  }
+
   private EditorOptionsComponent: EditorOptions;
   private LevelSelectorComponent: LevelSelector;
   private activeTileType: TileType;
 
-  constructor(interactor: Interactor) {
+  constructor(interactor: Interactor, router: (path: string) => void) {
     super(interactor);
 
     this.EditorOptionsComponent = new EditorOptions(

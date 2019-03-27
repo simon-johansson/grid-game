@@ -1,14 +1,25 @@
+/* tslint:disable: no-unused-expression */
 import Interactor from "@application/Interactor";
 import { ILevelData } from "@application/interfaces";
 import LevelSelector from "../components/LevelSelector";
 import MovesCounter from "../components/MovesCounter";
 import GameBoard from "./GameBoard";
+import setAppHTML from "./setAppHTML";
 
 export default class GameBoardPlayable extends GameBoard {
+  public static setScene(interactor: Interactor, router: (path: string) => void): void {
+    setAppHTML(`
+      <div id="moves-counter"></div>
+      <div id="canvas-container"></div>
+      <div id="level-selection"></div>
+    `);
+    new GameBoardPlayable(interactor, router);
+  }
+
   private MovesCounterComponent: MovesCounter;
   private LevelSelectorComponent: LevelSelector;
 
-  constructor(interactor: Interactor) {
+  constructor(interactor: Interactor, router: (path: string) => void) {
     super(interactor);
 
     this.MovesCounterComponent = new MovesCounter();
