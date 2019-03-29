@@ -105,7 +105,7 @@ describe("LevelManager", () => {
     });
 
     test("get custom level if supplied", () => {
-      const level = levelManager.getCurrentLevel(levels[2]);
+      const level = levelManager.getCurrentLevel({ ...levelDefaults, layout: blockerLayout });
       expect(level.isCustom).toEqual(true);
       expect(level.grid.layout).toEqual(get5x5TypedLayout(TileType.Blocker));
     });
@@ -117,7 +117,7 @@ describe("LevelManager", () => {
     });
   });
 
-  describe(".getNextLevel", () => {
+  describe(".nextLevel", () => {
     let levelManager: LevelManager;
 
     beforeEach(() => {
@@ -125,19 +125,19 @@ describe("LevelManager", () => {
     });
 
     test("get next level if possible", () => {
-      const level = levelManager.getNextLevel;
+      const level = levelManager.nextLevel;
       expect(level.name).toEqual(1);
     });
 
     test("can not go past last level", () => {
       levelManager = new LevelManager(levels, 2);
       expect(() => {
-        const level = levelManager.getNextLevel;
+        const level = levelManager.nextLevel;
       }).toThrowError();
     });
   });
 
-  describe(".getPreviousLevel", () => {
+  describe(".previousLevel", () => {
     let levelManager: LevelManager;
 
     beforeEach(() => {
@@ -146,14 +146,66 @@ describe("LevelManager", () => {
 
     test("get next level if possible", () => {
       levelManager = new LevelManager(levels, 1);
-      const level = levelManager.getPreviousLevel;
+      const level = levelManager.previousLevel;
       expect(level.name).toEqual(0);
     });
 
     test("can not go past last level", () => {
       expect(() => {
-        const level = levelManager.getPreviousLevel;
+        const level = levelManager.previousLevel;
       }).toThrowError();
+    });
+  });
+
+  describe(".overview", () => {
+    let levelManager: LevelManager;
+    const get125Levels = (): IGameLevel[] => {
+      const lvls = [];
+      for (let i = 0; i < 125; i++) {
+        lvls.push({ ...levelDefaults, layout: defaultLayout, id: i.toString() });
+      }
+      return lvls;
+    };
+    const getArrayOfNumbers = (low: number, high: number): string[] => {
+      const list = [];
+      for (let i = low; i <= high; i++) list.push(i.toString());
+      return list;
+    };
+
+    beforeEach(() => {
+      levelManager = new LevelManager(get125Levels(), 35, [...getArrayOfNumbers(0, 25), "33", "55"]);
+    });
+
+    test("total number of levels", () => {
+      const data = levelManager.overview;
+      expect(data.total).toEqual(125);
+    });
+
+    test("total number of cleared levels", () => {
+      const data = levelManager.overview;
+      expect(data.cleared).toEqual(28);
+    });
+
+    test("25 levels per stage", () => {
+      const data = levelManager.overview;
+      expect(data.stages.length).toEqual(5);
+      data.stages.forEach(stage => {
+        expect(stage.levels.length).toEqual(25);
+      })
+    });
+
+    test("stage containing currently playing level set as isPlaying", () => {
+      const data = levelManager.overview;
+      data.stages.forEach((stage, index) => {
+        expect(stage.isPlaying).toEqual(index === 1 ? true : false);
+      })
+    });
+
+    test("stage set as cleared if all containing levels is cleared", () => {
+      const data = levelManager.overview;
+      data.stages.forEach((stage, index) => {
+        expect(stage.isCleared).toEqual(index === 0 ? true : false);
+      })
     });
   });
 });

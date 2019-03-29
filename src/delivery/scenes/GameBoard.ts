@@ -13,13 +13,14 @@ export default abstract class GameBoard extends Component<{}> {
   private isSelecting: boolean = false;
   private isTransitioningBetweenLevels: boolean = false;
 
-  constructor(protected interactor: Interactor) {
+  constructor(protected interactor: Interactor, levelID?: string) {
     super();
     this.render({});
     this.setCanvasSize();
     this.bindEvents();
+    // TODO: Ladda banorna någon annan stans, mer top level
     this.interactor.loadLevels().then(() => {
-      this.startLevel();
+      this.startLevel(levelID);
     });
   }
 
@@ -59,7 +60,7 @@ export default abstract class GameBoard extends Component<{}> {
     }
   }
 
-  protected abstract startLevel(): void;
+  protected abstract startLevel(levelID?: string): void;
   protected abstract processSelectionStart(x: number, y: number): void;
   protected abstract processSelectionMove(x: number, y: number): void;
   protected abstract processSelectionEnd(): void;

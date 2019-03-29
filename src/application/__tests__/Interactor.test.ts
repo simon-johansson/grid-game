@@ -22,10 +22,10 @@ const levelDefaults = {
   moves: 3,
 };
 const levels: IGameLevel[] = [
-  { ...levelDefaults, layout: defaultLayout },
-  { ...levelDefaults, layout: clearedLayout },
-  { ...levelDefaults, layout: blockerLayout },
-  { ...levelDefaults, layout: mixedLayout },
+  { ...levelDefaults, layout: defaultLayout, id: 'id-0' },
+  { ...levelDefaults, layout: clearedLayout, id: 'id-1' },
+  { ...levelDefaults, layout: blockerLayout, id: 'id-2' },
+  { ...levelDefaults, layout: mixedLayout, id: 'id-3' },
 ];
 let querystringLevel: any = {};
 let selectionHasRendered: boolean;
@@ -82,7 +82,7 @@ describe("Interactor", () => {
       });
     });
 
-    test.only("cache levels on initial load", async () => {
+    test("cache levels on initial load", async () => {
       let networkRequests = 0;
       interactor = new Interactor(
         getNetworkGatewayMock(levels, () => {
@@ -118,6 +118,21 @@ describe("Interactor", () => {
       expect(state.isFirstLevel).toEqual(false);
       expect(tilesHasRendered).toEqual(true);
     });
+
+    test.skip("start level from query string", () => {});
+  });
+
+  describe("#startSpecificLevel", () => {
+    beforeEach(() => {
+      tilesHasRendered = false;
+    });
+
+    test("start specific level", () => {
+      const state = interactor.startSpecificLevel(presenters, 'id-2');
+      expect(state.name).toEqual(2);
+    });
+
+    test.skip("id supplied does not match any level", () => {});
   });
 
   describe("#startNextLevel", () => {
