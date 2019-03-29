@@ -29,7 +29,8 @@ export default class Level {
     public readonly isFirstLevel?: boolean,
     public readonly isLastLevel?: boolean,
     public readonly id?: string,
-    public readonly hasCompleted?: boolean
+    public readonly hasCompleted?: boolean,
+    public readonly isCurrentlyPlaying?: boolean
   ) {
     this.grid = {
       layout,
