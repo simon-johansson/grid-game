@@ -50,6 +50,7 @@ export default class Interactor {
   ) {}
 
   public async loadLevels(): Promise<void> {
+    if (this.levelManager !== undefined) return Promise.resolve();
     try {
       const levels = await this.network.getLevels();
       const currentLevel = await this.storage.getCurrentLevel();

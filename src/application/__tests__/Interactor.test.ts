@@ -68,7 +68,7 @@ describe("Interactor", () => {
       }).toThrow();
     });
 
-    test("can play start levels after load", () => {
+    test("can play levels after load", () => {
       interactor = new Interactor(
         getNetworkGatewayMock(levels),
         getAnalyticsMock(),
@@ -80,6 +80,22 @@ describe("Interactor", () => {
           interactor.startCurrentLevel(presenters);
         }).not.toThrow();
       });
+    });
+
+    test.only("cache levels on initial load", async () => {
+      let networkRequests = 0;
+      interactor = new Interactor(
+        getNetworkGatewayMock(levels, () => {
+          networkRequests++;
+        }),
+        getAnalyticsMock(),
+        getStorageMock(),
+        getQuerystringMock(),
+      );
+      await interactor.loadLevels();
+      expect(networkRequests).toEqual(1);
+      await interactor.loadLevels();
+      expect(networkRequests).toEqual(1);
     });
   });
 
