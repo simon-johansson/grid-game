@@ -13,7 +13,7 @@ describe("Level", () => {
   let level: Level;
 
   beforeEach(() => {
-    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules);
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, undefined);
   });
 
   test(".grid", () => {
@@ -22,12 +22,12 @@ describe("Level", () => {
     expect(level.grid.numberOfRows).toEqual(5);
   });
 
-  test(".isCustom true if name is not supplied", () => {
+  test(".isCustom true if id is not undefined", () => {
     expect(level.isCustom).toEqual(true);
   });
 
-  test(".isCustom false if name is supplied", () => {
-    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, 3);
+  test(".isCustom false if id is supplied", () => {
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, 'id');
     expect(level.isCustom).toEqual(false);
   });
 

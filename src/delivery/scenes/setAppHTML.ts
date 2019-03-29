@@ -1,3 +1,4 @@
+// https://ianopolous.github.io/javascript/innerHTML
 
 export default function(html: string): void {
   const topLevelEl = document.getElementById("app")!;

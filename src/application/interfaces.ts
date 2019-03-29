@@ -35,10 +35,25 @@ export interface ILevelData {
   };
   isCleared: boolean;
   isCustom: boolean;
+  id?: string;
   name?: number;
   rules: Rules;
   isLastLevel?: boolean;
   isFirstLevel?: boolean;
+  hasCompleted?: boolean;
+  isCurrentlyPlaying?: boolean;
+}
+
+export interface IStage {
+  isCleared: boolean;
+  isPlaying: boolean;
+  levels: ILevelData[]
+}
+
+export interface IOverviewData {
+  total: number;
+  cleared: number;
+  stages: IStage[];
 }
 
 export interface INetworkGateway {

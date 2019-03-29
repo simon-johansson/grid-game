@@ -7,20 +7,23 @@ import GameBoard from "./GameBoard";
 import setAppHTML from "./setAppHTML";
 
 export default class GameBoardPlayable extends GameBoard {
-  public static setScene(interactor: Interactor, router: (path: string) => void): void {
+  public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
     setAppHTML(`
+      <div id="header">
+        <div class="tab-button go-to-overview">Overview</div>
+      </div>
       <div id="moves-counter"></div>
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
     `);
-    new GameBoardPlayable(interactor, router);
+    new GameBoardPlayable(interactor, router, options);
   }
 
   private MovesCounterComponent: MovesCounter;
   private LevelSelectorComponent: LevelSelector;
 
-  constructor(interactor: Interactor, router: (path: string) => void) {
-    super(interactor);
+  constructor(interactor: Interactor, private router: (path: string) => void, options: { levelID?: string } = {}) {
+    super(interactor, options.levelID);
 
     this.MovesCounterComponent = new MovesCounter();
     this.LevelSelectorComponent = new LevelSelector({
@@ -31,8 +34,10 @@ export default class GameBoardPlayable extends GameBoard {
     });
   }
 
-  protected startLevel(): void {
-    const state = this.interactor.startCurrentLevel(this.getPresenters());
+  protected startLevel(levelID?: string): void {
+    let state: ILevelData;
+    if (levelID) state = this.interactor.startSpecificLevel(this.getPresenters(), levelID);
+    else state = this.interactor.startCurrentLevel(this.getPresenters());
     this.updateComponents(state);
   }
 
@@ -43,6 +48,11 @@ export default class GameBoardPlayable extends GameBoard {
         <canvas class="${this.tileCanvasClass}"></canvas>
       </div>
   `;
+  }
+
+  protected componentDidMount(): void {
+    // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
+    document.querySelector(".go-to-overview")!.addEventListener("click", () => this.router("overview"));
   }
 
   protected processSelectionStart(x: number, y: number): void {

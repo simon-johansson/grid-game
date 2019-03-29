@@ -6,7 +6,7 @@
   background: $lightGray;
   color: $black;
   font-weight: bold;
-  font-family: $fontFamily;
+  font-family: $defaultFontFamily;
   display: flex;
 
   &::before {
@@ -22,7 +22,7 @@
 }
 
 #doorbell {
-  font-family: $fontFamily;
+  font-family: $defaultFontFamily;
 
   #doorbell-form {
     border-radius: 8px;

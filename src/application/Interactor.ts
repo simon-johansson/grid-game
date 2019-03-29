@@ -10,6 +10,7 @@ import {
   IGridLayout,
   ILevelData,
   INetworkGateway,
+  IOverviewData,
   IQueryString,
   ISelectionPresenterConstructor,
   IStorage,
@@ -50,6 +51,7 @@ export default class Interactor {
   ) {}
 
   public async loadLevels(): Promise<void> {
+    if (this.levelManager !== undefined) return Promise.resolve();
     try {
       const levels = await this.network.getLevels();
       const currentLevel = await this.storage.getCurrentLevel();
@@ -68,14 +70,20 @@ export default class Interactor {
     return this.level;
   }
 
+  public startSpecificLevel(presenters: IPresenters, levelID: string): ILevelData {
+    this.level = this.levelManager.getCurrentLevel(levelID);
+    this.startLevel(presenters);
+    return this.level;
+  }
+
   public startNextLevel(presenters: IPresenters): ILevelData {
-    this.level = this.levelManager.getNextLevel;
+    this.level = this.levelManager.nextLevel;
     this.startLevel(presenters);
     return this.level;
   }
 
   public startPrevLevel(presenters: IPresenters): ILevelData {
-    this.level = this.levelManager.getPreviousLevel;
+    this.level = this.levelManager.previousLevel;
     this.startLevel(presenters);
     return this.level;
   }
@@ -93,6 +101,10 @@ export default class Interactor {
     this.startLevel(presenters);
     this.setQuerystringLevel();
     return this.level;
+  }
+
+  public getOverviewData(): IOverviewData {
+    return this.levelManager.overview;
   }
 
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
