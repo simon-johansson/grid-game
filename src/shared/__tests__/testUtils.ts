@@ -101,8 +101,11 @@ export const processedLayout = (state: ITileState | ITileSelection) => {
   return layout;
 };
 
-export const getNetworkGatewayMock = (data: IGameLevel[] = []): INetworkGateway => ({
-  getLevels: () => Promise.resolve(data),
+export const getNetworkGatewayMock = (data: IGameLevel[] = [], clb?: () => void): INetworkGateway => ({
+  getLevels: () => {
+    if (clb) clb();
+    return Promise.resolve(data)
+  },
 });
 
 export const getAnalyticsMock = (): IAnalytics => ({
