@@ -72,7 +72,8 @@ export default class Overview extends Component<IProps> {
   }
 
   private createLevels(): string {
-    return this.activeStage.levels
+    const len = this.activeStage.levels.length;
+    let html = this.activeStage.levels
       .map(({ hasCompleted, name, isCurrentlyPlaying }, index) => {
         return `
           <div class="level level-${index} ${hasCompleted && "cleared"} ${isCurrentlyPlaying && "active"}">
@@ -80,6 +81,22 @@ export default class Overview extends Component<IProps> {
           </div>`;
       })
       .join("");
+
+    if (len < 25) {
+      html += createFillterLevels();
+    }
+
+    return html;
+
+    function createFillterLevels(): string {
+      let result = "";
+      if (len < 25) {
+        for (let i = 0; i < 25 - len; i++) {
+          result += `<div class="level hidden"></div>`;
+        }
+      }
+      return result;
+    }
   }
 
   private bindStageSelect(): void {
