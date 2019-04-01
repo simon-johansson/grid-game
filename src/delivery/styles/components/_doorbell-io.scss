@@ -8,15 +8,16 @@
   font-weight: bold;
   font-family: $defaultFontFamily;
   display: flex;
+  padding: 5px 20px;
 
   &::before {
     content: "";
     position: relative;
     display: inline-block;
     background-image: url(/assets/conversation@2x.png);
-    background-size: 20px;
-    width: 20px;
-    height: 20px;
+    background-size: 18px;
+    width: 18px;
+    height: 18px;
     margin-right: 8px;
   }
 }

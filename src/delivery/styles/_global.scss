@@ -12,6 +12,7 @@ body {
   overflow: hidden;
   overscroll-behavior: contain;
   position: fixed;
+  touch-action: manipulation;
 }
 
 body {
