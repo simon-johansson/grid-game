@@ -65,6 +65,10 @@
     />
 
     <script src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40124062-6"></script>
+
+    <script src="/vendor/google-analytics.js"></script>
+    <script src="/vendor/sentry.js"></script>
 
     <link rel="stylesheet" href="/styles/styles.css" />
     <script>
@@ -94,11 +98,9 @@
   </head>
 
   <body>
-    <!-- TODO: Skapa element i koden istället -->
+
     <div id="app"></div>
-    <script>
-      // Sentry.init({ dsn: "https://224d81892cac4cd9ad8de7623b2187a3@sentry.io/1420148" });
-    </script>
+
     <script src="/vendor/doorbell.js"></script>
     <script src="/app.js"></script>
   </body>
