@@ -2,6 +2,7 @@ import { IAnalytics } from "@application/interfaces";
 import Level from "@domain/Level";
 import { EGAErrorSeverity, EGAProgressionStatus, GameAnalytics } from "gameanalytics";
 import packageJSON from "../../package.json";
+import { isProduction } from "./utils.js";
 
 const GA_KEY = "87aaaa576796f5ef0df26df23fc7c0e3";
 const GA_SECRET = "8e789012ed8133df1908eaff64a97d01a1cdcfa4";
@@ -14,7 +15,7 @@ export default class AnalyticsIml implements IAnalytics {
     GameAnalytics.configureBuild(packageJSON.version);
 
     // In production
-    if (location.hostname === "gridgame.net") {
+    if (isProduction()) {
       GameAnalytics.initialize(GA_KEY, GA_SECRET);
     }
     // In development
