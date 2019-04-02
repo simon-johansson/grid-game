@@ -32,6 +32,9 @@ export default class GameBoardPlayable extends GameBoard {
       onRestart: this.restartLevel.bind(this),
       onEditLevel: () => router("edit"),
     });
+    (window as any).helperFunctions.clearLevel = () => {
+      this.updateComponents(this.interactor.cheatToClearLevel());
+    };
   }
 
   protected startLevel(levelID?: string): void {

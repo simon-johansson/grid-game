@@ -39,4 +39,8 @@ export default class StorageIml implements IStorage {
   }
 
   public onFail(level: Level): void {}
+
+  public clearAllData(): Promise<void> {
+    return localforage.clear();
+  }
 }

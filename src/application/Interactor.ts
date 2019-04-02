@@ -124,6 +124,12 @@ export default class Interactor {
     return this.level;
   }
 
+  public cheatToClearLevel(): ILevelData {
+    this.level.isCleared = true;
+    this.onLevelEnded()
+    return this.level;
+  }
+
   public removeSelection(): void {
     this.grid.deselectTiles();
     this.selection.remove();
