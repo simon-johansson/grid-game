@@ -1,7 +1,9 @@
 /* tslint:disable: no-unused-expression */
 import Interactor from "@application/Interactor";
 import { ILevelData } from "@application/interfaces";
+import HowToPlayModal from "../components/HowToPlayModal";
 import LevelSelector from "../components/LevelSelector";
+import MinSelectionModal from "../components/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
 import GameBoard from "./GameBoard";
 import setAppHTML from "./setAppHTML";
@@ -15,12 +17,15 @@ export default class GameBoardPlayable extends GameBoard {
       <div id="moves-counter"></div>
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
+      <div id="modal"></div>
     `);
     new GameBoardPlayable(interactor, router, options);
   }
 
   private MovesCounterComponent: MovesCounter;
   private LevelSelectorComponent: LevelSelector;
+  private HowToPlayModalComponent: HowToPlayModal;
+  private MinSelectionModalComponent: MinSelectionModal;
 
   constructor(interactor: Interactor, private router: (path: string) => void, options: { levelID?: string } = {}) {
     super(interactor, options.levelID);
@@ -32,16 +37,22 @@ export default class GameBoardPlayable extends GameBoard {
       onRestart: this.restartLevel.bind(this),
       onEditLevel: () => router("edit"),
     });
+
+    this.HowToPlayModalComponent = new HowToPlayModal();
+    this.MinSelectionModalComponent = new MinSelectionModal(() => {
+      console.log("close");
+    });
+
     (window as any).helperFunctions.clearLevel = () => {
       this.updateComponents(this.interactor.cheatToClearLevel());
     };
   }
 
   protected startLevel(levelID?: string): void {
-    let state: ILevelData;
-    if (levelID) state = this.interactor.startSpecificLevel(this.getPresenters(), levelID);
-    else state = this.interactor.startCurrentLevel(this.getPresenters());
-    this.updateComponents(state);
+    let level: ILevelData;
+    if (levelID) level = this.interactor.startSpecificLevel(this.getPresenters(), levelID);
+    else level = this.interactor.startCurrentLevel(this.getPresenters());
+    this.updateComponents(level);
   }
 
   protected HTML(props: {}): string {
@@ -68,7 +79,6 @@ export default class GameBoardPlayable extends GameBoard {
 
   protected processSelectionEnd(): void {
     const level = this.interactor.processSelection();
-    this.interactor.removeSelection();
     this.updateComponents(level);
   }
 
@@ -87,6 +97,7 @@ export default class GameBoardPlayable extends GameBoard {
       isReviewing: level.isCustom,
     });
 
+    this.checkIfShouldShowModal(level);
     this.checkIfLevelHasEnded(level);
   }
 
@@ -94,6 +105,18 @@ export default class GameBoardPlayable extends GameBoard {
     this.convertAbsoluteOffsetToProcent(x),
     this.convertAbsoluteOffsetToProcent(y),
   ];
+
+  private checkIfShouldShowModal(level: ILevelData): void {
+    const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
+
+    if (this.shouldShowHowToPlayModal(level)) {
+      timeout(() => this.HowToPlayModalComponent.render({}));
+    }
+
+    if (this.shouldShowMinSelectionModal(level)) {
+      timeout(() => this.MinSelectionModalComponent.render({}));
+    }
+  }
 
   private checkIfLevelHasEnded(level: ILevelData): void {
     const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
@@ -108,5 +131,13 @@ export default class GameBoardPlayable extends GameBoard {
 
   private shouldRestartCurrentLevel(level: ILevelData): boolean {
     return level.selections.left === 0;
+  }
+
+  private shouldShowHowToPlayModal({ isFirstLevel, isCleared }: ILevelData): boolean {
+    return isFirstLevel !== undefined && isFirstLevel && !isCleared;
+  }
+
+  private shouldShowMinSelectionModal(level: ILevelData): boolean {
+    return level.rules.minSelection > 1;
   }
 }

@@ -15,6 +15,11 @@ export default abstract class Component<Props> {
     }
   }
 
+  public destroy(): void {
+    this.componentIsOnPage = false;
+    this.wrapperElement.innerHTML = "";
+  }
+
   protected abstract HTML(props: Props): string;
 
   protected abstract update(props: Props): void;
@@ -25,7 +30,7 @@ export default abstract class Component<Props> {
 
   protected bindClickEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
     const el = this.wrapperElement.querySelector("." + classSelector);
-    if (el) el.addEventListener("click", callback);
+    if (el) el.addEventListener("click", callback, false);
     else console.error('Can not bind click event to .' + classSelector)
   };
 
