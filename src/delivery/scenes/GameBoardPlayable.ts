@@ -103,6 +103,34 @@ export default class GameBoardPlayable extends GameBoard {
     this.checkIfLevelHasEnded(level);
   }
 
+  protected async goToNextLevel(): Promise<void> {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("next");
+      const level = this.interactor.startNextLevel(this.getPresenters());
+      this.updateComponents(level);
+      this.checkIfShouldShowModal(level, await this.interactor.getUserData());
+      return this.showNewLevel("next").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
+  }
+
+  protected async goToPrevLevel(): Promise<void> {
+    if (!this.isTransitioningBetweenLevels) {
+      this.isTransitioningBetweenLevels = true;
+      this.prepareNewLevel("prev");
+      const level = this.interactor.startPrevLevel(this.getPresenters());
+      this.updateComponents(level);
+      this.checkIfShouldShowModal(level, await this.interactor.getUserData());
+      return this.showNewLevel("prev").then(() => {
+        this.bindEvents();
+        this.isTransitioningBetweenLevels = false;
+      });
+    }
+  }
+
   private getSelectionArguments = (x: number, y: number): [number, number] => [
     this.convertAbsoluteOffsetToProcent(x),
     this.convertAbsoluteOffsetToProcent(y),

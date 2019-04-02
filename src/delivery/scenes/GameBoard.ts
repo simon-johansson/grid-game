@@ -10,8 +10,8 @@ export default abstract class GameBoard extends Component<{}> {
   protected tileCanvasClass = "tile-canvas";
   protected selectionCanvasClass = "selection-canvas";
   protected innerWrapperClass = "inner-wrapper";
+  protected isTransitioningBetweenLevels: boolean = false;
   private isSelecting: boolean = false;
-  private isTransitioningBetweenLevels: boolean = false;
 
   constructor(protected interactor: Interactor, levelID?: string) {
     super();
@@ -22,30 +22,6 @@ export default abstract class GameBoard extends Component<{}> {
     this.interactor.loadLevels().then(() => {
       this.startLevel(levelID);
     });
-  }
-
-  protected goToNextLevel(): Promise<void> | undefined {
-    if (!this.isTransitioningBetweenLevels) {
-      this.isTransitioningBetweenLevels = true;
-      this.prepareNewLevel("next");
-      this.updateComponents(this.interactor.startNextLevel(this.getPresenters()));
-      return this.showNewLevel("next").then(() => {
-        this.bindEvents();
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
-  }
-
-  protected goToPrevLevel(): Promise<void> | undefined {
-    if (!this.isTransitioningBetweenLevels) {
-      this.isTransitioningBetweenLevels = true;
-      this.prepareNewLevel("prev");
-      this.updateComponents(this.interactor.startPrevLevel(this.getPresenters()));
-      return this.showNewLevel("prev").then(() => {
-        this.bindEvents();
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
   }
 
   protected restartLevel(): Promise<void> | undefined {
@@ -79,6 +55,55 @@ export default abstract class GameBoard extends Component<{}> {
     };
   }
 
+  protected prepareNewLevel(direction: "prev" | "next" | "restart"): void {
+    this.getEl(this.innerWrapperClass)!.className = `${this.innerWrapperClass}-old`;
+    this.getEl(this.tileCanvasClass)!.className = `${this.tileCanvasClass}-old`;
+    this.getEl(this.selectionCanvasClass)!.className = `${this.selectionCanvasClass}-old`;
+    this.createWrapperAndCanvas(direction);
+    this.setCanvasSize();
+  }
+
+  protected showNewLevel(direction: "prev" | "next" | "restart"): Promise<void> {
+    const oldWrapper = this.getEl(`${this.innerWrapperClass}-old`);
+    const newWrapper = this.getEl(this.innerWrapperClass);
+
+    let directionOutClass = "fade-out";
+    if (direction === "prev") {
+      directionOutClass += "-right";
+    } else if (direction === "next") {
+      directionOutClass += "-left";
+    }
+
+    newWrapper!.classList.remove("fade-in", "fade-in-right", "fade-in-left");
+
+    // TODO: Gör kollen på den nya wrappern istället
+    const promise = new Promise(resolve => {
+      oldWrapper!.addEventListener("transitionend", resolve, false);
+    }).then(() => oldWrapper!.remove());
+    oldWrapper!.classList.add(directionOutClass);
+
+    return promise;
+  }
+
+  protected bindEvents(): void {
+    const addCanvasListener = (eventType: string, onEventActionFn: any, proxyFn?: any) =>
+      this.wrapperElement.addEventListener(
+        eventType,
+        proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn.bind(this),
+        false,
+      );
+
+    addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
+    addCanvasListener("mousemove", this.onSelectionMove, this.onMouseSelection);
+    addCanvasListener("mouseup", this.onSelectionEnd);
+    document.addEventListener("mouseup", this.onSelectionEnd.bind(this), false);
+
+    addCanvasListener("touchstart", this.onSelectionStart, this.onTouchSelection);
+    addCanvasListener("touchmove", this.onSelectionMove, this.onTouchSelection);
+    addCanvasListener("touchend", this.onSelectionEnd);
+    document.addEventListener("touchend", this.onSelectionEnd.bind(this), false);
+  }
+
   private get tileCanvas(): HTMLCanvasElement {
     return this.getEl(this.tileCanvasClass) as HTMLCanvasElement;
   }
@@ -99,36 +124,6 @@ export default abstract class GameBoard extends Component<{}> {
   // TODO: Gör detta dynamiskt, har tillgång till gamestate
   private get tileSize(): number {
     return Math.floor(this.tileCanvas.width / 5);
-  }
-
-  private prepareNewLevel(direction: "prev" | "next" | "restart"): void {
-    this.getEl(this.innerWrapperClass)!.className = `${this.innerWrapperClass}-old`;
-    this.getEl(this.tileCanvasClass)!.className = `${this.tileCanvasClass}-old`;
-    this.getEl(this.selectionCanvasClass)!.className = `${this.selectionCanvasClass}-old`;
-    this.createWrapperAndCanvas(direction);
-    this.setCanvasSize();
-  }
-
-  private showNewLevel(direction: "prev" | "next" | "restart"): Promise<void> {
-    const oldWrapper = this.getEl(`${this.innerWrapperClass}-old`);
-    const newWrapper = this.getEl(this.innerWrapperClass);
-
-    let directionOutClass = "fade-out";
-    if (direction === "prev") {
-      directionOutClass += "-right";
-    } else if (direction === "next") {
-      directionOutClass += "-left";
-    }
-
-    newWrapper!.classList.remove("fade-in", "fade-in-right", "fade-in-left");
-
-    // TODO: Gör kollen på den nya wrappern istället
-    const promise = new Promise(resolve => {
-      oldWrapper!.addEventListener("transitionend", resolve, false);
-    }).then(() => oldWrapper!.remove());
-    oldWrapper!.classList.add(directionOutClass);
-
-    return promise;
   }
 
   private createWrapperAndCanvas(direction: "prev" | "next" | "restart"): void {
@@ -171,25 +166,6 @@ export default abstract class GameBoard extends Component<{}> {
     this.selectionCanvas.height = boardSize;
     this.wrapperElement.style.width = `${boardSize}px`;
     this.wrapperElement.style.height = `${boardSize}px`;
-  }
-
-  private bindEvents(): void {
-    const addCanvasListener = (eventType: string, onEventActionFn: any, proxyFn?: any) =>
-      this.wrapperElement.addEventListener(
-        eventType,
-        proxyFn ? proxyFn.bind(this, onEventActionFn) : onEventActionFn.bind(this),
-        false,
-      );
-
-    addCanvasListener("mousedown", this.onSelectionStart, this.onMouseSelection);
-    addCanvasListener("mousemove", this.onSelectionMove, this.onMouseSelection);
-    addCanvasListener("mouseup", this.onSelectionEnd);
-    document.addEventListener("mouseup", this.onSelectionEnd.bind(this), false);
-
-    addCanvasListener("touchstart", this.onSelectionStart, this.onTouchSelection);
-    addCanvasListener("touchmove", this.onSelectionMove, this.onTouchSelection);
-    addCanvasListener("touchend", this.onSelectionEnd);
-    document.addEventListener("touchend", this.onSelectionEnd.bind(this), false);
   }
 
   private onMouseSelection = (method: (x: number, y: number) => void, e: MouseEvent): void => {
