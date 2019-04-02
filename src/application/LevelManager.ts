@@ -63,6 +63,13 @@ const getMinifiedTile = (tile: Tile): ITileRawState => {
   }
 };
 
+const cleanLevels = (levels: IGameLevel[]) => {
+  return levels.filter((level, index) => {
+    // console.log(level);
+    return level;
+  });
+};
+
 export default class LevelManager {
   public static newLevel(level: IGameLevel, options?: ILevelOptions): Level {
     const { layout, moves, rules: rawRules, id } = level;
@@ -85,22 +92,16 @@ export default class LevelManager {
 
   private currentLevelIndex: number;
   private completedLevels: string[];
+  private levels: IGameLevel[];
 
-  constructor(
-    private levels: IGameLevel[],
-    currentLevelIndex: number | null = 0,
-    completedLevels: string[] | null = [],
-  ) {
-    this.currentLevelIndex = currentLevelIndex === null ? 0 : currentLevelIndex;
+  constructor(levels: IGameLevel[], currentLevelID: string | null = "", completedLevels: string[] | null = []) {
+    this.levels = cleanLevels(levels);
+    this.currentLevelIndex = this.getLevelIndexFromID(currentLevelID);
     this.completedLevels = completedLevels === null ? [] : completedLevels;
-
-    if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
-      throw new Error("Supplied level index is out of bounds");
-    }
   }
 
   public getCurrentLevel(customLevel?: IGameLevel | string): Level {
-    if (typeof customLevel === "string") return this.getLevelFromID(customLevel);
+    if (typeof customLevel === "string") this.currentLevelIndex = this.getLevelIndexFromID(customLevel);
     else if (customLevel) return this.getCustomLevel(customLevel);
     return this.level;
   }
@@ -135,11 +136,14 @@ export default class LevelManager {
     this.completedLevels = completedLevels;
   }
 
-  private getLevelFromID(levelID: string): Level {
-    this.levels.forEach((lvl, index) => {
-      if (lvl.id === levelID) this.currentLevelIndex = index;
-    });
-    return this.level;
+  private getLevelIndexFromID(levelID: string | null): number {
+    let levelIndex = 0;
+    if (levelID !== null) {
+      this.levels.forEach((lvl, index) => {
+        if (lvl.id === levelID) levelIndex = index;
+      });
+    }
+    return levelIndex;
   }
 
   private getCustomLevel(customLevel: IGameLevel): Level {

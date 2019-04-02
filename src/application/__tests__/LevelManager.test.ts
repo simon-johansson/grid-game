@@ -14,21 +14,12 @@ const levelDefaults = {
   moves: 3,
 };
 const levels: IGameLevel[] = [
-  { ...levelDefaults, layout: defaultLayout, id: "0" },
-  { ...levelDefaults, layout: clearedLayout, id: "1" },
-  { ...levelDefaults, layout: blockerLayout, id: "2" },
+  { ...levelDefaults, layout: defaultLayout, id: "id-0" },
+  { ...levelDefaults, layout: clearedLayout, id: "id-1" },
+  { ...levelDefaults, layout: blockerLayout, id: "id-2" },
 ];
 
 describe("LevelManager", () => {
-  test("can not create if init level index is out of bounds", () => {
-    expect(() => {
-      const level = new LevelManager(levels, -1);
-    }).toThrowError();
-    expect(() => {
-      const level = new LevelManager(levels, 5);
-    }).toThrowError();
-  });
-
   describe("#newLevel", () => {
     test("name, isFirst & isLast is not defined if not set", () => {
       const level = LevelManager.newLevel(levels[0]);
@@ -97,8 +88,9 @@ describe("LevelManager", () => {
     });
 
     test("get level of init level index if supplied", () => {
-      levelManager = new LevelManager(levels, 1);
+      levelManager = new LevelManager(levels, "id-1");
       const level = levelManager.getCurrentLevel();
+      expect(level.id).toEqual("id-1");
       expect(level.name).toEqual(1);
       expect(level.isFirstLevel).toEqual(false);
       expect(level.isLastLevel).toEqual(false);
@@ -111,7 +103,7 @@ describe("LevelManager", () => {
     });
 
     test("level should be set as completed if id is present in storage", () => {
-      levelManager = new LevelManager(levels, 2, ["2"]);
+      levelManager = new LevelManager(levels, "id-2", ["id-2"]);
       const level = levelManager.getCurrentLevel();
       expect(level.hasCompleted).toEqual(true);
     });
@@ -130,7 +122,7 @@ describe("LevelManager", () => {
     });
 
     test("can not go past last level", () => {
-      levelManager = new LevelManager(levels, 2);
+      levelManager = new LevelManager(levels, "id-2");
       expect(() => {
         const level = levelManager.nextLevel;
       }).toThrowError();
@@ -144,13 +136,13 @@ describe("LevelManager", () => {
       levelManager = new LevelManager(levels);
     });
 
-    test("get next level if possible", () => {
-      levelManager = new LevelManager(levels, 1);
+    test("get prev level if possible", () => {
+      levelManager = new LevelManager(levels, "id-1");
       const level = levelManager.previousLevel;
       expect(level.name).toEqual(0);
     });
 
-    test("can not go past last level", () => {
+    test("can not go below first level", () => {
       expect(() => {
         const level = levelManager.previousLevel;
       }).toThrowError();
@@ -173,7 +165,7 @@ describe("LevelManager", () => {
     };
 
     beforeEach(() => {
-      levelManager = new LevelManager(get125Levels(), 35, [...getArrayOfNumbers(0, 25), "33", "55"]);
+      levelManager = new LevelManager(get125Levels(), "35", [...getArrayOfNumbers(0, 25), "33", "55"]);
     });
 
     test("total number of levels", () => {
@@ -191,21 +183,21 @@ describe("LevelManager", () => {
       expect(data.stages.length).toEqual(5);
       data.stages.forEach(stage => {
         expect(stage.levels.length).toEqual(25);
-      })
+      });
     });
 
     test("stage containing currently playing level set as isPlaying", () => {
       const data = levelManager.overview;
       data.stages.forEach((stage, index) => {
         expect(stage.isPlaying).toEqual(index === 1 ? true : false);
-      })
+      });
     });
 
     test("stage set as cleared if all containing levels is cleared", () => {
       const data = levelManager.overview;
       data.stages.forEach((stage, index) => {
         expect(stage.isCleared).toEqual(index === 0 ? true : false);
-      })
+      });
     });
   });
 });

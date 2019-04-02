@@ -163,7 +163,7 @@ export default class Interactor {
 
   private startLevel(presenters: IPresenters): void {
     this.createEnteties(presenters);
-    this.storage.setCurrentLevel(this.level);
+    this.storage.setCurrentLevel(this.level.id);
     this.analytics.startLevel(this.level);
   }
 
@@ -206,7 +206,7 @@ export default class Interactor {
   private async onLevelEnded(): Promise<void> {
     if (this.level.isCleared) {
       this.analytics.onLevelComplete(this.level);
-      const completedLevels = await this.storage.onLevelComplete(this.level);
+      const completedLevels = await this.storage.onLevelComplete(this.level.id!);
       this.levelManager.onLevelComplete(completedLevels);
     } else {
       this.analytics.onLevelFailed(this.level);

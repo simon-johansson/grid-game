@@ -12,25 +12,24 @@ export default class StorageIml implements IStorage {
     });
   }
 
-  public setCurrentLevel(level: Level): void {
-    if (level.name !== undefined) {
-      localforage.setItem(this.currentLevelKey, level.name).catch(error => {
+  public setCurrentLevel(levelID?: string): void {
+    if (levelID !== undefined) {
+      localforage.setItem(this.currentLevelKey, levelID).catch(error => {
         // Analytics
         console.log(error);
       });
     }
   }
 
-  public getCurrentLevel(): Promise<number | null> {
-    return localforage.getItem<number>(this.currentLevelKey);
+  public getCurrentLevel(): Promise<string | null> {
+    return localforage.getItem<string>(this.currentLevelKey);
+  }
   }
 
-  public async onLevelComplete(level: Level): Promise<string[]> {
+  public async onLevelComplete(levelID: string): Promise<string[]> {
     let completedLevels = await this.getCompletedLevels();
     completedLevels = completedLevels || [];
-    if (completedLevels.indexOf(level.id!) === -1) {
-      completedLevels.push(level.id!);
-    }
+    if (completedLevels.indexOf(levelID) === -1) completedLevels.push(levelID);
     return localforage.setItem(this.onLevelCompleteKey, completedLevels);
   }
 
