@@ -1,10 +1,14 @@
-import { IStorage } from "@application/interfaces";
+import { IStorage, IUserInformation } from "@application/interfaces";
 import Level from "@domain/Level";
 import localforage from "localforage";
 
 export default class StorageIml implements IStorage {
   private currentLevelKey = "currentLevel";
+  private userInformationKey = "userInfo";
   private onLevelCompleteKey = "levelComplete";
+  private defaultUserInformation: IUserInformation = {
+    hasViewedMinSelectionInfo: false,
+  };
 
   constructor() {
     localforage.config({
@@ -24,6 +28,15 @@ export default class StorageIml implements IStorage {
   public getCurrentLevel(): Promise<string | null> {
     return localforage.getItem<string>(this.currentLevelKey);
   }
+
+  public async setUserInformation(info: Partial<IUserInformation>): Promise<IUserInformation> {
+    const userInfo = await this.getUserInformation();
+    return localforage.setItem(this.userInformationKey, { ...userInfo, ...info });
+  }
+
+  public async getUserInformation(): Promise<IUserInformation> {
+    const data = await localforage.getItem<IUserInformation>(this.userInformationKey);
+    return data || this.defaultUserInformation;
   }
 
   public async onLevelComplete(levelID: string): Promise<string[]> {

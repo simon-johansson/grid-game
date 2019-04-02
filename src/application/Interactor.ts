@@ -15,6 +15,7 @@ import {
   ISelectionPresenterConstructor,
   IStorage,
   ITilePresenterConstructor,
+  IUserInformation,
   TileType,
 } from "./interfaces";
 import LevelManager from "./LevelManager";
@@ -107,6 +108,14 @@ export default class Interactor {
     return this.levelManager.overview;
   }
 
+  public getUserData(): Promise<IUserInformation> {
+    return this.storage.getUserInformation();
+  }
+
+  public setUserData(userInfo: Partial<IUserInformation>): void {
+    return this.storage.setUserInformation(userInfo);
+  }
+
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setStartPoint({ x: gridOffsetX, y: gridOffsetY });
     this.applySelectionToGrid(tileState);
@@ -126,7 +135,7 @@ export default class Interactor {
 
   public cheatToClearLevel(): ILevelData {
     this.level.isCleared = true;
-    this.onLevelEnded()
+    this.onLevelEnded();
     return this.level;
   }
 

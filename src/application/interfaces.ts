@@ -47,7 +47,7 @@ export interface ILevelData {
 export interface IStage {
   isCleared: boolean;
   isPlaying: boolean;
-  levels: ILevelData[]
+  levels: ILevelData[];
 }
 
 export interface IOverviewData {
@@ -57,7 +57,7 @@ export interface IOverviewData {
 }
 
 export interface INetworkGateway {
-  getLevels: () => Promise<IGameLevel[]>
+  getLevels: () => Promise<IGameLevel[]>;
 }
 
 export interface IAnalytics {
@@ -67,10 +67,16 @@ export interface IAnalytics {
   onError: (error: any) => void;
 }
 
+export interface IUserInformation {
+  hasViewedMinSelectionInfo: boolean;
+}
+
 export interface IStorage {
-  setCurrentLevel: (level: Level) => void;
-  getCurrentLevel: () => Promise<number | null>;
-  onLevelComplete: (level: Level) => Promise<string[]>;
+  setCurrentLevel: (levelID?: string) => void;
+  getCurrentLevel: () => Promise<string | null>;
+  setUserInformation: (info: Partial<IUserInformation>) => void;
+  getUserInformation: () => Promise<IUserInformation>;
+  onLevelComplete: (levelID: string) => Promise<string[]>;
   getCompletedLevels: () => Promise<string[] | null>;
   onFail: (level: Level) => void;
 }

@@ -1,6 +1,6 @@
 /* tslint:disable: no-unused-expression */
 import Interactor from "@application/Interactor";
-import { ILevelData } from "@application/interfaces";
+import { ILevelData, IUserInformation } from "@application/interfaces";
 import HowToPlayModal from "../components/HowToPlayModal";
 import LevelSelector from "../components/LevelSelector";
 import MinSelectionModal from "../components/MinSelectionModal";
@@ -40,7 +40,9 @@ export default class GameBoardPlayable extends GameBoard {
 
     this.HowToPlayModalComponent = new HowToPlayModal();
     this.MinSelectionModalComponent = new MinSelectionModal(() => {
-      console.log("close");
+      this.interactor.setUserData({
+        hasViewedMinSelectionInfo: true,
+      });
     });
 
     (window as any).helperFunctions.clearLevel = () => {
@@ -48,11 +50,12 @@ export default class GameBoardPlayable extends GameBoard {
     };
   }
 
-  protected startLevel(levelID?: string): void {
+  protected async startLevel(levelID?: string): Promise<void> {
     let level: ILevelData;
     if (levelID) level = this.interactor.startSpecificLevel(this.getPresenters(), levelID);
     else level = this.interactor.startCurrentLevel(this.getPresenters());
     this.updateComponents(level);
+    this.checkIfShouldShowModal(level, await this.interactor.getUserData());
   }
 
   protected HTML(props: {}): string {
@@ -97,7 +100,6 @@ export default class GameBoardPlayable extends GameBoard {
       isReviewing: level.isCustom,
     });
 
-    this.checkIfShouldShowModal(level);
     this.checkIfLevelHasEnded(level);
   }
 
@@ -106,14 +108,14 @@ export default class GameBoardPlayable extends GameBoard {
     this.convertAbsoluteOffsetToProcent(y),
   ];
 
-  private checkIfShouldShowModal(level: ILevelData): void {
+  private checkIfShouldShowModal(level: ILevelData, userInfo: IUserInformation): void {
     const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
 
     if (this.shouldShowHowToPlayModal(level)) {
       timeout(() => this.HowToPlayModalComponent.render({}));
     }
 
-    if (this.shouldShowMinSelectionModal(level)) {
+    if (this.shouldShowMinSelectionModal(level, userInfo)) {
       timeout(() => this.MinSelectionModalComponent.render({}));
     }
   }
@@ -137,7 +139,7 @@ export default class GameBoardPlayable extends GameBoard {
     return isFirstLevel !== undefined && isFirstLevel && !isCleared;
   }
 
-  private shouldShowMinSelectionModal(level: ILevelData): boolean {
-    return level.rules.minSelection > 1;
+  private shouldShowMinSelectionModal(level: ILevelData, userInfo: IUserInformation): boolean {
+    return level.rules.minSelection > 1 && !userInfo.hasViewedMinSelectionInfo;
   }
 }
