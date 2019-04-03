@@ -90,6 +90,7 @@ export default class GameBoardPlayable extends GameBoard {
       selectionsLeft: level.selections.left,
       selectionsMade: level.selections.made,
       isLevelCleared: level.isCleared,
+      minSelection: level.rules.minSelection
     });
 
     this.LevelSelectorComponent.render({

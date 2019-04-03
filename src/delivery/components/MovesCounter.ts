@@ -4,10 +4,13 @@ export interface IProps {
   selectionsLeft: number | undefined;
   selectionsMade: number;
   isLevelCleared: boolean;
+  minSelection: number;
 }
 
 const counterWrapperClass = "counter-number-wrapper";
 const counterClass = "counter-number";
+const minSelectionWrapperClass = "min-selection-indicator";
+const minSelectionNumberClass = "min-selection-number";
 
 export default class MovesLeft extends Component<IProps> {
   protected wrapperElement: HTMLElement = document.getElementById("moves-counter") as HTMLElement;
@@ -20,16 +23,20 @@ export default class MovesLeft extends Component<IProps> {
     return this.getEls(counterClass);
   }
 
-  protected HTML(props: IProps): string {
+  protected HTML(porps: IProps): string {
     return `
       <div class="inner-wrapper">
-        <div class="counter-number-wrapper"></div>
+        <div class="${counterWrapperClass}">
+          <div class="${minSelectionWrapperClass}">
+            <span>MIN</span><figure class="${minSelectionNumberClass}"></figure>
+          </div>
+        </div>
         <span class="counter-description">moves left</span>
       </div>
   `;
   }
 
-  protected update({ selectionsLeft, selectionsMade, isLevelCleared }: IProps): void {
+  protected update({ selectionsLeft, selectionsMade, isLevelCleared, minSelection }: IProps): void {
     const moves = selectionsLeft !== undefined ? selectionsLeft : selectionsMade;
     const isLevelFailed = !isLevelCleared && moves === 0;
 
@@ -37,6 +44,8 @@ export default class MovesLeft extends Component<IProps> {
     this.counterWrapperElement.appendChild(this.createNumberElement(moves));
     this.counterWrapperElement.className = `${counterWrapperClass} ${isLevelCleared && "cleared"} ${isLevelFailed &&
       "failed"}`;
+
+    this.setMinSelectionIndicator(minSelection);
   }
 
   private removeNumberElement(): void {
@@ -53,5 +62,11 @@ export default class MovesLeft extends Component<IProps> {
     el.textContent = `${moves}`;
     el.addEventListener("transitionend", e => el.remove(), false);
     return el;
+  }
+
+  private setMinSelectionIndicator(minSelection: number): void {
+    const shouldHide = minSelection === 1;
+    this.getEl(minSelectionWrapperClass)!.classList.toggle('hide', shouldHide)
+    this.getEl(minSelectionNumberClass)!.textContent = minSelection.toString();
   }
 }

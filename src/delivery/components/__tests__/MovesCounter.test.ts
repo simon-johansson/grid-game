@@ -13,7 +13,8 @@ describe("component/MovesCounter", () => {
     mc.render({
       selectionsLeft: 3,
       selectionsMade: 0,
-      isLevelCleared: false
+      isLevelCleared: false,
+      minSelection: 1
     });
     expect(getTextContent()).toContain("3");
     expect(getTextContent()).toContain("moves left");
@@ -23,13 +24,15 @@ describe("component/MovesCounter", () => {
     mc.render({
       selectionsLeft: 3,
       selectionsMade: 0,
-      isLevelCleared: false
+      isLevelCleared: false,
+      minSelection: 1
     });
     expect(getTextContent()).toContain("3");
     mc.render({
       selectionsLeft: 2,
       selectionsMade: 0,
-      isLevelCleared: false
+      isLevelCleared: false,
+      minSelection: 1
     });
     expect(getTextContent()).toContain("2");
   });
@@ -38,7 +41,8 @@ describe("component/MovesCounter", () => {
     mc.render({
       selectionsLeft: 0,
       selectionsMade: 0,
-      isLevelCleared: false
+      isLevelCleared: false,
+      minSelection: 1
     });
     ;
     expect(mc.counterWrapperElement.className).toContain("failed");
@@ -48,7 +52,8 @@ describe("component/MovesCounter", () => {
     mc.render({
       selectionsLeft: 0,
       selectionsMade: 0,
-      isLevelCleared: true
+      isLevelCleared: true,
+      minSelection: 1
     });
     expect(mc.counterWrapperElement.className).toContain("cleared");
   });
