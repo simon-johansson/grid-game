@@ -25,7 +25,7 @@ const getSelectionPresenter = (selectionContext: () => CanvasRenderingContext2D,
       this.ctx.restore();
     }
 
-    private clear() {
+    private clear(): void {
       if (this.prevRect) {
         const { x, y, width, height } = this.prevRect;
         this.ctx.clearRect(x - 10, y - 10, width + 20, height + 20);
@@ -36,7 +36,7 @@ const getSelectionPresenter = (selectionContext: () => CanvasRenderingContext2D,
       return selectionContext();
     }
 
-    private setStyling(isValid: boolean) {
+    private setStyling(isValid: boolean): void {
       this.ctx.lineWidth = 4;
       this.ctx.fillStyle = styles.fill;
       this.ctx.lineJoin = "round";
