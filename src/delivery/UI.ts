@@ -1,7 +1,7 @@
 import Interactor from "@application/Interactor";
-import GameBoardEditor from "./scenes/GameBoardEditor";
-import GameBoardPlayable from "./scenes/GameBoardPlayable";
+import Editor from "./scenes/Editor";
 import Overview from "./scenes/Overview";
+import Playable from "./scenes/Playable";
 
 export type RouterPaths = "play" | "edit" | "overview";
 
@@ -15,11 +15,11 @@ export default class UserInterface {
   private router(path: RouterPaths, options?: any): void {
     switch (path) {
       case "play":
-        GameBoardPlayable.setScene(this.interactor, this.router.bind(this), options);
+        Playable.setScene(this.interactor, this.router.bind(this), options);
         break;
 
       case "edit":
-        GameBoardEditor.setScene(this.interactor, this.router.bind(this));
+        Editor.setScene(this.interactor, this.router.bind(this));
         break;
 
       case "overview":

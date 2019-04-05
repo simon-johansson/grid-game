@@ -3,17 +3,17 @@ import Interactor from "@application/Interactor";
 import { ILevelData, TileType } from "@application/interfaces";
 import EditorOptions from "../components/EditorOptions";
 import LevelSelector from "../components/LevelSelector";
-import GameBoard from "./GameBoard";
+import GameBoard from "./gameboard/GameBoard";
 import setAppHTML from "./setAppHTML";
 
-export default class GameBoardEditor extends GameBoard {
+export default class Editor extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void): void {
     setAppHTML(`
       <div id="editor-options"></div>
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
     `);
-    new GameBoardEditor(interactor, router);
+    new Editor(interactor, router);
   }
 
   private EditorOptionsComponent: EditorOptions;
@@ -36,15 +36,6 @@ export default class GameBoardEditor extends GameBoard {
   protected startLevel(): void {
     const state = this.interactor.startEditorLevel(this.getPresenters());
     this.updateComponents(state);
-  }
-
-  protected HTML(props: {}): string {
-    return `
-      <div class="${this.innerWrapperClass}">
-        <canvas class="${this.selectionCanvasClass}"></canvas>
-        <canvas class="${this.tileCanvasClass}"></canvas>
-      </div>
-  `;
   }
 
   protected processSelectionStart(x: number, y: number): void {

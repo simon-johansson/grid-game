@@ -5,10 +5,15 @@ import HowToPlayModal from "../components/HowToPlayModal";
 import LevelSelector from "../components/LevelSelector";
 import MinSelectionModal from "../components/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
-import GameBoard from "./GameBoard";
+import debounce from "./gameboard/debounce";
+import GameBoard from "./gameboard/GameBoard";
 import setAppHTML from "./setAppHTML";
 
-export default class GameBoardPlayable extends GameBoard {
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export default class Playable extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
     setAppHTML(`
       <div id="header">
@@ -19,7 +24,7 @@ export default class GameBoardPlayable extends GameBoard {
       <div id="level-selection"></div>
       <div id="modal"></div>
     `);
-    new GameBoardPlayable(interactor, router, options);
+    new Playable(interactor, router, options);
   }
 
   private MovesCounterComponent: MovesCounter;
@@ -45,6 +50,11 @@ export default class GameBoardPlayable extends GameBoard {
       });
     });
 
+    // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
+    document.querySelector(".go-to-overview")!.addEventListener("click", () => this.router("overview"));
+
+    window.addEventListener("resize", debounce(this.restartLevel.bind(this), 200));
+
     (window as any).helperFunctions.clearLevel = () => {
       this.updateComponents(this.interactor.cheatToClearLevel());
     };
@@ -54,22 +64,7 @@ export default class GameBoardPlayable extends GameBoard {
     let level: ILevelData;
     if (levelID) level = this.interactor.startSpecificLevel(this.getPresenters(), levelID);
     else level = this.interactor.startCurrentLevel(this.getPresenters());
-    this.updateComponents(level);
-    this.checkIfShouldShowModal(level, await this.interactor.getUserData());
-  }
-
-  protected HTML(props: {}): string {
-    return `
-      <div class="${this.innerWrapperClass}">
-        <canvas class="${this.selectionCanvasClass}"></canvas>
-        <canvas class="${this.tileCanvasClass}"></canvas>
-      </div>
-  `;
-  }
-
-  protected componentDidMount(): void {
-    // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
-    document.querySelector(".go-to-overview")!.addEventListener("click", () => this.router("overview"));
+    this.onNewLevel(level);
   }
 
   protected processSelectionStart(x: number, y: number): void {
@@ -90,7 +85,7 @@ export default class GameBoardPlayable extends GameBoard {
       selectionsLeft: level.selections.left,
       selectionsMade: level.selections.made,
       isLevelCleared: level.isCleared,
-      minSelection: level.rules.minSelection
+      minSelection: level.rules.minSelection,
     });
 
     this.LevelSelectorComponent.render({
@@ -104,32 +99,31 @@ export default class GameBoardPlayable extends GameBoard {
     this.checkIfLevelHasEnded(level);
   }
 
-  protected async goToNextLevel(): Promise<void> {
-    if (!this.isTransitioningBetweenLevels) {
-      this.isTransitioningBetweenLevels = true;
-      this.prepareNewLevel("next");
-      const level = this.interactor.startNextLevel(this.getPresenters());
-      this.updateComponents(level);
-      this.checkIfShouldShowModal(level, await this.interactor.getUserData());
-      return this.showNewLevel("next").then(() => {
-        this.bindEvents();
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
+  private async restartLevel(wait: number = 0): Promise<void> {
+    return this.newLevel("restart", async () => {
+      await sleep(wait);
+      this.startLevel();
+    });
   }
 
-  protected async goToPrevLevel(): Promise<void> {
-    if (!this.isTransitioningBetweenLevels) {
-      this.isTransitioningBetweenLevels = true;
-      this.prepareNewLevel("prev");
+  private async goToNextLevel(wait: number = 0): Promise<void> {
+    return this.newLevel("next", async () => {
+      await sleep(wait);
+      const level = this.interactor.startNextLevel(this.getPresenters());
+      this.onNewLevel(level);
+    });
+  }
+
+  private async goToPrevLevel(): Promise<void> {
+    return this.newLevel("prev", async () => {
       const level = this.interactor.startPrevLevel(this.getPresenters());
-      this.updateComponents(level);
-      this.checkIfShouldShowModal(level, await this.interactor.getUserData());
-      return this.showNewLevel("prev").then(() => {
-        this.bindEvents();
-        this.isTransitioningBetweenLevels = false;
-      });
-    }
+      this.onNewLevel(level);
+    });
+  }
+
+  private async onNewLevel(level: ILevelData): Promise<void> {
+    this.updateComponents(level);
+    this.checkIfShouldShowModal(level, await this.interactor.getUserData());
   }
 
   private getSelectionArguments = (x: number, y: number): [number, number] => [
@@ -137,23 +131,21 @@ export default class GameBoardPlayable extends GameBoard {
     this.convertAbsoluteOffsetToProcent(y),
   ];
 
-  private checkIfShouldShowModal(level: ILevelData, userInfo: IUserInformation): void {
-    const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
-
+  private async checkIfShouldShowModal(level: ILevelData, userInfo: IUserInformation): Promise<void> {
     if (this.shouldShowHowToPlayModal(level)) {
-      timeout(() => this.HowToPlayModalComponent.render({}));
+      await sleep(500);
+      this.HowToPlayModalComponent.render({});
     }
 
     if (this.shouldShowMinSelectionModal(level, userInfo)) {
-      timeout(() => this.MinSelectionModalComponent.render({}));
+      await sleep(500);
+      this.MinSelectionModalComponent.render({});
     }
   }
 
   private checkIfLevelHasEnded(level: ILevelData): void {
-    const timeout = (func: () => void) => setTimeout(func.bind(this), 500);
-
-    if (this.shouldProcedeToNextLevel(level)) timeout(this.goToNextLevel);
-    else if (this.shouldRestartCurrentLevel(level)) timeout(this.restartLevel);
+    if (this.shouldProcedeToNextLevel(level)) this.goToNextLevel(500);
+    else if (this.shouldRestartCurrentLevel(level)) this.restartLevel(500);
   }
 
   private shouldProcedeToNextLevel({ isCleared, isLastLevel, isCustom }: ILevelData): boolean {
