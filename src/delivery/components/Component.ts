@@ -29,9 +29,12 @@ export default abstract class Component<Props> {
   }
 
   protected bindClickEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
-    const el = this.wrapperElement.querySelector("." + classSelector);
-    if (el) el.addEventListener("click", callback, false);
-    else console.error('Can not bind click event to .' + classSelector)
+    const els = document.querySelectorAll('.' + classSelector);
+    if (els.length) {
+      Array.from(els).forEach(el => el.addEventListener('click', callback, false));
+    } else {
+      console.error('Can not bind click event to .' + classSelector)
+    }
   };
 
   protected bindChangeEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {

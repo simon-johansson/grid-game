@@ -102,6 +102,13 @@ $tile-margin-small: 15px;
   .stages {
     .stage {
       @extend %tile;
+
+      &.locked {
+        background-image: url(/assets/lock@2x.png);
+        background-position: center;
+        background-size: 45%;
+        background-repeat: no-repeat;
+      }
     }
   }
 

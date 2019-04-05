@@ -48,18 +48,19 @@ export default class Overview extends Component<IProps> {
   }
 
   protected componentDidMount(): void {
-    this.bindClickEvent("back", this.onGoBack.bind(this)), this.update();
+    this.bindClickEvent("back", this.onGoBack.bind(this));
   }
 
   protected update(): void {
     this.getEl("levels")!.innerHTML = this.createLevels();
-    this.getEl("stages")!.innerHTML = this.createStages();
+    this.getEl("stages")!.innerHTML = this.createStages() + this.createLockedStages();
     this.bindStageSelect();
     this.bindLevelSelect();
   }
 
   private createStages(): string {
     return this.stages
+      .slice(0, 3)
       .map((stage, index) => {
         const isActive = this.activeStage === stage;
         return `
@@ -69,6 +70,14 @@ export default class Overview extends Component<IProps> {
         `;
       })
       .join("");
+  }
+
+  private createLockedStages(): string {
+    return Array.from({ length: 2 }, () => {
+      return `
+      <div class="stage locked"></div>
+    `;
+    }).join("");
   }
 
   private createLevels(): string {
@@ -103,6 +112,7 @@ export default class Overview extends Component<IProps> {
     this.stages.forEach((stage, index) =>
       this.bindClickEvent(`stage-${index}`, this.onStageSelected.bind(this, stage)),
     );
+    this.bindClickEvent("locked", this.onClickedLockStage.bind(this));
   }
 
   private bindLevelSelect(): void {
@@ -122,6 +132,10 @@ export default class Overview extends Component<IProps> {
 
   private onGoBack(): void {
     this.router("play");
+  }
+
+  private onClickedLockStage(): void {
+    console.log('locked!');
   }
 
   private getRomanNumber(num: number): string {
