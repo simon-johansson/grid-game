@@ -5,7 +5,7 @@ import HowToPlayModal from "../components/HowToPlayModal";
 import LevelSelector from "../components/LevelSelector";
 import MinSelectionModal from "../components/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
-import debounce from "./gameboard/debounce";
+import debounce from "../utils/debounce";
 import GameBoard from "./gameboard/GameBoard";
 import setAppHTML from "./setAppHTML";
 

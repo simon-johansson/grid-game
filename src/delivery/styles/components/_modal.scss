@@ -48,6 +48,49 @@
     margin: 0 0 10px;
   }
 
+  input[type="email"] {
+    border: 1px solid $lightGray;
+    box-sizing: border-box;
+    color: $black;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 16px;
+    height: 48px;
+    -webkit-appearance: none;
+    margin: 10px 0 0;
+
+    &.invalid {
+      border: 2px solid $strongRed;
+    }
+  }
+
+  .submit-feedback {
+    text-align: center;
+    margin: 10px 0 20px;
+    min-height: 20px;
+    // border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    p {
+      margin: 0;
+    }
+
+    .success,
+    .error {
+      font-weight: bold;
+    }
+    .success {
+      color: $pine;
+    }
+    .error {
+      color: $strongRed;
+    }
+  }
+
   .modal-button {
     display: flex;
     width: 100%;
@@ -60,5 +103,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border: none;
   }
 }

@@ -24,6 +24,14 @@
 
 #doorbell {
   font-family: $defaultFontFamily;
+  align-self: center;
+  top: auto !important;
+
+  @include respond-below(sm) {
+    left: 16px;
+    width: calc(100% - (16px * 2));
+    margin-left: 0;
+  }
 
   #doorbell-form {
     border-radius: 8px;
@@ -78,7 +86,8 @@
   .btn.btn-primary {
     background: $lightSage;
     border: none;
-    color: $black;
+    color: $pine;
+    font-size: 16px;
     font-weight: bold;
     height: 48px;
     box-sizing: border-box;

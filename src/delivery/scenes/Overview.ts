@@ -2,7 +2,9 @@
 import Interactor from "@application/Interactor";
 import { IOverviewData, IStage } from "@application/interfaces";
 import Component from "../components/Component";
+import StayInformedModal from "../components/StayInformedModal";
 import { RouterPaths } from "../UI";
+import { sendEmail } from "../utils/sendEmail";
 import setAppHTML from "./setAppHTML";
 
 export interface IProps extends IOverviewData {}
@@ -12,11 +14,13 @@ export default class Overview extends Component<IProps> {
   public static setScene(interactor: Interactor, router: (path: RouterPaths, options?: any) => void): void {
     setAppHTML(`
       <div id="overview"></div>
+      <div id="modal"></div>
     `);
     new Overview(interactor, router);
   }
 
   protected wrapperElement: HTMLElement = document.getElementById("overview") as HTMLElement;
+  private StayInformedModalComponent: StayInformedModal;
   private stages: IStage[];
   private activeStage: IStage;
 
@@ -28,6 +32,14 @@ export default class Overview extends Component<IProps> {
       this.stages = data.stages;
       this.activeStage = this.stages.find(stage => stage.isPlaying) || this.stages[0];
       this.render(data);
+
+      this.StayInformedModalComponent = new StayInformedModal({
+        onSubmit: (address: string) => {
+          return sendEmail(address, {
+            clearedLevels: data.cleared,
+          });
+        },
+      });
     });
   }
 
@@ -135,7 +147,7 @@ export default class Overview extends Component<IProps> {
   }
 
   private onClickedLockStage(): void {
-    console.log('locked!');
+    this.StayInformedModalComponent.render({});
   }
 
   private getRomanNumber(num: number): string {
