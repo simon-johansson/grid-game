@@ -13,6 +13,7 @@ import {
   ITilePresenter,
   ITilePresenterConstructor,
   ITypedGridLayout,
+  IUserInformation,
 } from "@application/interfaces";
 import Level from "@domain/Level";
 import Rules, { IGameRules } from "@domain/Rules";
@@ -101,8 +102,11 @@ export const processedLayout = (state: ITileState | ITileSelection) => {
   return layout;
 };
 
-export const getNetworkGatewayMock = (data: IGameLevel[] = []): INetworkGateway => ({
-  getLevels: () => Promise.resolve(data),
+export const getNetworkGatewayMock = (data: IGameLevel[] = [], clb?: () => void): INetworkGateway => ({
+  getLevels: () => {
+    if (clb) clb();
+    return Promise.resolve(data);
+  },
 });
 
 export const getAnalyticsMock = (): IAnalytics => ({
@@ -113,9 +117,13 @@ export const getAnalyticsMock = (): IAnalytics => ({
 });
 
 export const getStorageMock = (data: string[] = []): IStorage => ({
-  setCurrentLevel: (level: Level) => {},
-  getCurrentLevel: () => Promise.resolve(0),
-  onLevelComplete: (level: Level): Promise<string[]> => {
+  setCurrentLevel: (id: string) => {},
+  getCurrentLevel: () => Promise.resolve("0"),
+  setUserInformation: (info: Partial<IUserInformation>) => {},
+  getUserInformation: () => {
+    return Promise.resolve({ hasViewedMinSelectionInfo: false });
+  },
+  onLevelComplete: (id: string): Promise<string[]> => {
     return Promise.resolve(data);
   },
   getCompletedLevels: (): Promise<string[]> => {
@@ -127,11 +135,11 @@ export const getStorageMock = (data: string[] = []): IStorage => ({
 export const getQuerystringMock = (level: any = {}): IQueryString => ({
   getLevel: () => undefined,
   getLayout: () => undefined,
-  setLayout: (layout: IGridLayout) => level.layout = layout,
+  setLayout: (layout: IGridLayout) => (level.layout = layout),
   getRules: () => undefined,
-  setRules: (rules: IGameRules) => level.rules = rules,
+  setRules: (rules: IGameRules) => (level.rules = rules),
   getMoves: () => undefined,
-  setMoves: (moves: number) => level.moves = moves,
+  setMoves: (moves: number) => (level.moves = moves),
   getLevelNumber: () => undefined,
   setLevelNumber: (num: number) => undefined,
   getIsEditMode: () => undefined,

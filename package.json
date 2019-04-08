@@ -1,6 +1,6 @@
 {
   "name": "grid-game",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "",
   "author": "Simon Johansson <mail@simon-johansson.com>",
   "repository": {
@@ -14,7 +14,7 @@
     "start": "node ./server",
     "build": "run-s remove-build && run-p build:* service-worker",
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\" --logLevel debug",
-    "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico}\" dist",
+    "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico,woff2,woff,ttf}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
     "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/src/main.js -t [ aliasify ] -o dist/app.js",
     "watch:tsc": "tsc --watch",
@@ -53,7 +53,7 @@
     "ts-jest": "^23.1.4",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.0.3",
+    "typescript": "^3.4.1",
     "watchify": "^3.11.1"
   },
   "dependencies": {

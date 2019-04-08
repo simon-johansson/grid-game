@@ -10,10 +10,12 @@ import {
   IGridLayout,
   ILevelData,
   INetworkGateway,
+  IOverviewData,
   IQueryString,
   ISelectionPresenterConstructor,
   IStorage,
   ITilePresenterConstructor,
+  IUserInformation,
   TileType,
 } from "./interfaces";
 import LevelManager from "./LevelManager";
@@ -50,6 +52,7 @@ export default class Interactor {
   ) {}
 
   public async loadLevels(): Promise<void> {
+    if (this.levelManager !== undefined) return Promise.resolve();
     try {
       const levels = await this.network.getLevels();
       const currentLevel = await this.storage.getCurrentLevel();
@@ -68,14 +71,20 @@ export default class Interactor {
     return this.level;
   }
 
+  public startSpecificLevel(presenters: IPresenters, levelID: string): ILevelData {
+    this.level = this.levelManager.getCurrentLevel(levelID);
+    this.startLevel(presenters);
+    return this.level;
+  }
+
   public startNextLevel(presenters: IPresenters): ILevelData {
-    this.level = this.levelManager.getNextLevel;
+    this.level = this.levelManager.nextLevel;
     this.startLevel(presenters);
     return this.level;
   }
 
   public startPrevLevel(presenters: IPresenters): ILevelData {
-    this.level = this.levelManager.getPreviousLevel;
+    this.level = this.levelManager.previousLevel;
     this.startLevel(presenters);
     return this.level;
   }
@@ -95,6 +104,18 @@ export default class Interactor {
     return this.level;
   }
 
+  public getOverviewData(): IOverviewData {
+    return this.levelManager.overview;
+  }
+
+  public getUserData(): Promise<IUserInformation> {
+    return this.storage.getUserInformation();
+  }
+
+  public setUserData(userInfo: Partial<IUserInformation>): void {
+    return this.storage.setUserInformation(userInfo);
+  }
+
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {
     this.selection.setStartPoint({ x: gridOffsetX, y: gridOffsetY });
     this.applySelectionToGrid(tileState);
@@ -109,6 +130,12 @@ export default class Interactor {
     if (this.grid.isSelectedTilesClearable) this.clearTiles();
     if (this.hasLevelEnded) this.onLevelEnded();
     this.removeSelection();
+    return this.level;
+  }
+
+  public cheatToClearLevel(): ILevelData {
+    this.level.isCleared = true;
+    this.onLevelEnded();
     return this.level;
   }
 
@@ -145,7 +172,7 @@ export default class Interactor {
 
   private startLevel(presenters: IPresenters): void {
     this.createEnteties(presenters);
-    this.storage.setCurrentLevel(this.level);
+    this.storage.setCurrentLevel(this.level.id);
     this.analytics.startLevel(this.level);
   }
 
@@ -188,7 +215,7 @@ export default class Interactor {
   private async onLevelEnded(): Promise<void> {
     if (this.level.isCleared) {
       this.analytics.onLevelComplete(this.level);
-      const completedLevels = await this.storage.onLevelComplete(this.level);
+      const completedLevels = await this.storage.onLevelComplete(this.level.id!);
       this.levelManager.onLevelComplete(completedLevels);
     } else {
       this.analytics.onLevelFailed(this.level);

@@ -1,0 +1,121 @@
+$tile-margin-wide: 20px;
+$tile-margin-small: 15px;
+
+%tile {
+
+  @extend %secondaryFont;
+  display: inline-flex;
+  height: 50px;
+  width: calc((100% / 5) - ((4 * #{$tile-margin-wide}) / 5));
+  border-radius: 4px;
+  background-color: $lightGray;
+  justify-content: center;
+  align-items: center;
+  margin-right: $tile-margin-wide;
+  font-size: 24px;
+
+  @media (max-height: 630px) {
+    margin-bottom: $tile-margin-small;
+    width: calc((100% / 5) - ((4 * #{$tile-margin-small}) / 5));
+    margin-right: $tile-margin-small;
+  }
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  &.cleared {
+    background-color: $lightSage;
+    color: $pine;
+  }
+
+  &.active {
+    border: 3px solid $black;
+  }
+
+  &:nth-child(5n) {
+    margin-right: 0px;
+  }
+}
+
+#overview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .inner-wrapper {
+    width: 100%;
+    height: 100%;
+    // TODO: Varför 15px? Borde spara i variabel
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .back {
+      &:before {
+        content: "";
+        display: inline-block;
+        margin: 0 8px -2px 0;
+        background-image: url(/assets/back@2x.png);
+        background-size: 100%;
+        width: 14px;
+        height: 22px;
+      }
+    }
+
+    .progress {
+      @extend %secondaryFont;
+      display: flex;
+      align-items: center;
+
+      .progress-icon {
+        @extend %tile;
+        height: 35px;
+        width: 35px;
+        background-color: $lightSage;
+        margin: 0 0 0 10px;
+        background-image: url(/assets/check@2x.png);
+        background-size: 70%;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+
+  .stages,
+  .levels {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .stages {
+    .stage {
+      @extend %tile;
+
+      &.locked {
+        background-image: url(/assets/lock@2x.png);
+        background-position: center;
+        background-size: 45%;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+
+  .levels {
+    .level {
+      @extend %tile;
+      margin-bottom: $tile-margin-wide;
+    }
+  }
+}

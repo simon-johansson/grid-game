@@ -1,7 +1,15 @@
-import Level from "@domain/Level";
+import Level, { ILevelOptions } from "@domain/Level";
 import Rules from "@domain/Rules";
 import Tile from "@domain/Tile";
-import { IGameLevel, IGridLayout, ITileRawState, ITypedGridLayout, TileType } from "./interfaces";
+import {
+  IGameLevel,
+  IGridLayout,
+  IOverviewData,
+  IStage,
+  ITileRawState,
+  ITypedGridLayout,
+  TileType,
+} from "./interfaces";
 
 const defaultEditorLevel: IGameLevel = {
   layout: [
@@ -55,17 +63,17 @@ const getMinifiedTile = (tile: Tile): ITileRawState => {
   }
 };
 
+const cleanLevels = (levels: IGameLevel[]) => {
+  return levels.filter((level, index) => {
+    // console.log(level);
+    return level;
+  });
+};
+
 export default class LevelManager {
-  public static newLevel(
-    level: IGameLevel,
-    name?: number,
-    isFirst?: boolean,
-    isLast?: boolean,
-    hasCompleted?: boolean,
-  ): Level {
+  public static newLevel(level: IGameLevel, options?: ILevelOptions): Level {
     const { layout, moves, rules: rawRules, id } = level;
-    const rules = new Rules(rawRules);
-    return new Level(getTypedLayout(layout), moves, rules, name, isFirst, isLast, id, hasCompleted);
+    return new Level(getTypedLayout(layout), moves, new Rules(rawRules), id, options);
   }
 
   public static newEditorLevel(level?: IGameLevel): Level {
@@ -84,29 +92,21 @@ export default class LevelManager {
 
   private currentLevelIndex: number;
   private completedLevels: string[];
+  private levels: IGameLevel[];
 
-  constructor(
-    private levels: IGameLevel[],
-    currentLevelIndex: number | null = 0,
-    completedLevels: string[] | null = [],
-  ) {
-    this.currentLevelIndex = currentLevelIndex === null ? 0 : currentLevelIndex;
+  constructor(levels: IGameLevel[], currentLevelID: string | null = "", completedLevels: string[] | null = []) {
+    this.levels = cleanLevels(levels);
+    this.currentLevelIndex = this.getLevelIndexFromID(currentLevelID);
     this.completedLevels = completedLevels === null ? [] : completedLevels;
-
-    if (this.currentLevelIndex >= this.levels.length || this.currentLevelIndex < 0) {
-      throw new Error("Supplied level index is out of bounds");
-    }
   }
 
-  public getCurrentLevel(customLevel?: IGameLevel): Level {
-    if (customLevel) {
-      console.log(JSON.stringify(customLevel));
-      return LevelManager.newLevel(customLevel);
-    }
+  public getCurrentLevel(customLevel?: IGameLevel | string): Level {
+    if (typeof customLevel === "string") this.currentLevelIndex = this.getLevelIndexFromID(customLevel);
+    else if (customLevel) return this.getCustomLevel(customLevel);
     return this.level;
   }
 
-  public get getNextLevel(): Level {
+  public get nextLevel(): Level {
     if (!this.isPlayingLastLevel) {
       this.currentLevelIndex++;
       return this.level;
@@ -115,7 +115,7 @@ export default class LevelManager {
     }
   }
 
-  public get getPreviousLevel(): Level {
+  public get previousLevel(): Level {
     if (!this.isPlayingFirstLevel) {
       this.currentLevelIndex--;
       return this.level;
@@ -124,25 +124,71 @@ export default class LevelManager {
     }
   }
 
+  public get overview(): IOverviewData {
+    const levels = this.allLevels;
+    const total = levels.length;
+    const cleared = levels.filter(lvl => lvl.hasCompleted).length;
+    const stages = this.getStages(levels);
+    return { cleared, total, stages };
+  }
+
   public onLevelComplete(completedLevels: string[]): void {
     this.completedLevels = completedLevels;
   }
 
-  private get level(): Level {
-    const level = this.levels[this.currentLevelIndex];
-    const hasCompleted = level.id ? this.hasCompleted(level.id) : false;
-
-    return LevelManager.newLevel(
-      level,
-      this.currentLevelIndex,
-      this.isPlayingFirstLevel,
-      this.isPlayingLastLevel,
-      hasCompleted,
-    );
+  private getLevelIndexFromID(levelID: string | null): number {
+    let levelIndex = 0;
+    if (levelID !== null) {
+      this.levels.forEach((lvl, index) => {
+        if (lvl.id === levelID) levelIndex = index;
+      });
+    }
+    return levelIndex;
   }
 
-  private hasCompleted(id: string): boolean {
-    return this.completedLevels.indexOf(id) !== -1;
+  private getCustomLevel(customLevel: IGameLevel): Level {
+    console.log(JSON.stringify(customLevel));
+    return LevelManager.newLevel(customLevel);
+  }
+
+  private getStages(levels: Level[]): IStage[] {
+    const stageChuckSize = 25;
+    const stages = [];
+    for (let i = 0; i < levels.length; i += stageChuckSize) {
+      stages.push(this.getStage(levels.slice(i, i + stageChuckSize)));
+    }
+    return stages;
+  }
+
+  private getStage(levels: Level[]): IStage {
+    const isCleared = levels.every(lvl => !!lvl.hasCompleted);
+    const isPlaying = levels.some(lvl => !!lvl.isCurrentlyPlaying);
+    return { isCleared, isPlaying, levels };
+  }
+
+  private get level(): Level {
+    const level = this.levels[this.currentLevelIndex];
+    return LevelManager.newLevel(level, {
+      name: this.currentLevelIndex,
+      hasCompleted: this.hasCompleted(level.id),
+      isCurrentlyPlaying: true,
+      isFirst: this.isPlayingFirstLevel,
+      isLast: this.isPlayingLastLevel,
+    });
+  }
+
+  private get allLevels(): Level[] {
+    return this.levels.map((lvl, i) => {
+      return LevelManager.newLevel(lvl, {
+        name: i + 1,
+        hasCompleted: this.hasCompleted(lvl.id),
+        isCurrentlyPlaying: this.currentLevelIndex === i,
+      });
+    });
+  }
+
+  private hasCompleted(id: string | undefined): boolean {
+    return id !== undefined ? this.completedLevels.indexOf(id) !== -1 : false;
   }
 
   private get isPlayingLastLevel(): boolean {

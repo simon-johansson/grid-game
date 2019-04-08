@@ -15,6 +15,11 @@ export default abstract class Component<Props> {
     }
   }
 
+  public destroy(): void {
+    this.componentIsOnPage = false;
+    this.wrapperElement.innerHTML = "";
+  }
+
   protected abstract HTML(props: Props): string;
 
   protected abstract update(props: Props): void;
@@ -24,18 +29,30 @@ export default abstract class Component<Props> {
   }
 
   protected bindClickEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
-    const el = this.wrapperElement.querySelector("." + classSelector);
-    if (el) el.addEventListener("click", callback);
-    else console.error('Can not bind click event to .' + classSelector)
+    const els = document.querySelectorAll('.' + classSelector);
+    if (els.length) {
+      Array.from(els).forEach(el => el.addEventListener('click', callback, false));
+    } else {
+      console.error('Can not bind click event to .' + classSelector)
+    }
   };
 
-  protected bindChangeEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
+  protected removeClickEvent = (classSelector: string, callback: (e: MouseEvent) => void) => {
+    const els = document.querySelectorAll('.' + classSelector);
+    if (els.length) {
+      Array.from(els).forEach(el => el.removeEventListener('click', callback, false));
+    } else {
+      console.error('Can not remove click event from .' + classSelector)
+    }
+  };
+
+  protected bindChangeEvent = (classSelector: string, callback: (e: Event) => void) => {
     const el = this.wrapperElement.querySelector("." + classSelector);
     if (el) el.addEventListener("change", callback);
     else console.error('Can not bind change event to .' + classSelector)
   };
 
-  protected getEl = (classSelector: string): HTMLElement | null => {
+  protected getEl = <T extends HTMLElement>(classSelector: string): T | null => {
     return this.wrapperElement.querySelector("." + classSelector);
   };
 

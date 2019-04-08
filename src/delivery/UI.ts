@@ -1,32 +1,30 @@
 import Interactor from "@application/Interactor";
-import GameBoardEdit from "./scenes/GameBoardEditor";
-import GameBoardPlayable from "./scenes/GameBoardPlayable";
+import Editor from "./scenes/Editor";
+import Overview from "./scenes/Overview";
+import Playable from "./scenes/Playable";
+
+export type RouterPaths = "play" | "edit" | "overview";
 
 export default class UserInterface {
-  private isEditing: boolean;
-
   constructor(private interactor: Interactor) {
-    this.isEditing = this.interactor.isInEditMode;
-    this.createComponents();
+    this.router(interactor.isInEditMode ? "edit" : "play");
+    // this.router("overview");
   }
 
-  private createComponents(): void {
-    if (this.isEditing) {
-      // TODO: Flytta till scenes istället
-      document.getElementById('app')!.innerHTML = `
-        <div id="editor-options"></div>
-        <div id="canvas-container"></div>
-        <div id="level-selection"></div>
-      `
-      const gameBoardEditor = new GameBoardEdit(this.interactor);
-    } else {
+  // TODO: Bryt ut router till en egen komponent
+  private router(path: RouterPaths, options?: any): void {
+    switch (path) {
+      case "play":
+        Playable.setScene(this.interactor, this.router.bind(this), options);
+        break;
 
-      document.getElementById('app')!.innerHTML = `
-        <div id="moves-counter"></div>
-        <div id="canvas-container"></div>
-        <div id="level-selection"></div>
-      `
-      const gameBoardPlaybale = new GameBoardPlayable(this.interactor);
+      case "edit":
+        Editor.setScene(this.interactor, this.router.bind(this));
+        break;
+
+      case "overview":
+        Overview.setScene(this.interactor, this.router.bind(this));
+        break;
     }
   }
 }

@@ -7,6 +7,14 @@ const reviewBtnClass = "play";
 const editBtnClass = "edit";
 const currentLevelClass = "current-level";
 
+interface ICallbacks {
+  onPrevLevel?: () => void;
+  onNextLevel?: () => void;
+  onRestart?: () => void;
+  onReviewLevel?: () => void;
+  onEditLevel?: () => void;
+}
+
 export interface IProps {
   currentLevel?: number;
   isLastLevel?: boolean;
@@ -18,13 +26,7 @@ export interface IProps {
 export default class LevelSelector extends Component<IProps> {
   protected wrapperElement: HTMLElement = document.getElementById("level-selection") as HTMLElement;
 
-  constructor(
-    private onPrevLevel: () => void,
-    private onNextLevel: () => void,
-    private onRestart: () => void,
-    private onReviewLevel: () => void,
-    private onEditLevel: () => void,
-  ) {
+  constructor(private callbacks: ICallbacks) {
     super();
   }
 
@@ -59,11 +61,12 @@ export default class LevelSelector extends Component<IProps> {
   }
 
   protected componentDidMount(): void {
-    this.bindClickEvent(prevBtnClass, this.onPrevLevel);
-    this.bindClickEvent(nextBtnClass, this.onNextLevel);
-    this.bindClickEvent(restartBtnClass, this.onRestart);
-    this.bindClickEvent(reviewBtnClass, this.onReviewLevel);
-    this.bindClickEvent(editBtnClass, this.onEditLevel);
+    const { onPrevLevel, onNextLevel, onRestart, onReviewLevel, onEditLevel } = this.callbacks;
+    if (onPrevLevel) this.bindClickEvent(prevBtnClass, onPrevLevel);
+    if (onNextLevel) this.bindClickEvent(nextBtnClass, onNextLevel);
+    if (onRestart) this.bindClickEvent(restartBtnClass, onRestart);
+    if (onReviewLevel) this.bindClickEvent(reviewBtnClass, onReviewLevel);
+    if (onEditLevel) this.bindClickEvent(editBtnClass, onEditLevel);
   }
 
   protected update({ currentLevel, isFirstLevel, isLastLevel, isEditing, isReviewing }: IProps): void {
