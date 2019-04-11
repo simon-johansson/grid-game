@@ -10,8 +10,6 @@ self.addEventListener("install", function(event) {
           "/index.html",
           "/styles/styles.css",
           "/vendor/doorbell.js",
-          "/vendor/google-analytics.js",
-          "/vendor/sentry.js",
           "/app.js",
           "/favicon.ico",
           "/assets/how-to-play.gif",
