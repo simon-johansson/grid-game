@@ -1,7 +1,7 @@
 {
   "name": "GridGame",
   "short_name": "GridGame",
-  "start_url": ".",
+  "start_url": "/?utm_source=standalone&utm_medium=pwa",
   "background_color": "white",
   "theme_color": "white",
   "description": "Clear the grid in as few moves possible",
