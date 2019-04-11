@@ -208,7 +208,7 @@ export default class Interactor {
 
   private clearTiles(): void {
     this.grid.toggleClearedOnSelectedTiles();
-    this.level.onValidSelection();
+    this.level.onValidSelection(this.selection.tileSpan!);
     this.level.isCleared = this.grid.isGridCleared;
   }
 
@@ -223,6 +223,6 @@ export default class Interactor {
   }
 
   private get hasLevelEnded(): boolean {
-    return !this.level.selections.left && this.level.name !== undefined;
+    return (!this.level.selections.left || this.level.isCleared) && this.level.id !== undefined;
   }
 }

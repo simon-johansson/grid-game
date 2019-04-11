@@ -32,22 +32,13 @@ export default class AnalyticsIml implements IAnalytics {
     }
   }
 
-  public onSelection(level: Level): void {
-    // On level complete
-    if (level.isCleared && level.name) {
-      GameAnalytics.addProgressionEvent(
-        EGAProgressionStatus.Complete,
-        level.name.toString(),
-      );
-    }
-    // On level failed
-    else if (!level.isCleared && !level.selections.left && level.name) {
-      GameAnalytics.addProgressionEvent(EGAProgressionStatus.Fail, level.name.toString());
-    }
-  }
-
   public onLevelComplete(level: Level): void {
     GameAnalytics.addProgressionEvent(EGAProgressionStatus.Complete, level.name!.toString());
+    if (this.comletedInlessAmountOfMovesThanExpected(level)) {
+      this.onError(`
+        Level completed in less moves than expected:
+        name: ${level.name}, id: ${level.id}, moves: ${JSON.stringify(level.selections.history)}`);
+    }
   }
 
   public onLevelFailed(level: Level): void {
@@ -56,5 +47,9 @@ export default class AnalyticsIml implements IAnalytics {
 
   public onError(error: string): void {
     GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
+  }
+
+  private comletedInlessAmountOfMovesThanExpected(level: Level): boolean {
+    return level.selections.left > 0;
   }
 }
