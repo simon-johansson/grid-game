@@ -1,5 +1,4 @@
 import { IInstaller } from "@application/interfaces";
-import AnalyticsIml from "./AnalyticsImp";
 
 interface IBeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -19,7 +18,7 @@ export default class InstallerImp implements IInstaller {
   private isSafari = navigator.vendor && /Apple/i.test(this.userAgent);
   private isSafariMobile = !!this.isSafari && !!this.isIOS;
 
-  constructor(private analytics: AnalyticsIml) {
+  constructor() {
     this.bindEvents();
     this.checkIfInstalled();
   }
@@ -42,9 +41,9 @@ export default class InstallerImp implements IInstaller {
       this.installPromptEvent.prompt();
       this.installPromptEvent.userChoice.then(result => {
         if (result.outcome === "accepted") {
-          this.analytics.onAcceptedInstallPropmpt();
+          window.analytics.onAcceptedInstallPropmpt();
         } else {
-          this.analytics.onRejectedInstallPropmpt();
+          window.analytics.onRejectedInstallPropmpt();
         }
       });
     }
@@ -57,7 +56,7 @@ export default class InstallerImp implements IInstaller {
     });
 
     window.addEventListener("appinstalled", event => {
-      this.analytics.onInstall();
+      window.analytics.onInstall();
     });
   }
 
@@ -70,6 +69,6 @@ export default class InstallerImp implements IInstaller {
       // useful for iOS < 11.3
       this.isStandalone = !!(navigator as any).standalone;
     }
-    this.analytics.onUserEnvironment(this.isStandalone);
+    window.analytics.onUserEnvironment(this.isStandalone);
   }
 }

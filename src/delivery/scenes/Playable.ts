@@ -192,6 +192,7 @@ export default class Playable extends GameBoard {
       },
       isPersisted,
     );
+    window.analytics.onCloseInstallModal();
   }
 
   private onInstall(): void {
