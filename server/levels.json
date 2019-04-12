@@ -855,6 +855,51 @@
     "id": "5ca27c5c0137800c27a97bd2"
   },
   {
+    "layout": [
+      [
+        "b",
+        "b",
+        "b",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "f",
+        "r",
+        "f",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "b",
+        "b"
+      ],
+      [
+        "r",
+        "f",
+        "b",
+        "b",
+        "b"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5cae526584a6a47d48ef30a9"
+  },
+  {
     "rules": {
       "toggleOnOverlap": true,
       "minSelection": 1
@@ -1035,6 +1080,51 @@
     "id": "5c68820d1da49a098b4154e5"
   },
   {
+    "layout": [
+      [
+        "r",
+        "f",
+        "r",
+        "r",
+        "f"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "b",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "b",
+        "b",
+        "b"
+      ],
+      [
+        "f",
+        "f",
+        "b",
+        "b",
+        "b"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "id": "5cae51e12f82a557a2eb2f5a"
+  },
+  {
     "rules": {
       "toggleOnOverlap": true,
       "minSelection": 1
@@ -1125,6 +1215,141 @@
     "id": "5c68826e87d07c0ae50ebadb"
   },
   {
+    "layout": [
+      [
+        "b",
+        "b",
+        "b",
+        "b",
+        "b"
+      ],
+      [
+        "b",
+        "f",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "b"
+      ],
+      [
+        "b",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "b",
+        "b",
+        "b",
+        "b",
+        "b"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5cae5553f78a0a64048e6276"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "f",
+        "f",
+        "f",
+        "f",
+        "f"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "id": "5cae510ec163e114bf7023d5"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "f",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "f"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "f",
+        "f"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "f",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5cae4e2db054e845866d0591"
+  },
+  {
     "rules": {
       "toggleOnOverlap": true,
       "minSelection": 1
@@ -1213,6 +1438,96 @@
       ]
     ],
     "id": "5c68827ab56b3406db6746fa"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "r",
+        "b",
+        "b",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "b"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "f",
+        "b"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "f",
+        "b"
+      ],
+      [
+        "b",
+        "b",
+        "f",
+        "r",
+        "b"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "id": "5cae48b4eaeb985e7ea9a634"
+  },
+  {
+    "layout": [
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "b",
+        "b"
+      ],
+      [
+        "f",
+        "f",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5cae4d42341f24780007db49"
   },
   {
     "layout": [
@@ -1663,6 +1978,51 @@
       ]
     ],
     "id": "5c6882dcd629780fecd3bf88"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "r",
+        "f"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "f",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5cae478a46e8a23ab35fe20e"
   },
   {
     "rules": {
