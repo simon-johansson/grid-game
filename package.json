@@ -16,7 +16,7 @@
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\" --logLevel debug",
     "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico,woff2,woff,ttf,txt}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
-    "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/src/main.js -t [ aliasify ] -o dist/app.js",
+    "build:tsc": "tsc -p ./tsconfig.prod.json && browserify -g uglifyify .tmp/src/main.js -t [ aliasify ] -o dist/app.js",
     "watch:tsc": "tsc --watch",
     "watch:watchify": "watchify .tmp/src/main.js -t [ aliasify ] -o dist/app.js --debug",
     "watch:scss": "onchange \"src/delivery/**/*.scss\" -- run-s build:scss",
@@ -54,9 +54,11 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.4.1",
+    "uglifyify": "^5.0.1",
     "watchify": "^3.11.1"
   },
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.16.4",
     "trello": "^0.9.1"
   }
