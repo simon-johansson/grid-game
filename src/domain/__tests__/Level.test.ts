@@ -1,4 +1,6 @@
 import { TileType } from "@application/interfaces";
+import TilePosition from "@domain/TilePosition";
+import TileSpan from "@domain/TileSpan";
 import { get5x5TypedLayout } from "@shared/__tests__/testUtils";
 import Level from "../Level";
 import Rules from "../Rules";
@@ -11,6 +13,7 @@ const defaultRules: Rules = new Rules({
 
 describe("Level", () => {
   let level: Level;
+  const selectionSpan = new TileSpan(new TilePosition(0, 0), new TilePosition(4, 4));
 
   beforeEach(() => {
     level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, undefined);
@@ -27,24 +30,28 @@ describe("Level", () => {
   });
 
   test(".isCustom false if id is supplied", () => {
-    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, 'id');
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, "id");
     expect(level.isCustom).toEqual(false);
   });
 
   describe("#onValidSelection()", () => {
     test("on one valid selection", () => {
-      level.onValidSelection();
+      level.onValidSelection(selectionSpan);
       expect(level.selections.made).toEqual(1);
       expect(level.selections.left).toEqual(defaultMoves - 1);
+      expect(level.selections.history.length).toEqual(1);
+      expect(level.selections.history).toEqual([selectionSpan]);
     });
 
     test("on multiple valid selection", () => {
-      level.onValidSelection();
-      level.onValidSelection();
-      level.onValidSelection();
-      level.onValidSelection();
+      level.onValidSelection(selectionSpan);
+      level.onValidSelection(selectionSpan);
+      level.onValidSelection(selectionSpan);
+      level.onValidSelection(selectionSpan);
       expect(level.selections.made).toEqual(4);
       expect(level.selections.left).toEqual(0);
+      expect(level.selections.history.length).toEqual(4);
+      expect(level.selections.history).toEqual([selectionSpan, selectionSpan, selectionSpan, selectionSpan]);
     });
   });
 });

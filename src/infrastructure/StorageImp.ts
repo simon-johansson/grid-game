@@ -1,4 +1,4 @@
-import { IStorage, IUserInformation } from "@application/interfaces";
+import { ISettableUserInformation, IStorage, IUserInformation } from "@application/interfaces";
 import Level from "@domain/Level";
 import localforage from "localforage";
 
@@ -6,8 +6,9 @@ export default class StorageIml implements IStorage {
   private currentLevelKey = "currentLevel";
   private userInformationKey = "userInfo";
   private onLevelCompleteKey = "levelComplete";
-  private defaultUserInformation: IUserInformation = {
+  private defaultUserInformation: ISettableUserInformation = {
     hasViewedMinSelectionInfo: false,
+    hasViewedInstallationInfo: false,
   };
 
   constructor() {
@@ -29,14 +30,24 @@ export default class StorageIml implements IStorage {
     return localforage.getItem<string>(this.currentLevelKey);
   }
 
-  public async setUserInformation(info: Partial<IUserInformation>): Promise<IUserInformation> {
+  public async setUserInformation(
+    info: Partial<ISettableUserInformation>,
+    persisted: boolean = true,
+  ): Promise<ISettableUserInformation> {
     const userInfo = await this.getUserInformation();
-    return localforage.setItem(this.userInformationKey, { ...userInfo, ...info });
+    if (persisted) {
+      return localforage.setItem(this.userInformationKey, { ...userInfo, ...info });
+    } else {
+      this.defaultUserInformation = { ...this.defaultUserInformation, ...info };
+      return Promise.resolve(this.defaultUserInformation);
+    }
   }
 
   public async getUserInformation(): Promise<IUserInformation> {
-    const data = await localforage.getItem<IUserInformation>(this.userInformationKey);
-    return data || this.defaultUserInformation;
+    const data = await localforage.getItem<ISettableUserInformation>(this.userInformationKey);
+    const cleared = (await this.getCompletedLevels()) || [];
+
+    return { ...this.defaultUserInformation, ...data, clearedLevels: cleared.length };
   }
 
   public async onLevelComplete(levelID: string): Promise<string[]> {

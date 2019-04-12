@@ -1,6 +1,6 @@
 {
   "name": "grid-game",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "",
   "author": "Simon Johansson <mail@simon-johansson.com>",
   "repository": {
@@ -14,13 +14,13 @@
     "start": "node ./server",
     "build": "run-s remove-build && run-p build:* service-worker",
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\" --logLevel debug",
-    "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico,woff2,woff,ttf}\" dist",
+    "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico,woff2,woff,ttf,txt}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
     "build:tsc": "tsc -p ./tsconfig.prod.json && browserify .tmp/src/main.js -t [ aliasify ] -o dist/app.js",
     "watch:tsc": "tsc --watch",
     "watch:watchify": "watchify .tmp/src/main.js -t [ aliasify ] -o dist/app.js --debug",
     "watch:scss": "onchange \"src/delivery/**/*.scss\" -- run-s build:scss",
-    "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,json,png,jpg,gif}\" -- run-s build:assets",
+    "watch:assets": "onchange \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,txt}\" -- run-s build:assets",
     "watch": "run-s remove-build build:* && run-p start serve watch:*",
     "test": "jest",
     "test-watch": "jest --watchAll",

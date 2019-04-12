@@ -25,6 +25,8 @@
 
     <link rel="manifest" href="/manifest.json" />
 
+    <meta name="theme-color" content="white">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png" />
 
@@ -66,9 +68,25 @@
 
     <script src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js" crossorigin="anonymous"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40124062-6"></script>
+    <script src="https://cdn.logrocket.io/LogRocket.min.js" crossorigin="anonymous"></script>
 
-    <script src="/vendor/google-analytics.js"></script>
-    <script src="/vendor/sentry.js"></script>
+    <script>
+      if (document.location.hostname.search("gridgame.net") !== -1) {
+        // Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "UA-40124062-6");
+
+        // LogRocket
+        window.LogRocket && window.LogRocket.init("rfelo6/gridgame");
+
+        // Sentry
+        Sentry.init({ dsn: "https://224d81892cac4cd9ad8de7623b2187a3@sentry.io/1420148" });
+      }
+    </script>
 
     <link rel="stylesheet" href="/styles/styles.css" />
     <script>
@@ -98,7 +116,6 @@
   </head>
 
   <body>
-
     <div id="app"></div>
 
     <script src="/vendor/doorbell.js"></script>

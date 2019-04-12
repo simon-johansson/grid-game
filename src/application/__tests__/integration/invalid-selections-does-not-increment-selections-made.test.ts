@@ -3,6 +3,7 @@ import { ISelectionPresentationData } from "@application/interfaces";
 import Rules from "@domain/Rules";
 import {
   getAnalyticsMock,
+  getInstallerMock,
   getNetworkGatewayMock,
   getQuerystringMock,
   getSelectionPresenter,
@@ -23,7 +24,13 @@ const presenters: IPresenters = {
   }),
   tile: getTilePresenter(() => {}, tileStateLayout, tileSelectionLayout),
 };
-const interactor = new Interactor(getNetworkGatewayMock(), getAnalyticsMock(), getStorageMock(), getQuerystringMock());
+const interactor = new Interactor(
+  getNetworkGatewayMock(),
+  getAnalyticsMock(),
+  getStorageMock(),
+  getQuerystringMock(),
+  getInstallerMock(),
+);
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 const setSelection = setSelectionHelper(interactor);
 

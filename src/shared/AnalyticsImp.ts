@@ -10,7 +10,7 @@ const GA_SECRET = "8e789012ed8133df1908eaff64a97d01a1cdcfa4";
 const GA_DEV_KEY = "05fa73c552a901b72307566335e61ce0";
 const GA_DEV_SECRET = "5383806560f5ec338170b98de5468f387bb31a60";
 
-export default class AnalyticsIml implements IAnalytics {
+export default class AnalyticsImp implements IAnalytics {
   constructor() {
     GameAnalytics.configureBuild(packageJSON.version);
 
@@ -32,22 +32,13 @@ export default class AnalyticsIml implements IAnalytics {
     }
   }
 
-  public onSelection(level: Level): void {
-    // On level complete
-    if (level.isCleared && level.name) {
-      GameAnalytics.addProgressionEvent(
-        EGAProgressionStatus.Complete,
-        level.name.toString(),
-      );
-    }
-    // On level failed
-    else if (!level.isCleared && !level.selections.left && level.name) {
-      GameAnalytics.addProgressionEvent(EGAProgressionStatus.Fail, level.name.toString());
-    }
-  }
-
   public onLevelComplete(level: Level): void {
     GameAnalytics.addProgressionEvent(EGAProgressionStatus.Complete, level.name!.toString());
+    if (this.comletedInLessMovesThanExpected(level)) {
+      this.onError(`
+        Level completed in less moves than expected:
+        name: ${level.name}, id: ${level.id}, moves: ${JSON.stringify(level.selections.history)}`);
+    }
   }
 
   public onLevelFailed(level: Level): void {
@@ -56,5 +47,30 @@ export default class AnalyticsIml implements IAnalytics {
 
   public onError(error: string): void {
     GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
+  }
+
+  public onAcceptedInstallPropmpt(): void {
+    GameAnalytics.addDesignEvent("InstallPropmpt:Accepted");
+  }
+
+  public onRejectedInstallPropmpt(): void {
+    GameAnalytics.addDesignEvent("InstallPropmpt:Rejected");
+  }
+
+  public onInstall(): void {
+    GameAnalytics.addDesignEvent("Installation");
+  }
+
+  public onUserEnvironment(isStandalone: boolean): void {
+    const InBrowser = isStandalone ? "No" : "Yes";
+    GameAnalytics.addDesignEvent(`PlayingInBrowser:${InBrowser}`);
+  }
+
+  public onCloseInstallModal(): void {
+    GameAnalytics.addDesignEvent(`Modal:Install:Close`);
+  }
+
+  private comletedInLessMovesThanExpected(level: Level): boolean {
+    return level.selections.left > 0;
   }
 }

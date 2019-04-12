@@ -1,6 +1,7 @@
 import { Board5x5 } from "@shared/interfaces";
 import Rules from "./Rules";
 import { TileType } from "./Tile";
+import TileSpan from "./TileSpan";
 
 export interface ILevelOptions {
   name: number;
@@ -15,6 +16,7 @@ export type ITypedGridLayout = Board5x5<TileType>;
 interface ISelections {
   left: number;
   made: number;
+  history: TileSpan[];
 }
 
 interface IGrid {
@@ -32,6 +34,7 @@ const getGridObject = (layout: ITypedGridLayout): IGrid => ({
 const getSelectionObject = (moves: number): ISelections => ({
   left: moves,
   made: 0,
+  history: [],
 });
 
 export default class Level {
@@ -62,8 +65,9 @@ export default class Level {
     }
   }
 
-  public onValidSelection(): void {
+  public onValidSelection(selection: TileSpan): void {
     this.selections.made++;
+    this.selections.history.push(selection);
 
     if (this.selections.left) {
       this.selections.left--;

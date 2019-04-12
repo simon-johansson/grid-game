@@ -4,6 +4,7 @@ import {
   IAnalytics,
   IGameLevel,
   IGridLayout,
+  IInstaller,
   ILevelData,
   INetworkGateway,
   IQueryString,
@@ -121,7 +122,11 @@ export const getStorageMock = (data: string[] = []): IStorage => ({
   getCurrentLevel: () => Promise.resolve("0"),
   setUserInformation: (info: Partial<IUserInformation>) => {},
   getUserInformation: () => {
-    return Promise.resolve({ hasViewedMinSelectionInfo: false });
+    return Promise.resolve({
+      hasViewedMinSelectionInfo: false,
+      hasViewedInstallationInfo: false,
+      clearedLevels: 0,
+    });
   },
   onLevelComplete: (id: string): Promise<string[]> => {
     return Promise.resolve(data);
@@ -144,6 +149,13 @@ export const getQuerystringMock = (level: any = {}): IQueryString => ({
   setLevelNumber: (num: number) => undefined,
   getIsEditMode: () => undefined,
   setIsEditMode: (bool: boolean) => undefined,
+});
+
+export const getInstallerMock = (): IInstaller => ({
+  canBeInstalled: false,
+  canBeInstalledViaNativeInstallPromp: false,
+  canShowNativeInstallPrompt: false,
+  showNativeInstallPrompt: () => {},
 });
 
 export const presenters: IPresenters = {

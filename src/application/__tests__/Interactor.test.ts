@@ -8,6 +8,7 @@ import {
   clearedLayout,
   defaultLayout,
   getAnalyticsMock,
+  getInstallerMock,
   getNetworkGatewayMock,
   getQuerystringMock,
   getSelectionPresenter,
@@ -22,10 +23,10 @@ const levelDefaults = {
   moves: 3,
 };
 const levels: IGameLevel[] = [
-  { ...levelDefaults, layout: defaultLayout, id: 'id-0' },
-  { ...levelDefaults, layout: clearedLayout, id: 'id-1' },
-  { ...levelDefaults, layout: blockerLayout, id: 'id-2' },
-  { ...levelDefaults, layout: mixedLayout, id: 'id-3' },
+  { ...levelDefaults, layout: defaultLayout, id: "id-0" },
+  { ...levelDefaults, layout: clearedLayout, id: "id-1" },
+  { ...levelDefaults, layout: blockerLayout, id: "id-2" },
+  { ...levelDefaults, layout: mixedLayout, id: "id-3" },
 ];
 let querystringLevel: any = {};
 let selectionHasRendered: boolean;
@@ -50,6 +51,7 @@ describe("Interactor", () => {
       getAnalyticsMock(),
       getStorageMock(),
       getQuerystringMock(querystringLevel),
+      getInstallerMock(),
     );
     await interactor.loadLevels();
     done();
@@ -62,6 +64,7 @@ describe("Interactor", () => {
         getAnalyticsMock(),
         getStorageMock(),
         getQuerystringMock(),
+        getInstallerMock(),
       );
       expect(() => {
         interactor.startCurrentLevel(presenters);
@@ -74,6 +77,7 @@ describe("Interactor", () => {
         getAnalyticsMock(),
         getStorageMock(),
         getQuerystringMock(),
+        getInstallerMock(),
       );
       return interactor.loadLevels().then(() => {
         expect(() => {
@@ -91,6 +95,7 @@ describe("Interactor", () => {
         getAnalyticsMock(),
         getStorageMock(),
         getQuerystringMock(),
+        getInstallerMock(),
       );
       await interactor.loadLevels();
       expect(networkRequests).toEqual(1);
@@ -128,7 +133,7 @@ describe("Interactor", () => {
     });
 
     test("start specific level", () => {
-      const state = interactor.startSpecificLevel(presenters, 'id-2');
+      const state = interactor.startSpecificLevel(presenters, "id-2");
       expect(state.name).toEqual(2);
     });
 

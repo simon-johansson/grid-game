@@ -12,6 +12,8 @@ self.addEventListener("install", function(event) {
           "/vendor/doorbell.js",
           "/app.js",
           "/favicon.ico",
+          "/assets/how-to-play.gif",
+          "/assets/min-selection-info.gif"
         ]);
       })
       .then(function() {

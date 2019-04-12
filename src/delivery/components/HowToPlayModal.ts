@@ -7,7 +7,7 @@ export default class HowToPlayModal extends Modal {
   protected imageURL = "/assets/how-to-play.gif";
   protected buttonText = "Start game";
 
-  constructor(onClose?: () => void) {
-    super(onClose);
+  constructor() {
+    super();
   }
 }

@@ -3,6 +3,7 @@ import { IGameLevel } from "@application/interfaces";
 import Rules from "@domain/Rules";
 import {
   getAnalyticsMock,
+  getInstallerMock,
   getNetworkGatewayMock,
   getQuerystringMock,
   getSelectionPresenter,
@@ -36,6 +37,7 @@ const interactor = new Interactor(
   getAnalyticsMock(),
   getStorageMock(),
   getQuerystringMock(),
+  getInstallerMock(),
 );
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);
 
