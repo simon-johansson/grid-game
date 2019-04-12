@@ -67,14 +67,20 @@ export interface IAnalytics {
   onError: (error: any) => void;
 }
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
 export interface IUserInformation {
   hasViewedMinSelectionInfo: boolean;
+  hasViewedInstallationInfo: boolean;
+  clearedLevels: number;
 }
+
+export type ISettableUserInformation = Omit<IUserInformation, "clearedLevels">;
 
 export interface IStorage {
   setCurrentLevel: (levelID?: string) => void;
   getCurrentLevel: () => Promise<string | null>;
-  setUserInformation: (info: Partial<IUserInformation>) => void;
+  setUserInformation: (info: Partial<ISettableUserInformation>, persisted?: boolean) => void;
   getUserInformation: () => Promise<IUserInformation>;
   onLevelComplete: (levelID: string) => Promise<string[]>;
   getCompletedLevels: () => Promise<string[] | null>;
@@ -93,4 +99,11 @@ export interface IQueryString {
   setLevelNumber: (level: number) => void;
   getIsEditMode: () => boolean | undefined;
   setIsEditMode: (bool: boolean) => void;
+}
+
+export interface IInstaller {
+  canBeInstalled: boolean;
+  canBeInstalledViaNativeInstallPromp: boolean;
+  canShowNativeInstallPrompt: boolean;
+  showNativeInstallPrompt: () => void;
 }

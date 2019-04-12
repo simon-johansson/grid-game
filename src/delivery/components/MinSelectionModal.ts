@@ -10,7 +10,7 @@ export default class MinSelectionModal extends Modal {
   protected imageURL = "/assets/min-selection-info.gif";
   protected buttonText = "Got it";
 
-  constructor(onClose: () => void) {
-    super(onClose);
+  constructor(options: { onClose: () => void }) {
+    super(options.onClose);
   }
 }

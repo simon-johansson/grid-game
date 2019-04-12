@@ -4,6 +4,7 @@ import Rules from "@domain/Rules";
 import {
   defaultLayout,
   getAnalyticsMock,
+  getInstallerMock,
   getNetworkGatewayMock,
   getQuerystringMock,
   getSelectionPresenter,
@@ -24,6 +25,7 @@ const interactor = new Interactor(
   getAnalyticsMock(),
   getStorageMock(),
   getQuerystringMock(),
+  getInstallerMock(),
 );
 interactor.loadLevels();
 const setSelectionAndProcess = setSelectionAndProcessHelper(interactor);

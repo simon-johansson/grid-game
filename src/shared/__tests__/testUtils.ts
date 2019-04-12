@@ -4,6 +4,7 @@ import {
   IAnalytics,
   IGameLevel,
   IGridLayout,
+  IInstaller,
   ILevelData,
   INetworkGateway,
   IQueryString,
@@ -144,6 +145,13 @@ export const getQuerystringMock = (level: any = {}): IQueryString => ({
   setLevelNumber: (num: number) => undefined,
   getIsEditMode: () => undefined,
   setIsEditMode: (bool: boolean) => undefined,
+});
+
+export const getInstallerMock = (): IInstaller => ({
+  canBeInstalled: false,
+  canBeInstalledViaNativeInstallPromp: false,
+  canShowNativeInstallPrompt: false,
+  showNativeInstallPrompt: () => {},
 });
 
 export const presenters: IPresenters = {

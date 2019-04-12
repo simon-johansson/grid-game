@@ -2,6 +2,7 @@
 import Interactor from "@application/Interactor";
 import { ILevelData, IUserInformation } from "@application/interfaces";
 import HowToPlayModal from "../components/HowToPlayModal";
+import InstallModal from "../components/InstallModal";
 import LevelSelector from "../components/LevelSelector";
 import MinSelectionModal from "../components/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
@@ -29,6 +30,7 @@ export default class Playable extends GameBoard {
 
   private MovesCounterComponent: MovesCounter;
   private LevelSelectorComponent: LevelSelector;
+  private InstallModalComponent: InstallModal;
   private HowToPlayModalComponent: HowToPlayModal;
   private MinSelectionModalComponent: MinSelectionModal;
 
@@ -36,6 +38,7 @@ export default class Playable extends GameBoard {
     super(interactor, options.levelID);
 
     this.MovesCounterComponent = new MovesCounter();
+
     this.LevelSelectorComponent = new LevelSelector({
       onPrevLevel: this.goToPrevLevel.bind(this),
       onNextLevel: this.goToNextLevel.bind(this),
@@ -43,11 +46,16 @@ export default class Playable extends GameBoard {
       onEditLevel: () => router("edit"),
     });
 
+    this.InstallModalComponent = new InstallModal({
+      installViaButton: this.interactor.installer.canBeInstalledViaNativeInstallPromp,
+      onClose: this.onCloseInstallModal.bind(this),
+      onInstall: this.onInstall.bind(this),
+    });
+
     this.HowToPlayModalComponent = new HowToPlayModal();
-    this.MinSelectionModalComponent = new MinSelectionModal(() => {
-      this.interactor.setUserData({
-        hasViewedMinSelectionInfo: true,
-      });
+
+    this.MinSelectionModalComponent = new MinSelectionModal({
+      onClose: this.onCloseMinSelectionModal.bind(this),
     });
 
     // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
@@ -135,11 +143,12 @@ export default class Playable extends GameBoard {
     if (this.shouldShowHowToPlayModal(level)) {
       await sleep(500);
       this.HowToPlayModalComponent.render({});
-    }
-
-    if (this.shouldShowMinSelectionModal(level, userInfo)) {
+    } else if (this.shouldShowMinSelectionModal(level, userInfo)) {
       await sleep(500);
       this.MinSelectionModalComponent.render({});
+    } else if (this.shouldShowInstallerModal(userInfo)) {
+      await sleep(500);
+      this.InstallModalComponent.render({});
     }
   }
 
@@ -162,5 +171,30 @@ export default class Playable extends GameBoard {
 
   private shouldShowMinSelectionModal(level: ILevelData, userInfo: IUserInformation): boolean {
     return level.rules.minSelection > 1 && !userInfo.hasViewedMinSelectionInfo;
+  }
+
+  private shouldShowInstallerModal({ hasViewedInstallationInfo, clearedLevels }: IUserInformation): boolean {
+    const { canBeInstalled } = this.interactor.installer;
+    return canBeInstalled && !hasViewedInstallationInfo && clearedLevels >= 15;
+  }
+
+  private onCloseMinSelectionModal(): void {
+    this.interactor.setUserData({
+      hasViewedMinSelectionInfo: true,
+    });
+  }
+
+  private onCloseInstallModal(): void {
+    const isPersisted = false;
+    this.interactor.setUserData(
+      {
+        hasViewedInstallationInfo: true,
+      },
+      isPersisted,
+    );
+  }
+
+  private onInstall(): void {
+    this.interactor.installer.showNativeInstallPrompt();
   }
 }

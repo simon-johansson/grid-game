@@ -8,11 +8,13 @@ import {
   IAnalytics,
   IGameLevel,
   IGridLayout,
+  IInstaller,
   ILevelData,
   INetworkGateway,
   IOverviewData,
   IQueryString,
   ISelectionPresenterConstructor,
+  ISettableUserInformation,
   IStorage,
   ITilePresenterConstructor,
   IUserInformation,
@@ -49,6 +51,7 @@ export default class Interactor {
     private analytics: IAnalytics,
     private storage: IStorage,
     private querystring: IQueryString,
+    public installer: IInstaller,
   ) {}
 
   public async loadLevels(): Promise<void> {
@@ -112,8 +115,8 @@ export default class Interactor {
     return this.storage.getUserInformation();
   }
 
-  public setUserData(userInfo: Partial<IUserInformation>): void {
-    return this.storage.setUserInformation(userInfo);
+  public setUserData(userInfo: Partial<ISettableUserInformation>, persisted?: boolean): void {
+    return this.storage.setUserInformation(userInfo, persisted);
   }
 
   public setSelectionStart(gridOffsetX: number, gridOffsetY: number, tileState?: TileType): void {

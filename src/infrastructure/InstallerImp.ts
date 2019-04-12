@@ -1,3 +1,6 @@
+import { IInstaller } from "@application/interfaces";
+import AnalyticsIml from "./AnalyticsImp";
+
 interface IBeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
@@ -7,7 +10,7 @@ interface IBeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-export default class Device {
+export default class InstallerImp implements IInstaller {
   private isStandalone: boolean;
   private installPromptEvent: IBeforeInstallPromptEvent;
   private userAgent = navigator.userAgent || "";
@@ -16,7 +19,7 @@ export default class Device {
   private isSafari = navigator.vendor && /Apple/i.test(this.userAgent);
   private isSafariMobile = !!this.isSafari && !!this.isIOS;
 
-  constructor() {
+  constructor(private analytics: AnalyticsIml) {
     this.bindEvents();
     this.checkIfInstalled();
   }
@@ -34,15 +37,14 @@ export default class Device {
   }
 
   public showNativeInstallPrompt(): void {
+    console.log(this.installPromptEvent);
     if (this.installPromptEvent !== undefined) {
       this.installPromptEvent.prompt();
       this.installPromptEvent.userChoice.then(result => {
         if (result.outcome === "accepted") {
-          alert("accepted");
-          // Track event: The web app banner was accepted
+          this.analytics.onAcceptedInstallPropmpt();
         } else {
-          alert("not accepted");
-          // Track event: The web app banner was dismissed
+          this.analytics.onRejectedInstallPropmpt();
         }
       });
     }
@@ -51,15 +53,11 @@ export default class Device {
   private bindEvents(): void {
     window.addEventListener("beforeinstallprompt", (event: IBeforeInstallPromptEvent) => {
       event.preventDefault();
-      console.log("beforeinstallprompt");
       this.installPromptEvent = event;
-      console.log(this.installPromptEvent);
-
     });
 
     window.addEventListener("appinstalled", event => {
-      alert("installed");
-      // Track event: The app was installed (banner or manual installation)
+      this.analytics.onInstall();
     });
   }
 
@@ -72,6 +70,6 @@ export default class Device {
       // useful for iOS < 11.3
       this.isStandalone = !!(navigator as any).standalone;
     }
-    // Track event: The web app is inastalled or not
+    this.analytics.onUserEnvironment(this.isStandalone);
   }
 }

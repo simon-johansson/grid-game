@@ -34,7 +34,7 @@ export default class AnalyticsIml implements IAnalytics {
 
   public onLevelComplete(level: Level): void {
     GameAnalytics.addProgressionEvent(EGAProgressionStatus.Complete, level.name!.toString());
-    if (this.comletedInlessAmountOfMovesThanExpected(level)) {
+    if (this.comletedInLessMovesThanExpected(level)) {
       this.onError(`
         Level completed in less moves than expected:
         name: ${level.name}, id: ${level.id}, moves: ${JSON.stringify(level.selections.history)}`);
@@ -49,7 +49,28 @@ export default class AnalyticsIml implements IAnalytics {
     GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
   }
 
-  private comletedInlessAmountOfMovesThanExpected(level: Level): boolean {
+  public onAcceptedInstallPropmpt(): void {
+    GameAnalytics.addDesignEvent("InstallPropmpt:Accepted");
+  }
+
+  public onRejectedInstallPropmpt(): void {
+    GameAnalytics.addDesignEvent("InstallPropmpt:Rejected");
+  }
+
+  public onInstall(): void {
+    GameAnalytics.addDesignEvent("Installation");
+  }
+
+  public onUserEnvironment(isStandalone: boolean): void {
+    const InBrowser = isStandalone ? "No" : "Yes";
+    GameAnalytics.addDesignEvent(`PlayingInBrowser:${InBrowser}`);
+  }
+
+  public onCloseInstallModal(): void {
+    GameAnalytics.addDesignEvent(`Modal:Install:Close`);
+  }
+
+  private comletedInLessMovesThanExpected(level: Level): boolean {
     return level.selections.left > 0;
   }
 }
