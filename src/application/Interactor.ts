@@ -59,7 +59,17 @@ export default class Interactor {
     try {
       const levels = await this.network.getLevels();
       const currentLevel = await this.storage.getCurrentLevel();
-      const completedLevels = await this.storage.getCompletedLevels();
+      // let completedLevels = await this.storage.getCompletedLevels();
+      let completedLevels = [];
+
+      try {
+        completedLevels = await fetch("/completedLevels").then(response => response.json());
+      } catch (error) {
+        alert(error);
+      }
+
+      console.log(completedLevels);
+
       this.levelManager = new LevelManager(levels, currentLevel, completedLevels);
     } catch (error) {
       console.error(error);
@@ -220,6 +230,12 @@ export default class Interactor {
       this.analytics.onLevelComplete(this.level);
       const completedLevels = await this.storage.onLevelComplete(this.level.id!);
       this.levelManager.onLevelComplete(completedLevels);
+
+      console.log(JSON.stringify({ levels: completedLevels }));
+      fetch("/completedLevels", { method: "POST", body: JSON.stringify(completedLevels) }).then(() => {
+        console.log("saved to cache");
+      });
+      
     } else {
       this.analytics.onLevelFailed(this.level);
     }

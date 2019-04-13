@@ -5,6 +5,10 @@ export default class NetworkGatewayImp implements INetworkGateway {
     return this.api<IGameLevel[]>("/levels");
   }
 
+  public getCompletedLevels(): Promise<string[]> {
+    return this.api<string[]>("/completedLevels");
+  }
+
   private api<T>(url: string): Promise<T> {
     return fetch(url).then(response => {
       if (!response.ok) {
