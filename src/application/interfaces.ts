@@ -58,6 +58,8 @@ export interface IOverviewData {
 
 export interface INetworkGateway {
   getLevels: () => Promise<IGameLevel[]>;
+  getCompletedLevels: () => Promise<string[]>
+  setCompletedLevels: (levels: string[]) => Promise<Response>
 }
 
 export interface IAnalytics {

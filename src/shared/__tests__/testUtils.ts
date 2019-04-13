@@ -108,6 +108,8 @@ export const getNetworkGatewayMock = (data: IGameLevel[] = [], clb?: () => void)
     if (clb) clb();
     return Promise.resolve(data);
   },
+  getCompletedLevels: () => Promise.resolve([]),
+  setCompletedLevels: (levels: string[]) => Promise.resolve(new Response()),
 });
 
 export const getAnalyticsMock = (): IAnalytics => ({
