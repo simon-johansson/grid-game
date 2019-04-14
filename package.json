@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node ./server",
-    "build": "run-s remove-build && run-p build:* service-worker",
+    "build": "run-s remove-build && run-p build:* && run-s service-worker",
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\" --logLevel debug",
     "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,ico,woff2,woff,ttf,txt}\" dist",
     "build:scss": "node-sass --output-style compressed -r src/delivery -o dist",
@@ -25,7 +25,7 @@
     "test": "jest",
     "test-watch": "jest --watchAll",
     "test-coverage": "jest --coverage",
-    "service-worker": "copyfiles -u 2 \"src/delivery/**/service-worker.js\" dist && node build_scripts/sw-cache-bust.js",
+    "service-worker": "copyfiles -u 3 \".tmp/src/delivery/service-worker.js\" dist && node build_scripts/sw-cache-bust.js",
     "download-levels": "node -e 'require(\"./server/trello.js\").saveLevels()'",
     "remove-build": "rm -rf ./dist",
     "postinstall": "npm run build"

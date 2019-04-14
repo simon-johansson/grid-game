@@ -58,6 +58,10 @@ export interface IOverviewData {
 
 export interface INetworkGateway {
   getLevels: () => Promise<IGameLevel[]>;
+  getCurrentLevel: () => Promise<string>;
+  setCurrentLevel: (levelID: string) => Promise<Response>;
+  getCompletedLevels: () => Promise<string[]>;
+  setCompletedLevels: (levels: string[]) => Promise<Response>;
 }
 
 export interface IAnalytics {
@@ -78,11 +82,12 @@ export interface IUserInformation {
 export type ISettableUserInformation = Omit<IUserInformation, "clearedLevels">;
 
 export interface IStorage {
-  setCurrentLevel: (levelID?: string) => void;
+  setCurrentLevel: (levelID: string) => void;
   getCurrentLevel: () => Promise<string | null>;
   setUserInformation: (info: Partial<ISettableUserInformation>, persisted?: boolean) => void;
   getUserInformation: () => Promise<IUserInformation>;
   onLevelComplete: (levelID: string) => Promise<string[]>;
+  setCompletedLevels: (levels: string[]) => void;
   getCompletedLevels: () => Promise<string[] | null>;
   onFail: (level: Level) => void;
 }

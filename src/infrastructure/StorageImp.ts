@@ -17,13 +17,11 @@ export default class StorageIml implements IStorage {
     });
   }
 
-  public setCurrentLevel(levelID?: string): void {
-    if (levelID !== undefined) {
-      localforage.setItem(this.currentLevelKey, levelID).catch(error => {
-        // Analytics
-        console.log(error);
-      });
-    }
+  public setCurrentLevel(levelID: string): void {
+    localforage.setItem(this.currentLevelKey, levelID).catch(error => {
+      // Analytics
+      console.log(error);
+    });
   }
 
   public getCurrentLevel(): Promise<string | null> {
@@ -55,6 +53,13 @@ export default class StorageIml implements IStorage {
     completedLevels = completedLevels || [];
     if (completedLevels.indexOf(levelID) === -1) completedLevels.push(levelID);
     return localforage.setItem(this.onLevelCompleteKey, completedLevels);
+  }
+
+  public setCompletedLevels(levels: string[]): void {
+    localforage.setItem(this.onLevelCompleteKey, levels).catch(error => {
+      // Analytics
+      console.log(error);
+    });
   }
 
   public getCompletedLevels(): Promise<string[] | null> {
