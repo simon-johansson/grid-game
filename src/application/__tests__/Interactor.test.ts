@@ -89,7 +89,7 @@ describe("Interactor", () => {
     test("cache levels on initial load", async () => {
       let networkRequests = 0;
       interactor = new Interactor(
-        getNetworkGatewayMock(levels, () => {
+        getNetworkGatewayMock(levels, [], "", () => {
           networkRequests++;
         }),
         getAnalyticsMock(),
@@ -101,6 +101,48 @@ describe("Interactor", () => {
       expect(networkRequests).toEqual(1);
       await interactor.loadLevels();
       expect(networkRequests).toEqual(1);
+    });
+
+    test("get current level from cache", async () => {
+      interactor = new Interactor(
+        getNetworkGatewayMock(levels, [], "id-2"),
+        getAnalyticsMock(),
+        getStorageMock(),
+        getQuerystringMock(),
+        getInstallerMock(),
+      );
+      await interactor.loadLevels();
+      const level = interactor.startCurrentLevel(presenters);
+      expect(level.id).toEqual("id-2");
+    });
+
+    test("get completed levels from cache", async () => {
+      interactor = new Interactor(
+        getNetworkGatewayMock(levels, ["id-0", "id-2", "id-3"]),
+        getAnalyticsMock(),
+        getStorageMock(),
+        getQuerystringMock(),
+        getInstallerMock(),
+      );
+      await interactor.loadLevels();
+      const { cleared } = interactor.getOverviewData();
+      expect(cleared).toEqual(3);
+    });
+
+    test("sync cache and local storage", async () => {
+      const storage = getStorageMock();
+      const currentLevel = "id-1";
+      const completedLevels = ["id-0", "id-2", "id-3"];
+      interactor = new Interactor(
+        getNetworkGatewayMock(levels, completedLevels, currentLevel),
+        getAnalyticsMock(),
+        storage,
+        getQuerystringMock(),
+        getInstallerMock(),
+      );
+      await interactor.loadLevels();
+      expect(await storage.getCompletedLevels()).toEqual(completedLevels);
+      expect(await storage.getCurrentLevel()).toEqual(currentLevel);
     });
   });
 

@@ -103,13 +103,20 @@ export const processedLayout = (state: ITileState | ITileSelection) => {
   return layout;
 };
 
-export const getNetworkGatewayMock = (data: IGameLevel[] = [], clb?: () => void): INetworkGateway => ({
+export const getNetworkGatewayMock = (
+  data: IGameLevel[] = [],
+  completedLevels: string[] = [],
+  currentLevel: string = "",
+  clb?: () => void,
+): INetworkGateway => ({
   getLevels: () => {
     if (clb) clb();
     return Promise.resolve(data);
   },
-  getCompletedLevels: () => Promise.resolve([]),
-  setCompletedLevels: (levels: string[]) => Promise.resolve(new Response()),
+  getCurrentLevel: () => Promise.resolve(currentLevel),
+  setCurrentLevel: (levelID: string) => Promise.resolve() as any,
+  getCompletedLevels: () => Promise.resolve(completedLevels),
+  setCompletedLevels: (levels: string[]) => Promise.resolve() as any,
 });
 
 export const getAnalyticsMock = (): IAnalytics => ({
@@ -119,25 +126,34 @@ export const getAnalyticsMock = (): IAnalytics => ({
   onError: (error: any) => {},
 });
 
-export const getStorageMock = (data: string[] = []): IStorage => ({
-  setCurrentLevel: (id: string) => {},
-  getCurrentLevel: () => Promise.resolve("0"),
-  setUserInformation: (info: Partial<IUserInformation>) => {},
-  getUserInformation: () => {
-    return Promise.resolve({
-      hasViewedMinSelectionInfo: false,
-      hasViewedInstallationInfo: false,
-      clearedLevels: 0,
-    });
-  },
-  onLevelComplete: (id: string): Promise<string[]> => {
-    return Promise.resolve(data);
-  },
-  getCompletedLevels: (): Promise<string[]> => {
-    return Promise.resolve(data);
-  },
-  onFail: (level: Level) => {},
-});
+export const getStorageMock = (data: string[] = []): IStorage => {
+  let completedLevels = data;
+  let currentLevel = "id-0";
+  return {
+    setCurrentLevel: (id: string) => {
+      currentLevel = id;
+    },
+    getCurrentLevel: () => Promise.resolve(currentLevel),
+    setUserInformation: (info: Partial<IUserInformation>) => {},
+    getUserInformation: () => {
+      return Promise.resolve({
+        hasViewedMinSelectionInfo: false,
+        hasViewedInstallationInfo: false,
+        clearedLevels: 0,
+      });
+    },
+    onLevelComplete: (id: string): Promise<string[]> => {
+      return Promise.resolve(completedLevels);
+    },
+    setCompletedLevels: (levels: string[]) => {
+      completedLevels = levels;
+    },
+    getCompletedLevels: (): Promise<string[]> => {
+      return Promise.resolve(completedLevels);
+    },
+    onFail: (level: Level) => {},
+  };
+};
 
 export const getQuerystringMock = (level: any = {}): IQueryString => ({
   getLevel: () => undefined,
