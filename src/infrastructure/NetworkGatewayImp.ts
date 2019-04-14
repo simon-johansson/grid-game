@@ -5,6 +5,14 @@ export default class NetworkGatewayImp implements INetworkGateway {
     return this.get<IGameLevel[]>("/levels");
   }
 
+  public getCurrentLevel(): Promise<string> {
+    return this.get<string>("/currentLevel");
+  }
+
+  public setCurrentLevel(levelID: string): Promise<Response> {
+    return this.post("/currentLevel", levelID);
+  }
+
   public getCompletedLevels(): Promise<string[]> {
     return this.get<string[]>("/completedLevels");
   }

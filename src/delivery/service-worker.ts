@@ -1,6 +1,7 @@
 const PRECACHE = "REPLACE_IN_BUILD_STEP";
 const RUNTIME = "REPLACE_IN_BUILD_STEP";
 const COMPLETED_LEVELS_ENDPOINT = "/completedLevels";
+const CURRENT_LEVEL_ENDPOINT = "/currentLevel";
 
 self.addEventListener("install", (event: any) => {
   event.waitUntil(
@@ -28,7 +29,11 @@ self.addEventListener("activate", (event: any) => {
   event
     .waitUntil(
       caches.keys().then(cacheNames => {
-        const cachesToDelete = cacheNames.filter(cacheName => cacheName !== PRECACHE);
+        const cachesToDelete = cacheNames.filter(cacheName => {
+          return (
+            cacheName !== PRECACHE && cacheName !== COMPLETED_LEVELS_ENDPOINT && cacheName !== CURRENT_LEVEL_ENDPOINT
+          );
+        });
         return Promise.all(cachesToDelete.map(cacheName => caches.delete(cacheName)));
       }),
     )
@@ -61,7 +66,9 @@ function cachedEndpoint(event: any, cacheName: string, defaultReponse: string): 
 self.addEventListener("fetch", (event: any) => {
   const { request } = event;
 
-  if (request.url.match(COMPLETED_LEVELS_ENDPOINT)) {
+  if (request.url.match(CURRENT_LEVEL_ENDPOINT)) {
+    cachedEndpoint(event, CURRENT_LEVEL_ENDPOINT, "");
+  } else if (request.url.match(COMPLETED_LEVELS_ENDPOINT)) {
     cachedEndpoint(event, COMPLETED_LEVELS_ENDPOINT, "[]");
   } else if (request.url.startsWith(self.location.origin)) {
     event.respondWith(
