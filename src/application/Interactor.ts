@@ -58,8 +58,8 @@ export default class Interactor {
     if (this.levelManager !== undefined) return Promise.resolve();
     try {
       const levels = await this.network.getLevels();
-      const currentLevel = await this.storage.getCurrentLevel();
-      const completedLevels = await this.storage.getCompletedLevels();
+      const currentLevel = await this.getCurrentLevelID();
+      const completedLevels = await this.getCompletedLevels();
       this.levelManager = new LevelManager(levels, currentLevel, completedLevels);
     } catch (error) {
       console.error(error);
@@ -175,7 +175,7 @@ export default class Interactor {
 
   private startLevel(presenters: IPresenters): void {
     this.createEnteties(presenters);
-    this.storage.setCurrentLevel(this.level.id);
+    this.persistCurrentLevel();
     this.analytics.startLevel(this.level);
   }
 
@@ -219,6 +219,7 @@ export default class Interactor {
     if (this.level.isCleared) {
       this.analytics.onLevelComplete(this.level);
       const completedLevels = await this.storage.onLevelComplete(this.level.id!);
+      this.network.setCompletedLevels(completedLevels);
       this.levelManager.onLevelComplete(completedLevels);
     } else {
       this.analytics.onLevelFailed(this.level);
@@ -227,5 +228,38 @@ export default class Interactor {
 
   private get hasLevelEnded(): boolean {
     return (!this.level.selections.left || this.level.isCleared) && this.level.id !== undefined;
+  }
+
+  private async getCurrentLevelID(): Promise<string | null> {
+    const locallyStoredLevel = await this.storage.getCurrentLevel();
+    try {
+      const cachedLevel = await this.network.getCurrentLevel();
+      if (cachedLevel) this.storage.setCurrentLevel(cachedLevel);
+      return cachedLevel;
+    } catch (error) {
+      console.log("Failed to load current levels from service worker cache: ", error);
+    }
+    return locallyStoredLevel;
+  }
+
+  private async getCompletedLevels(): Promise<string[] | null> {
+    const locallyStoredLevels = await this.storage.getCompletedLevels();
+    try {
+      const cachedLevels = await this.network.getCompletedLevels();
+      if (!locallyStoredLevels || cachedLevels.length > locallyStoredLevels.length) {
+        this.storage.setCompletedLevels(cachedLevels);
+        return cachedLevels;
+      }
+    } catch (error) {
+      console.log("Failed to load completed levels from service worker cache: ", error);
+    }
+    return locallyStoredLevels;
+  }
+
+  private persistCurrentLevel(): void {
+    if (this.level.id !== undefined) {
+      this.storage.setCurrentLevel(this.level.id);
+      this.network.setCurrentLevel(this.level.id);
+    }
   }
 }

@@ -1,8 +1,12 @@
 var express = require("express");
+var compression = require('compression')
 var path = require("path");
 var app = express();
 var { getLevels } = require('./trello');
 var port = process.env.PORT || 8070;
+
+// compress all responses
+app.use(compression())
 
 app.set("port", port);
 app.use(express.static(path.join(__dirname, "..", "dist")));

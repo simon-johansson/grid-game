@@ -47,6 +47,9 @@ export default class AnalyticsImp implements IAnalytics {
 
   public onError(error: string): void {
     GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
+    if ((window as any).Sentry) {
+      (window as any).Sentry.captureException(error);
+    }
   }
 
   public onAcceptedInstallPropmpt(): void {
