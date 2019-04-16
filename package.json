@@ -27,8 +27,7 @@
     "test-coverage": "jest --coverage",
     "service-worker": "copyfiles -u 3 \".tmp/src/delivery/service-worker.js\" dist && node build_scripts/sw-cache-bust.js",
     "download-levels": "node -e 'require(\"./server/trello.js\").saveLevels()'",
-    "remove-build": "rm -rf ./dist",
-    "postinstall": "npm run build"
+    "remove-build": "rm -rf ./dist"
   },
   "aliasify": {
     "aliases": {
