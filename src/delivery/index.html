@@ -66,10 +66,8 @@
       media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
     />
 
-    <script src="https://browser.sentry-cdn.com/4.6.4/bundle.min.js" crossorigin="anonymous"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40124062-6"></script>
-    <script src="https://cdn.logrocket.io/LogRocket.min.js" crossorigin="anonymous"></script>
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-40124062-6"></script>
     <script>
       if (document.location.hostname.search("gridgame.net") !== -1) {
         // Google Analytics
@@ -79,12 +77,6 @@
         }
         gtag("js", new Date());
         gtag("config", "UA-40124062-6");
-
-        // LogRocket
-        window.LogRocket && window.LogRocket.init("rfelo6/gridgame");
-
-        // Sentry
-        Sentry.init({ dsn: "https://8af91441ff6842d88135eaa5e82ce9dc@sentry.io/1440646" });
       }
     </script>
 

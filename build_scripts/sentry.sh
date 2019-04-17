@@ -7,7 +7,7 @@ APP_VERSION=$(cat package.json \
   | head -1 \
   | awk -F: '{ print $2 }' \
   | sed 's/[",\t ]//g')
-VERSION="$APP_VERSION-$REVISION"
+VERSION="$APP_VERSION"
 
 if [ "$NODE_ENV" = "production" ]
 then
