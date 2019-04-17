@@ -27,7 +27,8 @@
     "test-coverage": "jest --coverage",
     "service-worker": "copyfiles -u 3 \".tmp/src/delivery/service-worker.js\" dist && node build_scripts/sw-cache-bust.js",
     "download-levels": "node -e 'require(\"./server/trello.js\").saveLevels()'",
-    "remove-build": "rm -rf ./dist"
+    "remove-build": "rm -rf ./dist",
+    "heroku-postbuild": "sh build_scripts/sentry.sh"
   },
   "aliasify": {
     "aliases": {
@@ -38,6 +39,7 @@
     "verbose": false
   },
   "devDependencies": {
+    "@sentry/cli": "^1.41.0",
     "@types/jest": "^23.3.2",
     "aliasify": "^2.1.0",
     "browser-sync": "^2.24.7",
