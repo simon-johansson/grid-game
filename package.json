@@ -28,7 +28,7 @@
     "service-worker": "copyfiles -u 3 \".tmp/src/delivery/service-worker.js\" dist && node build_scripts/sw-cache-bust.js",
     "download-levels": "node -e 'require(\"./server/trello.js\").saveLevels()'",
     "remove-build": "rm -rf ./dist",
-    "heroku-postbuild": "sh build_scripts/sentry.sh"
+    "heroku-postbuild": "npm run build && sh build_scripts/sentry.sh"
   },
   "aliasify": {
     "aliases": {
