@@ -1,6 +1,8 @@
 import { IAnalytics } from "@application/interfaces";
 import Level from "@domain/Level";
+import * as Sentry from "@sentry/browser";
 import { EGAErrorSeverity, EGAProgressionStatus, GameAnalytics } from "gameanalytics";
+import LogRocket from "logrocket";
 import packageJSON from "../../package.json";
 import { isProduction } from "./utils.js";
 
@@ -17,6 +19,21 @@ export default class AnalyticsImp implements IAnalytics {
     // In production
     if (isProduction()) {
       GameAnalytics.initialize(GA_KEY, GA_SECRET);
+
+      Sentry.init({
+        dsn: "https://b1fe68bd8b2b4c06a2a76cce0eea5888@sentry.io/1440247",
+        release: packageJSON.version,
+      });
+
+      LogRocket.init("rfelo6/gridgame", {
+        release: packageJSON.version,
+      });
+
+      LogRocket.getSessionURL(sessionURL => {
+        Sentry.configureScope(scope => {
+          scope.setExtra("sessionURL", sessionURL);
+        });
+      });
     }
     // In development
     else {
@@ -45,10 +62,14 @@ export default class AnalyticsImp implements IAnalytics {
     GameAnalytics.addProgressionEvent(EGAProgressionStatus.Fail, level.name!.toString());
   }
 
-  public onError(error: string): void {
+  public onError(error: any): void {
     GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
-    if ((window as any).Sentry) {
-      (window as any).Sentry.captureException(error);
+    Sentry.captureException(error);
+
+    if (typeof error === "string") {
+      LogRocket.captureMessage(error);
+    } else {
+      LogRocket.captureException(error);
     }
   }
 
