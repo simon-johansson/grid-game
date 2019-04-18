@@ -21,7 +21,7 @@ export default class AnalyticsImp implements IAnalytics {
       GameAnalytics.initialize(GA_KEY, GA_SECRET);
 
       Sentry.init({
-        dsn: "https://b1fe68bd8b2b4c06a2a76cce0eea5888@sentry.io/1440247",
+        dsn: "https://8af91441ff6842d88135eaa5e82ce9dc@sentry.io/1440646",
         release: packageJSON.version,
       });
 
@@ -62,10 +62,9 @@ export default class AnalyticsImp implements IAnalytics {
     GameAnalytics.addProgressionEvent(EGAProgressionStatus.Fail, level.name!.toString());
   }
 
-  public onError(error: any): void {
-    GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error);
+  public onError(error: Error | string): void {
+    GameAnalytics.addErrorEvent(EGAErrorSeverity.Error, error.toString());
     Sentry.captureException(error);
-
     if (typeof error === "string") {
       LogRocket.captureMessage(error);
     } else {
