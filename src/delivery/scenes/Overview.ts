@@ -1,6 +1,7 @@
 /* tslint:disable: no-unused-expression no-empty-interface */
 import Interactor from "@application/Interactor";
 import { IOverviewData, IStage } from "@application/interfaces";
+import AboutModal from "../components/AboutModal";
 import Component from "../components/Component";
 import StayInformedModal from "../components/StayInformedModal";
 import { RouterPaths } from "../UI";
@@ -13,6 +14,9 @@ export interface IProps extends IOverviewData {}
 export default class Overview extends Component<IProps> {
   public static setScene(interactor: Interactor, router: (path: RouterPaths, options?: any) => void): void {
     setAppHTML(`
+      <div id="header">
+        <div class="tab-button about">About</div>
+      </div>
       <div id="overview"></div>
       <div id="modal"></div>
     `);
@@ -21,6 +25,7 @@ export default class Overview extends Component<IProps> {
 
   protected wrapperElement: HTMLElement = document.getElementById("overview") as HTMLElement;
   private StayInformedModalComponent: StayInformedModal;
+  private AboutModalComponent: AboutModal;
   private stages: IStage[];
   private activeStage: IStage;
 
@@ -40,6 +45,8 @@ export default class Overview extends Component<IProps> {
           });
         },
       });
+
+      this.AboutModalComponent = new AboutModal();
     });
   }
 
@@ -61,6 +68,11 @@ export default class Overview extends Component<IProps> {
 
   protected componentDidMount(): void {
     this.bindClickEvent("back", this.onGoBack.bind(this));
+
+    // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
+    document.querySelector(".about")!.addEventListener("click", () => {
+      this.AboutModalComponent.render({});
+    });
   }
 
   protected update(): void {
