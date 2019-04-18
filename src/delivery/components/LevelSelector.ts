@@ -13,6 +13,7 @@ interface ICallbacks {
   onRestart?: () => void;
   onReviewLevel?: () => void;
   onEditLevel?: () => void;
+  onGoToOverview?: () => void;
 }
 
 export interface IProps {
@@ -61,12 +62,13 @@ export default class LevelSelector extends Component<IProps> {
   }
 
   protected componentDidMount(): void {
-    const { onPrevLevel, onNextLevel, onRestart, onReviewLevel, onEditLevel } = this.callbacks;
+    const { onPrevLevel, onNextLevel, onRestart, onReviewLevel, onEditLevel, onGoToOverview } = this.callbacks;
     if (onPrevLevel) this.bindClickEvent(prevBtnClass, onPrevLevel);
     if (onNextLevel) this.bindClickEvent(nextBtnClass, onNextLevel);
     if (onRestart) this.bindClickEvent(restartBtnClass, onRestart);
     if (onReviewLevel) this.bindClickEvent(reviewBtnClass, onReviewLevel);
     if (onEditLevel) this.bindClickEvent(editBtnClass, onEditLevel);
+    if (onGoToOverview) this.bindClickEvent(currentLevelClass, onGoToOverview);
   }
 
   protected update({ currentLevel, isFirstLevel, isLastLevel, isEditing, isReviewing }: IProps): void {

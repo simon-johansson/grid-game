@@ -18,7 +18,7 @@ export default class Playable extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
     setAppHTML(`
       <div id="header">
-        <div class="tab-button go-to-overview">Overview</div>
+        <div class="tab-button go-to-overview">About</div>
       </div>
       <div id="moves-counter"></div>
       <div id="canvas-container"></div>
@@ -44,6 +44,7 @@ export default class Playable extends GameBoard {
       onNextLevel: this.goToNextLevel.bind(this),
       onRestart: this.restartLevel.bind(this),
       onEditLevel: () => router("edit"),
+      onGoToOverview: () => this.router("overview"),
     });
 
     this.InstallModalComponent = new InstallModal({
