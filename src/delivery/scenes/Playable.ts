@@ -17,9 +17,6 @@ function sleep(ms: number): Promise<void> {
 export default class Playable extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
     setAppHTML(`
-      <div id="header">
-        <div class="tab-button go-to-overview">About</div>
-      </div>
       <div id="moves-counter"></div>
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
@@ -58,9 +55,6 @@ export default class Playable extends GameBoard {
     this.MinSelectionModalComponent = new MinSelectionModal({
       onClose: this.onCloseMinSelectionModal.bind(this),
     });
-
-    // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
-    document.querySelector(".go-to-overview")!.addEventListener("click", () => this.router("overview"));
 
     window.addEventListener("resize", debounce(this.restartLevel.bind(this), 200));
 

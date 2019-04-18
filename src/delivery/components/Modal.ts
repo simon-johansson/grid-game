@@ -11,6 +11,7 @@ export default abstract class Modal extends Component<{}> {
   protected imageURL: string;
   protected additionalModalClass: string = "";
   protected showButton: boolean = true;
+  protected closeOnOverlayClick: boolean = false;
   protected abstract title: string;
   protected abstract bodyText: string;
   protected abstract buttonText: string;
@@ -34,9 +35,11 @@ export default abstract class Modal extends Component<{}> {
 
   protected componentDidMount(): void {
     this.bindButtonEvent();
-    // this.bindClickEvent(overlayClass, this.closeModal.bind(this));
     this.bindClickEvent(closeClass, this.closeModal.bind(this));
     this.bindClickEvent(bodyClass, (e: MouseEvent) => e.stopPropagation());
+    if (this.closeOnOverlayClick) {
+      this.bindClickEvent(overlayClass, this.closeModal.bind(this));
+    }
   }
 
   protected bindButtonEvent(): void {
@@ -62,16 +65,19 @@ export default abstract class Modal extends Component<{}> {
   }
 
   protected getModalButton(): string {
-    return `
-      <div class="${buttonClass}">
-        <span class="${buttonTextClass}">${this.buttonText}</span>
-      </div>
-    `;
+    if (this.showButton) {
+      return `
+        <div class="${buttonClass}">
+          <span class="${buttonTextClass}">${this.buttonText}</span>
+        </div>
+      `;
+    }
+    return "";
   }
 
   protected onButtonClicked(): void {
     this.closeModal();
-  };
+  }
 
   protected closeModal(): void {
     if (this.onClose) this.onClose();
