@@ -1,11 +1,11 @@
 import Component from "./Component";
 
-const prevBtnClass = "prev";
-const nextBtnClass = "next";
-const restartBtnClass = "restart";
-const reviewBtnClass = "play";
-const editBtnClass = "edit";
-const currentLevelClass = "current-level";
+export const prevBtnClass = "prev";
+export const nextBtnClass = "next";
+export const restartBtnClass = "restart";
+export const reviewBtnClass = "play";
+export const editBtnClass = "edit";
+export const currentLevelClass = "current-level";
 
 interface ICallbacks {
   onPrevLevel?: () => void;
@@ -36,25 +36,25 @@ export default class LevelSelector extends Component<IProps> {
 
     return `
     <div class="inner-wrapper">
-      <span class="${prevBtnClass} ${!isPlaying && "disable"}">
+      <span class="${prevBtnClass} ${!isPlaying && "disabled"}">
         <img src="/assets/arrowThickLeft@3x.png" />
       </span>
 
       <span class="${currentLevelClass}"></span>
 
-      <span class="${nextBtnClass} ${!isPlaying && "disable"}">
+      <span class="${nextBtnClass} ${!isPlaying && "disabled"}">
         <img src="/assets/arrowThickLeft@3x.png" />
       </span>
 
-      <span class="${reviewBtnClass} ${!isEditing && "hide"}">
+      <span class="${reviewBtnClass} ${!isEditing && "hidden"}">
         <small>Test &#8594;</small>
       </span>
 
-      <span class="${editBtnClass} ${!isReviewing && "hide"}">
+      <span class="${editBtnClass} ${!isReviewing && "hidden"}">
         <small>&#8592; Edit</small>
       </span>
 
-      <span class="${restartBtnClass} ${isEditing && "hide"}">
+      <span class="${restartBtnClass} ${isEditing && "hidden"}">
         <img src="/assets/reload@3x.png" />
       </span>
     </div>
@@ -84,8 +84,8 @@ export default class LevelSelector extends Component<IProps> {
     this.getEl(currentLevelClass)!.textContent = "Review level";
   }
   private updatePlayingView(currentLevel: number, isFirstLevel: boolean, isLastLevel: boolean): void {
-    this.getEl(currentLevelClass)!.textContent = `Level ${currentLevel + 1}`;
-    this.getEl(prevBtnClass)!.className = `${prevBtnClass} ${isFirstLevel && "disable"}`;
-    this.getEl(nextBtnClass)!.className = `${nextBtnClass} ${isLastLevel && "disable"}`;
+    this.getEl(currentLevelClass)!.textContent = `Level ${currentLevel}`;
+    this.getEl(prevBtnClass)!.className = `${prevBtnClass} ${isFirstLevel && "disabled"}`;
+    this.getEl(nextBtnClass)!.className = `${nextBtnClass} ${isLastLevel && "disabled"}`;
   }
 }

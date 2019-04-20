@@ -10,14 +10,14 @@
     align-items: center;
   }
 
-  .hide,
-  .disable {
+  .hidden,
+  .disabled {
     pointer-events: none;
   }
-  .hide {
+  .hidden {
     display: none !important;
   }
-  .disable {
+  .disabled {
     opacity: 0;
   }
 
