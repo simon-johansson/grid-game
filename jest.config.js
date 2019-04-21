@@ -5,6 +5,7 @@ module.exports = {
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
   },
+  "setupFiles": ["jest-canvas-mock"],
   "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
   "testPathIgnorePatterns": ["/node_modules/", "testUtils.ts", "/dist/", "/.tmp/"],
   "moduleFileExtensions": [
