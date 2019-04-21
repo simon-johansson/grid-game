@@ -7,8 +7,9 @@ import LevelSelector from "../components/LevelSelector";
 import MinSelectionModal from "../components/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
 import debounce from "../utils/debounce";
+import setAppHTML from "../utils/setAppHTML";
+import setAppSceneClassName from "../utils/setAppSceneClassName";
 import GameBoard from "./gameboard/GameBoard";
-import setAppHTML from "./setAppHTML";
 
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -22,6 +23,7 @@ export default class Playable extends GameBoard {
       <div id="level-selection"></div>
       <div id="modal"></div>
     `);
+    setAppSceneClassName("playable");
     new Playable(interactor, router, options);
   }
 
@@ -58,9 +60,7 @@ export default class Playable extends GameBoard {
 
     window.addEventListener("resize", debounce(this.restartLevel.bind(this), 200));
 
-    (window as any).helperFunctions.clearLevel = () => {
-      this.updateComponents(this.interactor.cheatToClearLevel());
-    };
+    this.createHelperFunctions();
   }
 
   protected async startLevel(levelID?: string): Promise<void> {
@@ -192,5 +192,12 @@ export default class Playable extends GameBoard {
 
   private onInstall(): void {
     this.interactor.installer.showNativeInstallPrompt();
+  }
+
+  private createHelperFunctions(): void {
+    if ((window as any).helperFunctions === undefined) (window as any).helperFunctions = {};
+    (window as any).helperFunctions.clearLevel = () => {
+      this.updateComponents(this.interactor.cheatToClearLevel());
+    };
   }
 }

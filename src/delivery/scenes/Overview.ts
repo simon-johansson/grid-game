@@ -6,7 +6,8 @@ import StayInformedModal from "../components/StayInformedModal";
 import TopBar from "../components/TopBar";
 import { RouterPaths } from "../UI";
 import { sendEmail } from "../utils/sendEmail";
-import setAppHTML from "./setAppHTML";
+import setAppHTML from "../utils/setAppHTML";
+import setAppSceneClassName from "../utils/setAppSceneClassName";
 
 export interface IProps extends IOverviewData {}
 
@@ -18,6 +19,7 @@ export default class Overview extends Component<IProps> {
       <div id="overview"></div>
       <div id="modal"></div>
     `);
+    setAppSceneClassName("overview");
     new Overview(interactor, router);
   }
 

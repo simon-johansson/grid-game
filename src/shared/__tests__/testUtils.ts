@@ -155,7 +155,7 @@ export const getStorageMock = (data: string[] = []): IStorage => {
   };
 };
 
-export const getQuerystringMock = (level: any = {}): IQueryString => ({
+export const getQuerystringMock = (level: any = {}, options: { isEditMode?: boolean } = {}): IQueryString => ({
   getLevel: () => undefined,
   getLayout: () => undefined,
   setLayout: (layout: IGridLayout) => (level.layout = layout),
@@ -165,7 +165,7 @@ export const getQuerystringMock = (level: any = {}): IQueryString => ({
   setMoves: (moves: number) => (level.moves = moves),
   getLevelNumber: () => undefined,
   setLevelNumber: (num: number) => undefined,
-  getIsEditMode: () => undefined,
+  getIsEditMode: () => options.isEditMode,
   setIsEditMode: (bool: boolean) => undefined,
 });
 
