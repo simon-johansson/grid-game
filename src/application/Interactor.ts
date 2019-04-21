@@ -237,7 +237,7 @@ export default class Interactor {
       if (cachedLevel) this.storage.setCurrentLevel(cachedLevel);
       return cachedLevel;
     } catch (error) {
-      console.log("Failed to load current levels from service worker cache: ", error);
+      this.analytics.onError(`Failed to load current levels from service worker cache: ${error.toString()}`);
     }
     return locallyStoredLevel;
   }
@@ -251,7 +251,7 @@ export default class Interactor {
         return cachedLevels;
       }
     } catch (error) {
-      console.log("Failed to load completed levels from service worker cache: ", error);
+      this.analytics.onError(`Failed to load completed levels from service worker cache: ${error.toString()}`);
     }
     return locallyStoredLevels;
   }
