@@ -7,8 +7,8 @@ export type RouterPaths = "play" | "edit" | "overview";
 
 export default class UserInterface {
   constructor(private interactor: Interactor) {
-    // this.router(interactor.isInEditMode ? "edit" : "play");
-    this.router("overview");
+    this.router(interactor.isInEditMode ? "edit" : "play");
+    // this.router("overview");
   }
 
   // TODO: Bryt ut router till en egen komponent

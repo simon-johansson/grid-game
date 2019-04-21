@@ -159,3 +159,46 @@
     }
   }
 }
+
+.modal-body.about-modal {
+  p {
+    margin-bottom: 20px;
+  }
+
+  .sharing {
+
+    .sharing-button {
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
+      display: inline-block;
+      margin-right: 10px;
+      border-radius: 4px;
+      text-align: center;
+      padding: 5px 10px 5px 5px;
+
+      &::before {
+        content: "";
+        margin-right: 10px;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-size: 100%;
+        background-position: center;
+        vertical-align: bottom;
+      }
+    }
+    .facebook-share {
+      background-color: #365899;
+      &::before {
+        background: url("/assets/facebook.svg") no-repeat;
+      }
+    }
+    .twitter-share {
+      background-color: #55acee;
+      &::before {
+        background: url("/assets/twitter.svg") no-repeat;
+      }
+    }
+  }
+}
