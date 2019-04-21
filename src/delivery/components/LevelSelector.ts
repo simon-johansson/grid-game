@@ -47,11 +47,11 @@ export default class LevelSelector extends Component<IProps> {
       </span>
 
       <span class="${reviewBtnClass} ${!isEditing && "hidden"}">
-        <small>Test &#8594;</small>
+        <small>Test</small>
       </span>
 
       <span class="${editBtnClass} ${!isReviewing && "hidden"}">
-        <small>&#8592; Edit</small>
+        <small>Edit</small>
       </span>
 
       <span class="${restartBtnClass} ${isEditing && "hidden"}">

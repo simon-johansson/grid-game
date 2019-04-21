@@ -97,6 +97,12 @@
       }
     }
 
+    .play,
+    .edit {
+      align-self: center;
+      margin-right: 10px;
+    }
+
     .restart {
       img {
         width: 40px;
