@@ -1,10 +1,11 @@
 import Component from "./Component";
 
-const overlayClass = "overlay";
-const bodyClass = "modal-body";
-const buttonClass = "modal-button";
-const buttonTextClass = "modal-button-text";
-const closeClass = "close-cross";
+export const overlayClass = "overlay";
+export const bodyClass = "modal-body";
+export const titleClass = "modal-title";
+export const buttonClass = "modal-button";
+export const buttonTextClass = "modal-button-text";
+export const closeClass = "close-cross";
 
 export default abstract class Modal extends Component<{}> {
   protected wrapperElement: HTMLElement = document.getElementById("modal") as HTMLElement;
@@ -26,7 +27,7 @@ export default abstract class Modal extends Component<{}> {
     <div class="${overlayClass}">
       <div class="${bodyClass} ${this.additionalModalClass}">
         <figure class="${closeClass}">×</figure>
-        <h2>${this.title}</h2>
+        <h2 class="${titleClass}">${this.title}</h2>
         ${this.getModalBody()}
       </div>
     </div>

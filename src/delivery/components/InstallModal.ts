@@ -7,7 +7,6 @@ const iosInstructionsClass = "ios-instructions";
 const iosExportIconClass = "ios-export";
 
 export default class InstallModal extends Modal {
-  protected wrapperElement: HTMLElement = document.getElementById("modal") as HTMLElement;
   protected title = "Add to homescreen";
   protected bodyText = "You can add GridGame to your home screen to get the following perks.";
   protected buttonText = "Install now!";

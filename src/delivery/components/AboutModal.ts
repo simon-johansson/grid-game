@@ -5,7 +5,6 @@ const facebookBtn = "facebook-share";
 const twitterBtn = "twitter-share";
 
 export default class AboutModal extends Modal {
-  protected wrapperElement: HTMLElement = document.getElementById("modal") as HTMLElement;
   protected title = "About";
   protected bodyText = "";
   protected imageURL = "";
