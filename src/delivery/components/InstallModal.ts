@@ -1,10 +1,10 @@
 import Modal from "./Modal";
 
-const modalClass = "install-modal";
-const safariModalClass = "safari-specific";
-const perksListClass = "perks-list";
-const iosInstructionsClass = "ios-instructions";
-const iosExportIconClass = "ios-export";
+export const modalClass = "install-modal";
+export const safariModalClass = "safari-specific";
+export const perksListClass = "perks-list";
+export const iosInstructionsClass = "ios-instructions";
+export const iosExportIconClass = "ios-export";
 
 export default class InstallModal extends Modal {
   protected title = "Add to homescreen";
