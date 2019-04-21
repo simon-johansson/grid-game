@@ -42,6 +42,10 @@ describe("component/Modal", () => {
     expect(document.body.innerHTML).toContain("<img src=\"image.gif\">");
   });
 
+  test("apply additional modal class", () => {
+    expect(el(bodyClass).classList.contains('additional-class')).toEqual(true);
+  });
+
   test("close modal on cross clicked", () => {
     el(closeClass).click();
     expect(onCloseMock).toBeCalledTimes(1);
