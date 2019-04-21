@@ -3,8 +3,9 @@ import Interactor from "@application/Interactor";
 import { ILevelData, TileType } from "@application/interfaces";
 import EditorOptions from "../components/EditorOptions";
 import LevelSelector from "../components/LevelSelector";
+import setAppHTML from "../utils/setAppHTML";
+import setAppSceneClassName from "../utils/setAppSceneClassName";
 import GameBoard from "./gameboard/GameBoard";
-import setAppHTML from "./setAppHTML";
 
 export default class Editor extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void): void {
@@ -13,6 +14,7 @@ export default class Editor extends GameBoard {
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
     `);
+    setAppSceneClassName("editor");
     new Editor(interactor, router);
   }
 

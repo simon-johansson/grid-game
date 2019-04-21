@@ -7,8 +7,9 @@ import LevelSelector from "../components/LevelSelector";
 import MinSelectionModal from "../components/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
 import debounce from "../utils/debounce";
+import setAppHTML from "../utils/setAppHTML";
+import setAppSceneClassName from "../utils/setAppSceneClassName";
 import GameBoard from "./gameboard/GameBoard";
-import setAppHTML from "./setAppHTML";
 
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -17,14 +18,12 @@ function sleep(ms: number): Promise<void> {
 export default class Playable extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
     setAppHTML(`
-      <div id="header">
-        <div class="tab-button go-to-overview">Overview</div>
-      </div>
       <div id="moves-counter"></div>
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
       <div id="modal"></div>
     `);
+    setAppSceneClassName("playable");
     new Playable(interactor, router, options);
   }
 
@@ -44,6 +43,7 @@ export default class Playable extends GameBoard {
       onNextLevel: this.goToNextLevel.bind(this),
       onRestart: this.restartLevel.bind(this),
       onEditLevel: () => router("edit"),
+      onGoToOverview: () => this.router("overview"),
     });
 
     this.InstallModalComponent = new InstallModal({
@@ -58,14 +58,9 @@ export default class Playable extends GameBoard {
       onClose: this.onCloseMinSelectionModal.bind(this),
     });
 
-    // TODO: Gör snyggare, kanske borde vara i en komponent som heter Header
-    document.querySelector(".go-to-overview")!.addEventListener("click", () => this.router("overview"));
-
     window.addEventListener("resize", debounce(this.restartLevel.bind(this), 200));
 
-    (window as any).helperFunctions.clearLevel = () => {
-      this.updateComponents(this.interactor.cheatToClearLevel());
-    };
+    this.createHelperFunctions();
   }
 
   protected async startLevel(levelID?: string): Promise<void> {
@@ -197,5 +192,12 @@ export default class Playable extends GameBoard {
 
   private onInstall(): void {
     this.interactor.installer.showNativeInstallPrompt();
+  }
+
+  private createHelperFunctions(): void {
+    if ((window as any).helperFunctions === undefined) (window as any).helperFunctions = {};
+    (window as any).helperFunctions.clearLevel = () => {
+      this.updateComponents(this.interactor.cheatToClearLevel());
+    };
   }
 }

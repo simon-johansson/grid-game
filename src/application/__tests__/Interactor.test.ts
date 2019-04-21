@@ -153,7 +153,7 @@ describe("Interactor", () => {
 
     test("start init level", () => {
       const state = interactor.startCurrentLevel(presenters);
-      expect(state.name).toEqual(0);
+      expect(state.name).toEqual(1);
       expect(state.isFirstLevel).toEqual(true);
       expect(tilesHasRendered).toEqual(true);
     });
@@ -161,7 +161,7 @@ describe("Interactor", () => {
     test("get current after proceeded to next", () => {
       let state = interactor.startNextLevel(presenters);
       state = interactor.startCurrentLevel(presenters);
-      expect(state.name).toEqual(1);
+      expect(state.name).toEqual(2);
       expect(state.isFirstLevel).toEqual(false);
       expect(tilesHasRendered).toEqual(true);
     });
@@ -176,7 +176,7 @@ describe("Interactor", () => {
 
     test("start specific level", () => {
       const state = interactor.startSpecificLevel(presenters, "id-2");
-      expect(state.name).toEqual(2);
+      expect(state.name).toEqual(3);
     });
 
     test.skip("id supplied does not match any level", () => {});
@@ -189,7 +189,7 @@ describe("Interactor", () => {
 
     test("start next level from init", () => {
       const state = interactor.startNextLevel(presenters);
-      expect(state.name).toEqual(1);
+      expect(state.name).toEqual(2);
       expect(state.isFirstLevel).toEqual(false);
       expect(tilesHasRendered).toEqual(true);
     });
@@ -205,7 +205,7 @@ describe("Interactor", () => {
     test("start prev level after proceeded to next", () => {
       let state = interactor.startNextLevel(presenters);
       state = interactor.startPrevLevel(presenters);
-      expect(state.name).toEqual(0);
+      expect(state.name).toEqual(1);
       expect(state.isFirstLevel).toEqual(true);
       expect(tilesHasRendered).toEqual(true);
     });

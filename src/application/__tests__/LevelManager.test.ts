@@ -82,7 +82,7 @@ describe("LevelManager", () => {
 
     test("get first level if init level index is not supplied", () => {
       const level = levelManager.getCurrentLevel();
-      expect(level.name).toEqual(0);
+      expect(level.name).toEqual(1);
       expect(level.isFirstLevel).toEqual(true);
       expect(level.isLastLevel).toEqual(false);
     });
@@ -91,7 +91,7 @@ describe("LevelManager", () => {
       levelManager = new LevelManager(levels, "id-1");
       const level = levelManager.getCurrentLevel();
       expect(level.id).toEqual("id-1");
-      expect(level.name).toEqual(1);
+      expect(level.name).toEqual(2);
       expect(level.isFirstLevel).toEqual(false);
       expect(level.isLastLevel).toEqual(false);
     });
@@ -118,7 +118,7 @@ describe("LevelManager", () => {
 
     test("get next level if possible", () => {
       const level = levelManager.nextLevel;
-      expect(level.name).toEqual(1);
+      expect(level.name).toEqual(2);
     });
 
     test("can not go past last level", () => {
@@ -139,7 +139,7 @@ describe("LevelManager", () => {
     test("get prev level if possible", () => {
       levelManager = new LevelManager(levels, "id-1");
       const level = levelManager.previousLevel;
-      expect(level.name).toEqual(0);
+      expect(level.name).toEqual(1);
     });
 
     test("can not go below first level", () => {

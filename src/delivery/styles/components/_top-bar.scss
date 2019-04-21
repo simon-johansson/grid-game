@@ -1,0 +1,48 @@
+#top-bar {
+  .tab-button {
+    position: fixed;
+    cursor: pointer;
+    width: auto;
+    border: 0;
+    font-size: 14px;
+    background: #2c2c2c;
+    color: #ffffff;
+    padding: 5px 20px;
+    margin: 0;
+    z-index: 100;
+    border-radius: 5px 5px 0 0;
+    border-radius: 0 0 5px 5px;
+    top: 0;
+    background: #efefef;
+    color: #3d3d3d;
+    font-weight: bold;
+    display: flex;
+
+    &::before {
+      content: "";
+      position: relative;
+      display: inline-block;
+      background-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+
+    &.about {
+      left: 10px;
+
+      &::before {
+        background-image: url(/assets/iconInfo@2x.png);
+      }
+    }
+
+    &.feedback {
+      right: 10px;
+
+      &::before {
+        content: "";
+        background-image: url(/assets/conversation@2x.png);
+      }
+    }
+  }
+}

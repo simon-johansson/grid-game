@@ -3,9 +3,11 @@ import Interactor from "@application/Interactor";
 import { IOverviewData, IStage } from "@application/interfaces";
 import Component from "../components/Component";
 import StayInformedModal from "../components/StayInformedModal";
+import TopBar from "../components/TopBar";
 import { RouterPaths } from "../UI";
 import { sendEmail } from "../utils/sendEmail";
-import setAppHTML from "./setAppHTML";
+import setAppHTML from "../utils/setAppHTML";
+import setAppSceneClassName from "../utils/setAppSceneClassName";
 
 export interface IProps extends IOverviewData {}
 
@@ -13,14 +15,17 @@ export interface IProps extends IOverviewData {}
 export default class Overview extends Component<IProps> {
   public static setScene(interactor: Interactor, router: (path: RouterPaths, options?: any) => void): void {
     setAppHTML(`
+      <div id="top-bar"></div>
       <div id="overview"></div>
       <div id="modal"></div>
     `);
+    setAppSceneClassName("overview");
     new Overview(interactor, router);
   }
 
   protected wrapperElement: HTMLElement = document.getElementById("overview") as HTMLElement;
   private StayInformedModalComponent: StayInformedModal;
+  private TopBarComponent: TopBar;
   private stages: IStage[];
   private activeStage: IStage;
 
@@ -40,6 +45,9 @@ export default class Overview extends Component<IProps> {
           });
         },
       });
+
+      this.TopBarComponent = new TopBar();
+      this.TopBarComponent.render({});
     });
   }
 

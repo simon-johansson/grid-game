@@ -169,7 +169,7 @@ export default class LevelManager {
   private get level(): Level {
     const level = this.levels[this.currentLevelIndex];
     return LevelManager.newLevel(level, {
-      name: this.currentLevelIndex,
+      name: this.currentLevelIndex + 1,
       hasCompleted: this.hasCompleted(level.id),
       isCurrentlyPlaying: true,
       isFirst: this.isPlayingFirstLevel,

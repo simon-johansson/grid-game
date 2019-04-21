@@ -6,14 +6,18 @@
   align-items: flex-end;
   justify-content: center;
 
-  .hide,
-  .disable {
+  @include respond-above(sm) {
+    align-items: center;
+  }
+
+  .hidden,
+  .disabled {
     pointer-events: none;
   }
-  .hide {
+  .hidden {
     display: none !important;
   }
-  .disable {
+  .disabled {
     opacity: 0;
   }
 
@@ -22,6 +26,7 @@
     flex-direction: row;
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
 
     @include respond-below(sm) {
       max-width: 350px;
@@ -63,9 +68,39 @@
     }
 
     .current-level {
-      @include respond-above(sm) {
-        font-size: 48px;
+      border: 0.5px solid lighten($brownGrey, 20);
+      border-radius: 4px;
+      padding: 8px 16px;
+
+      &::after {
+        content: "";
+        display: inline-block;
+        margin: 0 0 2px 12px;
+        background-image: url(/assets/back@2x.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100%;
+        width: 8px;
+        height: 12px;
+        transform: rotate(-90deg);
       }
+
+      @include respond-above(sm) {
+        line-height: auto;
+        font-size: 48px;
+
+        &::after {
+          margin: 0 5px 5px 20px;
+          width: 15px;
+          height: 23px;
+        }
+      }
+    }
+
+    .play,
+    .edit {
+      align-self: center;
+      margin-right: 10px;
     }
 
     .restart {

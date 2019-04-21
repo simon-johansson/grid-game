@@ -6,3 +6,4 @@ export default function(html: string): void {
   newDiv.innerHTML = html;
   topLevelEl.parentNode!.replaceChild(newDiv, topLevelEl);
 }
+

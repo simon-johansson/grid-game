@@ -1,16 +1,18 @@
 import Component from "./Component";
 
-const overlayClass = "overlay";
-const bodyClass = "modal-body";
-const buttonClass = "modal-button";
-const buttonTextClass = "modal-button-text";
-const closeClass = "close-cross";
+export const overlayClass = "overlay";
+export const bodyClass = "modal-body";
+export const titleClass = "modal-title";
+export const buttonClass = "modal-button";
+export const buttonTextClass = "modal-button-text";
+export const closeClass = "close-cross";
 
 export default abstract class Modal extends Component<{}> {
   protected wrapperElement: HTMLElement = document.getElementById("modal") as HTMLElement;
   protected imageURL: string;
   protected additionalModalClass: string = "";
   protected showButton: boolean = true;
+  protected closeOnOverlayClick: boolean = false;
   protected abstract title: string;
   protected abstract bodyText: string;
   protected abstract buttonText: string;
@@ -25,7 +27,7 @@ export default abstract class Modal extends Component<{}> {
     <div class="${overlayClass}">
       <div class="${bodyClass} ${this.additionalModalClass}">
         <figure class="${closeClass}">×</figure>
-        <h2>${this.title}</h2>
+        <h2 class="${titleClass}">${this.title}</h2>
         ${this.getModalBody()}
       </div>
     </div>
@@ -34,9 +36,11 @@ export default abstract class Modal extends Component<{}> {
 
   protected componentDidMount(): void {
     this.bindButtonEvent();
-    // this.bindClickEvent(overlayClass, this.closeModal.bind(this));
     this.bindClickEvent(closeClass, this.closeModal.bind(this));
     this.bindClickEvent(bodyClass, (e: MouseEvent) => e.stopPropagation());
+    if (this.closeOnOverlayClick) {
+      this.bindClickEvent(overlayClass, this.closeModal.bind(this));
+    }
   }
 
   protected bindButtonEvent(): void {
@@ -62,16 +66,19 @@ export default abstract class Modal extends Component<{}> {
   }
 
   protected getModalButton(): string {
-    return `
-      <div class="${buttonClass}">
-        <span class="${buttonTextClass}">${this.buttonText}</span>
-      </div>
-    `;
+    if (this.showButton) {
+      return `
+        <div class="${buttonClass}">
+          <span class="${buttonTextClass}">${this.buttonText}</span>
+        </div>
+      `;
+    }
+    return "";
   }
 
   protected onButtonClicked(): void {
     this.closeModal();
-  };
+  }
 
   protected closeModal(): void {
     if (this.onClose) this.onClose();

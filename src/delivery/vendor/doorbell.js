@@ -1,6 +1,7 @@
 window.doorbellOptions = {
   id: '9725',
-  appKey: '13pIkJLw6oTmqb1MCvqThyMF75Uxgol1YC4iYZ0RwXmdxahx954COFETzuCRxfh2'
+  appKey: '13pIkJLw6oTmqb1MCvqThyMF75Uxgol1YC4iYZ0RwXmdxahx954COFETzuCRxfh2',
+  hideButton: true,
 };
 (function (w, d, t) {
   var hasLoaded = false;

@@ -5,7 +5,6 @@ const emailInputClass = "email-address";
 const submitFeedbackClass = "submit-feedback";
 
 export default class StayInformedModal extends Modal {
-  protected wrapperElement: HTMLElement = document.getElementById("modal") as HTMLElement;
   protected title = "Extra levels";
   protected bodyText = `
     We are working on adding more levels.
