@@ -8,7 +8,9 @@ export const buttonTextClass = "modal-button-text";
 export const closeClass = "close-cross";
 
 export default abstract class Modal extends Component<{}> {
-  protected wrapperElement: HTMLElement = document.getElementById("modal") as HTMLElement;
+  public static id = "modal";
+  public static outerHTML = `<div id="${Modal.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(Modal.id) as HTMLElement;
   protected imageURL: string;
   protected additionalModalClass: string = "";
   protected showButton: boolean = true;

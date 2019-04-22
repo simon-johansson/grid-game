@@ -13,7 +13,9 @@ export interface IProps {
 }
 
 export default class EditorOptions extends Component<IProps> {
-  protected wrapperElement: HTMLElement = document.getElementById("editor-options") as HTMLElement;
+  public static id = "editor-options";
+  public static outerHTML = `<div id="${EditorOptions.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(EditorOptions.id) as HTMLElement;
   private tile: TileType = TileType.Regular;
   private rules: IGameRules = {};
 

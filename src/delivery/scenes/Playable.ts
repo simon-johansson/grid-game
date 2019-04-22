@@ -18,10 +18,10 @@ function sleep(ms: number): Promise<void> {
 export default class Playable extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
     setAppHTML(`
-      <div id="moves-counter"></div>
-      <div id="canvas-container"></div>
-      <div id="level-selection"></div>
-      <div id="modal"></div>
+      ${MovesCounter.outerHTML}
+      ${Playable.outerHTML}
+      ${LevelSelector.outerHTML}
+      ${HowToPlayModal.outerHTML}
     `);
     setAppSceneClassName("playable-scene");
     new Playable(interactor, router, options);

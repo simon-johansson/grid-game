@@ -13,17 +13,20 @@ export interface IProps extends IOverviewData {}
 
 // TODO: Spara selectorer i variabler utanför klassen
 export default class Overview extends Component<IProps> {
+  public static id = "overview";
+  public static outerHTML = `<div id="${Overview.id}"></div>`;
+
   public static setScene(interactor: Interactor, router: (path: RouterPaths, options?: any) => void): void {
     setAppHTML(`
-      <div id="top-bar"></div>
-      <div id="overview"></div>
-      <div id="modal"></div>
+      ${TopBar.outerHTML}
+      ${Overview.outerHTML}
+      ${StayInformedModal.outerHTML}
     `);
     setAppSceneClassName("overview-scene");
     new Overview(interactor, router);
   }
 
-  protected wrapperElement: HTMLElement = document.getElementById("overview") as HTMLElement;
+  protected wrapperElement: HTMLElement = document.getElementById(Overview.id) as HTMLElement;
   private StayInformedModalComponent: StayInformedModal;
   private TopBarComponent: TopBar;
   private stages: IStage[];

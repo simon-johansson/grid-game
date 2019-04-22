@@ -3,7 +3,9 @@ import { getSelectionPresenter, getTilePresenter } from "../../game_presenters/i
 import CanvasElementHandler, { NextLevelDirection } from "./CanvasElementHandler";
 
 export default abstract class GameBoard {
-  protected wrapperElement: HTMLElement = document.getElementById("canvas-container") as HTMLElement;
+  public static id = "canvas-container";
+  public static outerHTML = `<div id="${GameBoard.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(GameBoard.id) as HTMLElement;
   protected innerWrapperClass = "inner-wrapper";
   protected tileCanvasClass = "tile-canvas";
   protected selectionCanvasClass = "selection-canvas";

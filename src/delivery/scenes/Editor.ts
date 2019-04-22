@@ -10,9 +10,9 @@ import GameBoard from "./gameboard/GameBoard";
 export default class Editor extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void): void {
     setAppHTML(`
-      <div id="editor-options"></div>
-      <div id="canvas-container"></div>
-      <div id="level-selection"></div>
+      ${EditorOptions.outerHTML}
+      ${Editor.outerHTML}
+      ${LevelSelector.outerHTML}
     `);
     setAppSceneClassName("editor-scene");
     new Editor(interactor, router);

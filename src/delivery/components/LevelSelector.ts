@@ -25,7 +25,9 @@ export interface IProps {
 }
 
 export default class LevelSelector extends Component<IProps> {
-  protected wrapperElement: HTMLElement = document.getElementById("level-selection") as HTMLElement;
+  public static id = "level-selection";
+  public static outerHTML = `<div id="${LevelSelector.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(LevelSelector.id) as HTMLElement;
 
   constructor(private callbacks: ICallbacks) {
     super();
