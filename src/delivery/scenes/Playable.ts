@@ -35,14 +35,20 @@ export default class Playable extends GameBoard {
 
   constructor(interactor: Interactor, private router: (path: string) => void, options: { levelID?: string } = {}) {
     super(interactor, options.levelID);
+    this.createComponents();
+    window.addEventListener("resize", debounce(this.restartLevel.bind(this), 200));
+    this.createHelperFunctions();
+    this.startLevel(options.levelID);
+  }
 
+  protected createComponents(): void {
     this.MovesCounterComponent = new MovesCounter();
 
     this.LevelSelectorComponent = new LevelSelector({
       onPrevLevel: this.goToPrevLevel.bind(this),
       onNextLevel: this.goToNextLevel.bind(this),
       onRestart: this.restartLevel.bind(this),
-      onEditLevel: () => router("edit"),
+      onEditLevel: () => this.router("edit"),
       onGoToOverview: () => this.router("overview"),
     });
 
@@ -57,10 +63,6 @@ export default class Playable extends GameBoard {
     this.MinSelectionModalComponent = new MinSelectionModal({
       onClose: this.onCloseMinSelectionModal.bind(this),
     });
-
-    window.addEventListener("resize", debounce(this.restartLevel.bind(this), 200));
-
-    this.createHelperFunctions();
   }
 
   protected async startLevel(levelID?: string): Promise<void> {

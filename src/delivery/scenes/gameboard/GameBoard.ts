@@ -21,13 +21,8 @@ export default abstract class GameBoard {
     );
     this.canvasHandler.createInitialElements();
     this.bindEvents();
-    // TODO: Ladda banorna någon annan stans, mer top level
-    this.interactor.loadLevels().then(() => {
-      this.startLevel(levelID);
-    });
   }
 
-  protected abstract startLevel(levelID?: string): void;
   protected abstract processSelectionStart(x: number, y: number): void;
   protected abstract processSelectionMove(x: number, y: number): void;
   protected abstract processSelectionEnd(): void;

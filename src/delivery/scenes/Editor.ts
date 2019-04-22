@@ -33,6 +33,8 @@ export default class Editor extends GameBoard {
     this.LevelSelectorComponent = new LevelSelector({
       onReviewLevel: () => router("play"),
     });
+
+    this.startLevel();
   }
 
   protected startLevel(): void {

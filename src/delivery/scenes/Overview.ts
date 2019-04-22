@@ -32,23 +32,21 @@ export default class Overview extends Component<IProps> {
   constructor(private interactor: Interactor, private router: (path: RouterPaths, options?: any) => void) {
     super();
 
-    this.interactor.loadLevels().then(() => {
-      const data = this.interactor.getOverviewData();
-      this.stages = data.stages;
-      this.activeStage = this.stages.find(stage => stage.isPlaying) || this.stages[0];
-      this.render(data);
+    const data = this.interactor.getOverviewData();
+    this.stages = data.stages;
+    this.activeStage = this.stages.find(stage => stage.isPlaying) || this.stages[0];
+    this.render(data);
 
-      this.StayInformedModalComponent = new StayInformedModal({
-        onSubmit: (address: string) => {
-          return sendEmail(address, {
-            clearedLevels: data.cleared,
-          });
-        },
-      });
-
-      this.TopBarComponent = new TopBar();
-      this.TopBarComponent.render({});
+    this.StayInformedModalComponent = new StayInformedModal({
+      onSubmit: (address: string) => {
+        return sendEmail(address, {
+          clearedLevels: data.cleared,
+        });
+      },
     });
+
+    this.TopBarComponent = new TopBar();
+    this.TopBarComponent.render({});
   }
 
   protected HTML({ cleared, total }: IProps): string {
