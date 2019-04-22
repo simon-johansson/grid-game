@@ -1,4 +1,4 @@
-import Component from "./Component";
+import Component from "../Component";
 
 export const overlayClass = "overlay";
 export const bodyClass = "modal-body";

@@ -1,10 +1,10 @@
 /* tslint:disable: no-unused-expression */
 import Interactor from "@application/Interactor";
 import { ILevelData, IUserInformation } from "@application/interfaces";
-import HowToPlayModal from "../components/HowToPlayModal";
-import InstallModal from "../components/InstallModal";
 import LevelSelector from "../components/LevelSelector";
-import MinSelectionModal from "../components/MinSelectionModal";
+import HowToPlayModal from "../components/Modals/HowToPlayModal";
+import InstallModal from "../components/Modals/InstallModal";
+import MinSelectionModal from "../components/Modals/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
 import debounce from "../utils/debounce";
 import setAppHTML from "../utils/setAppHTML";

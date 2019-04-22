@@ -2,7 +2,7 @@
 import Interactor from "@application/Interactor";
 import { IOverviewData, IStage } from "@application/interfaces";
 import Component from "../components/Component";
-import StayInformedModal from "../components/StayInformedModal";
+import StayInformedModal from "../components/Modals/StayInformedModal";
 import TopBar from "../components/TopBar";
 import { RouterPaths } from "../UI";
 import { sendEmail } from "../utils/sendEmail";

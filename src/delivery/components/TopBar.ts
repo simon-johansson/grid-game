@@ -1,5 +1,5 @@
-import AboutModal from "./AboutModal";
 import Component from "./Component";
+import AboutModal from "./Modals/AboutModal";
 
 export const aboutBtnClass = "about";
 export const feedbackBtnClass = "feedback";
