@@ -19,7 +19,7 @@ export default class Overview extends Component<IProps> {
       <div id="overview"></div>
       <div id="modal"></div>
     `);
-    setAppSceneClassName("overview");
+    setAppSceneClassName("overview-scene");
     new Overview(interactor, router);
   }
 

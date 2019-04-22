@@ -23,7 +23,7 @@ export default class Playable extends GameBoard {
       <div id="level-selection"></div>
       <div id="modal"></div>
     `);
-    setAppSceneClassName("playable");
+    setAppSceneClassName("playable-scene");
     new Playable(interactor, router, options);
   }
 

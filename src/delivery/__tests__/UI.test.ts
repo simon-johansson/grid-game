@@ -26,7 +26,7 @@ describe("UI", () => {
       getInstallerMock(),
       );
     const ui = new UI(interactor);
-    expect(isScene("playable")).toEqual(true);
+    expect(isScene("playable-scene")).toEqual(true);
   });
 
   test("start editor scene if in edit mode", () => {
@@ -38,6 +38,6 @@ describe("UI", () => {
       getInstallerMock(),
     );
     const ui = new UI(interactor);
-    expect(isScene("editor")).toEqual(true);
+    expect(isScene("editor-scene")).toEqual(true);
   });
 });

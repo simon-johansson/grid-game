@@ -14,7 +14,7 @@ export default class Editor extends GameBoard {
       <div id="canvas-container"></div>
       <div id="level-selection"></div>
     `);
-    setAppSceneClassName("editor");
+    setAppSceneClassName("editor-scene");
     new Editor(interactor, router);
   }
 
