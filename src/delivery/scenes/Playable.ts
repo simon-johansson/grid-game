@@ -1,19 +1,15 @@
 /* tslint:disable: no-unused-expression */
 import Interactor from "@application/Interactor";
-import { ILevelData, IUserInformation } from "@application/interfaces";
+import { ILevelData } from "@application/interfaces";
 import LevelSelector from "../components/LevelSelector";
 import HowToPlayModal from "../components/Modals/HowToPlayModal";
-import InstallModal from "../components/Modals/InstallModal";
-import MinSelectionModal from "../components/Modals/MinSelectionModal";
 import MovesCounter from "../components/MovesCounter";
+import PlayableModalHelper from "../components/PlayableModalHelper";
 import debounce from "../utils/debounce";
 import setAppHTML from "../utils/setAppHTML";
 import setAppSceneClassName from "../utils/setAppSceneClassName";
+import sleep from "../utils/sleep";
 import GameBoard from "./gameboard/GameBoard";
-
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 export default class Playable extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void, options: { levelID: string }): void {
@@ -29,9 +25,7 @@ export default class Playable extends GameBoard {
 
   private MovesCounterComponent: MovesCounter;
   private LevelSelectorComponent: LevelSelector;
-  private InstallModalComponent: InstallModal;
-  private HowToPlayModalComponent: HowToPlayModal;
-  private MinSelectionModalComponent: MinSelectionModal;
+  private PlayableModalHelperComponent: PlayableModalHelper;
 
   constructor(interactor: Interactor, private router: (path: string) => void, options: { levelID?: string } = {}) {
     super(interactor, options.levelID);
@@ -52,17 +46,10 @@ export default class Playable extends GameBoard {
       onGoToOverview: () => this.router("overview"),
     });
 
-    this.InstallModalComponent = new InstallModal({
-      installViaButton: this.interactor.installer.canBeInstalledViaNativeInstallPromp,
-      onClose: this.onCloseInstallModal.bind(this),
-      onInstall: this.onInstall.bind(this),
-    });
-
-    this.HowToPlayModalComponent = new HowToPlayModal();
-
-    this.MinSelectionModalComponent = new MinSelectionModal({
-      onClose: this.onCloseMinSelectionModal.bind(this),
-    });
+    this.PlayableModalHelperComponent = new PlayableModalHelper(
+      this.interactor.installer,
+      this.interactor.setUserData.bind(this.interactor),
+    );
   }
 
   protected async startLevel(levelID?: string): Promise<void> {
@@ -128,26 +115,13 @@ export default class Playable extends GameBoard {
 
   private async onNewLevel(level: ILevelData): Promise<void> {
     this.updateComponents(level);
-    this.checkIfShouldShowModal(level, await this.interactor.getUserData());
+    this.PlayableModalHelperComponent.checkIfShouldShowModal(level, await this.interactor.getUserData());
   }
 
   private getSelectionArguments = (x: number, y: number): [number, number] => [
     this.convertAbsoluteOffsetToProcent(x),
     this.convertAbsoluteOffsetToProcent(y),
   ];
-
-  private async checkIfShouldShowModal(level: ILevelData, userInfo: IUserInformation): Promise<void> {
-    if (this.shouldShowHowToPlayModal(level)) {
-      await sleep(500);
-      this.HowToPlayModalComponent.render({});
-    } else if (this.shouldShowMinSelectionModal(level, userInfo)) {
-      await sleep(500);
-      this.MinSelectionModalComponent.render({});
-    } else if (this.shouldShowInstallerModal(userInfo)) {
-      await sleep(500);
-      this.InstallModalComponent.render({});
-    }
-  }
 
   private checkIfLevelHasEnded(level: ILevelData): void {
     if (this.shouldProcedeToNextLevel(level)) this.goToNextLevel(500);
@@ -160,40 +134,6 @@ export default class Playable extends GameBoard {
 
   private shouldRestartCurrentLevel(level: ILevelData): boolean {
     return level.selections.left === 0;
-  }
-
-  private shouldShowHowToPlayModal({ isFirstLevel, isCleared }: ILevelData): boolean {
-    return isFirstLevel !== undefined && isFirstLevel && !isCleared;
-  }
-
-  private shouldShowMinSelectionModal(level: ILevelData, userInfo: IUserInformation): boolean {
-    return level.rules.minSelection > 1 && !userInfo.hasViewedMinSelectionInfo;
-  }
-
-  private shouldShowInstallerModal({ hasViewedInstallationInfo, clearedLevels }: IUserInformation): boolean {
-    const { canBeInstalled } = this.interactor.installer;
-    return canBeInstalled && !hasViewedInstallationInfo && clearedLevels >= 15;
-  }
-
-  private onCloseMinSelectionModal(): void {
-    this.interactor.setUserData({
-      hasViewedMinSelectionInfo: true,
-    });
-  }
-
-  private onCloseInstallModal(): void {
-    const isPersisted = false;
-    this.interactor.setUserData(
-      {
-        hasViewedInstallationInfo: true,
-      },
-      isPersisted,
-    );
-    window.analytics.onCloseInstallModal();
-  }
-
-  private onInstall(): void {
-    this.interactor.installer.showNativeInstallPrompt();
   }
 
   private createHelperFunctions(): void {
