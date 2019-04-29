@@ -12,8 +12,10 @@ const counterClass = "counter-number";
 const minSelectionWrapperClass = "min-selection-indicator";
 const minSelectionNumberClass = "min-selection-number";
 
-export default class MovesLeft extends Component<IProps> {
-  protected wrapperElement: HTMLElement = document.getElementById("moves-counter") as HTMLElement;
+export default class MovesCounter extends Component<IProps> {
+  public static id = "moves-counter";
+  public static outerHTML = `<div id="${MovesCounter.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(MovesCounter.id) as HTMLElement;
 
   public get counterWrapperElement(): HTMLElement {
     return this.getEl(counterWrapperClass) as HTMLElement;

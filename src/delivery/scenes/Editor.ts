@@ -10,11 +10,11 @@ import GameBoard from "./gameboard/GameBoard";
 export default class Editor extends GameBoard {
   public static setScene(interactor: Interactor, router: (path: string) => void): void {
     setAppHTML(`
-      <div id="editor-options"></div>
-      <div id="canvas-container"></div>
-      <div id="level-selection"></div>
+      ${EditorOptions.outerHTML}
+      ${Editor.outerHTML}
+      ${LevelSelector.outerHTML}
     `);
-    setAppSceneClassName("editor");
+    setAppSceneClassName("editor-scene");
     new Editor(interactor, router);
   }
 
@@ -33,6 +33,8 @@ export default class Editor extends GameBoard {
     this.LevelSelectorComponent = new LevelSelector({
       onReviewLevel: () => router("play"),
     });
+
+    this.startLevel();
   }
 
   protected startLevel(): void {

@@ -2,7 +2,7 @@
 import Interactor from "@application/Interactor";
 import { IOverviewData, IStage } from "@application/interfaces";
 import Component from "../components/Component";
-import StayInformedModal from "../components/StayInformedModal";
+import StayInformedModal from "../components/Modals/StayInformedModal";
 import TopBar from "../components/TopBar";
 import { RouterPaths } from "../UI";
 import { sendEmail } from "../utils/sendEmail";
@@ -13,17 +13,20 @@ export interface IProps extends IOverviewData {}
 
 // TODO: Spara selectorer i variabler utanför klassen
 export default class Overview extends Component<IProps> {
+  public static id = "overview";
+  public static outerHTML = `<div id="${Overview.id}"></div>`;
+
   public static setScene(interactor: Interactor, router: (path: RouterPaths, options?: any) => void): void {
     setAppHTML(`
-      <div id="top-bar"></div>
-      <div id="overview"></div>
-      <div id="modal"></div>
+      ${TopBar.outerHTML}
+      ${Overview.outerHTML}
+      ${StayInformedModal.outerHTML}
     `);
-    setAppSceneClassName("overview");
+    setAppSceneClassName("overview-scene");
     new Overview(interactor, router);
   }
 
-  protected wrapperElement: HTMLElement = document.getElementById("overview") as HTMLElement;
+  protected wrapperElement: HTMLElement = document.getElementById(Overview.id) as HTMLElement;
   private StayInformedModalComponent: StayInformedModal;
   private TopBarComponent: TopBar;
   private stages: IStage[];
@@ -32,23 +35,21 @@ export default class Overview extends Component<IProps> {
   constructor(private interactor: Interactor, private router: (path: RouterPaths, options?: any) => void) {
     super();
 
-    this.interactor.loadLevels().then(() => {
-      const data = this.interactor.getOverviewData();
-      this.stages = data.stages;
-      this.activeStage = this.stages.find(stage => stage.isPlaying) || this.stages[0];
-      this.render(data);
+    const data = this.interactor.getOverviewData();
+    this.stages = data.stages;
+    this.activeStage = this.stages.find(stage => stage.isPlaying) || this.stages[0];
+    this.render(data);
 
-      this.StayInformedModalComponent = new StayInformedModal({
-        onSubmit: (address: string) => {
-          return sendEmail(address, {
-            clearedLevels: data.cleared,
-          });
-        },
-      });
-
-      this.TopBarComponent = new TopBar();
-      this.TopBarComponent.render({});
+    this.StayInformedModalComponent = new StayInformedModal({
+      onSubmit: (address: string) => {
+        return sendEmail(address, {
+          clearedLevels: data.cleared,
+        });
+      },
     });
+
+    this.TopBarComponent = new TopBar();
+    this.TopBarComponent.render({});
   }
 
   protected HTML({ cleared, total }: IProps): string {

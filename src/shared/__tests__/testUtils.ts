@@ -196,6 +196,19 @@ export const get5x5TypedLayout = (type: TileType) =>
     return Array.from({ length: 5 }, () => type);
   }) as ITypedGridLayout;
 
+export const getDefaultGameLevels = (amount: number): IGameLevel[] => {
+  const levelDefaults = {
+    rules: new Rules(),
+    moves: 3,
+  };
+
+  return Array.from({ length: amount }, (el, index) => ({
+    ...levelDefaults,
+    layout: defaultLayout,
+    id: `id-${index}`,
+  })) as IGameLevel[];
+};
+
 export const defaultLayout: IGridLayout = [
   ["r", "r", "r", "r", "r"],
   ["r", "r", "r", "r", "r"],

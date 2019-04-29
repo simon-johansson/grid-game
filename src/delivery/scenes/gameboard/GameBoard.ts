@@ -3,7 +3,9 @@ import { getSelectionPresenter, getTilePresenter } from "../../game_presenters/i
 import CanvasElementHandler, { NextLevelDirection } from "./CanvasElementHandler";
 
 export default abstract class GameBoard {
-  protected wrapperElement: HTMLElement = document.getElementById("canvas-container") as HTMLElement;
+  public static id = "canvas-container";
+  public static outerHTML = `<div id="${GameBoard.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(GameBoard.id) as HTMLElement;
   protected innerWrapperClass = "inner-wrapper";
   protected tileCanvasClass = "tile-canvas";
   protected selectionCanvasClass = "selection-canvas";
@@ -21,13 +23,8 @@ export default abstract class GameBoard {
     );
     this.canvasHandler.createInitialElements();
     this.bindEvents();
-    // TODO: Ladda banorna någon annan stans, mer top level
-    this.interactor.loadLevels().then(() => {
-      this.startLevel(levelID);
-    });
   }
 
-  protected abstract startLevel(levelID?: string): void;
   protected abstract processSelectionStart(x: number, y: number): void;
   protected abstract processSelectionMove(x: number, y: number): void;
   protected abstract processSelectionEnd(): void;
