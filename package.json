@@ -8,7 +8,7 @@
     "url": "https://github.com/simon-johansson/grid-game"
   },
   "engines": {
-    "node": "10.12.0"
+    "node": "11.14.0"
   },
   "scripts": {
     "start": "node ./server",
