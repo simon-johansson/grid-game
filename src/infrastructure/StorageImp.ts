@@ -10,6 +10,7 @@ export default class StorageIml implements IStorage {
     hasViewedMinSelectionInfo: false,
     hasViewedInstallationInfo: false,
   };
+  private sessionUserInformation: Partial<ISettableUserInformation> = {};
 
   constructor() {
     localforage.config({
@@ -36,16 +37,15 @@ export default class StorageIml implements IStorage {
     if (persisted) {
       return localforage.setItem(this.userInformationKey, { ...userInfo, ...info });
     } else {
-      this.defaultUserInformation = { ...this.defaultUserInformation, ...info };
-      return Promise.resolve(this.defaultUserInformation);
+      this.sessionUserInformation = { ...info };
+      return Promise.resolve({ ...this.defaultUserInformation, ...this.sessionUserInformation });
     }
   }
 
   public async getUserInformation(): Promise<IUserInformation> {
     const data = await localforage.getItem<ISettableUserInformation>(this.userInformationKey);
     const cleared = (await this.getCompletedLevels()) || [];
-
-    return { ...this.defaultUserInformation, ...data, clearedLevels: cleared.length };
+    return { ...this.defaultUserInformation, ...data, ...this.sessionUserInformation, clearedLevels: cleared.length };
   }
 
   public async onLevelComplete(levelID: string): Promise<string[]> {
