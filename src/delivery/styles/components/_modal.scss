@@ -163,6 +163,13 @@
 .modal-body.about-modal {
   p {
     margin-bottom: 20px;
+
+    a,
+    a:visited {
+      color: $coolBlue;
+      font-weight: bold;
+      text-decoration: none;
+    }
   }
 
   .sharing {

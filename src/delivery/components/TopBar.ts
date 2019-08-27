@@ -1,11 +1,13 @@
-import AboutModal from "./AboutModal";
 import Component from "./Component";
+import AboutModal from "./Modals/AboutModal";
 
 export const aboutBtnClass = "about";
 export const feedbackBtnClass = "feedback";
 
 export default class TopBar extends Component<{}> {
-  protected wrapperElement: HTMLElement = document.getElementById("top-bar") as HTMLElement;
+  public static id = "top-bar";
+  public static outerHTML = `<div id="${TopBar.id}"></div>`;
+  protected wrapperElement: HTMLElement = document.getElementById(TopBar.id) as HTMLElement;
   private AboutModalComponent = new AboutModal();
 
   constructor() {
