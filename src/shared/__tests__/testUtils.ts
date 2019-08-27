@@ -11,6 +11,9 @@ import {
   ISelectionPresenter,
   ISelectionPresenterConstructor,
   IStorage,
+  ITileGroupPresentationData,
+  ITileGroupPresenter,
+  ITileGroupPresenterConstructor,
   ITilePresenter,
   ITilePresenterConstructor,
   ITypedGridLayout,
@@ -69,6 +72,18 @@ export const getSelectionPresenter = (
 ): ISelectionPresenterConstructor => {
   return class SelectionPresenter implements ISelectionPresenter {
     public render(data: ISelectionPresentationData): void {
+      if (renderClb) {
+        renderClb(data);
+      }
+    }
+  };
+};
+
+export const getTileGroupPresenter = (
+  renderClb?: (data: ITileGroupPresentationData) => void,
+): ITileGroupPresenterConstructor => {
+  return class TileGroupPresenter implements ITileGroupPresenter {
+    public render(data: ITileGroupPresentationData): void {
       if (renderClb) {
         renderClb(data);
       }
@@ -179,6 +194,7 @@ export const getInstallerMock = (): IInstaller => ({
 export const presenters: IPresenters = {
   selection: getSelectionPresenter(),
   tile: getTilePresenter(),
+  tileGroup: getTileGroupPresenter(),
 };
 
 export const createTiles = (layout: ITypedGridLayout): Tile[] => {

@@ -5,7 +5,7 @@ import InstallerImp from "./infrastructure/InstallerImp";
 import NetworkGatewayImp from "./infrastructure/NetworkGatewayImp";
 import QueryStringImp from "./infrastructure/QueryStringImp";
 import StorageImp from "./infrastructure/StorageImp";
-import { createHelpers } from "./manualTestingHelpers";
+import {createHelpers} from "./manualTestingHelpers";
 import AnalyticsImp from "./shared/AnalyticsImp";
 
 declare global {

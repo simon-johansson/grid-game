@@ -3,7 +3,9 @@ import Level, { ITypedGridLayout } from "@domain/Level";
 import Rules, { IGameRules } from "@domain/Rules";
 import Selection from "@domain/Selection";
 import Tile from "@domain/Tile";
+import TileGroup from "@domain/TileGroup";
 import TilePosition from "@domain/TilePosition";
+import TileSpan from "@domain/TileSpan";
 import {
   IAnalytics,
   IGameLevel,
@@ -16,6 +18,7 @@ import {
   ISelectionPresenterConstructor,
   ISettableUserInformation,
   IStorage,
+  ITileGroupPresenterConstructor,
   ITilePresenterConstructor,
   IUserInformation,
   TileType,
@@ -25,6 +28,7 @@ import LevelManager from "./LevelManager";
 export interface IPresenters {
   selection: ISelectionPresenterConstructor;
   tile: ITilePresenterConstructor;
+  tileGroup: ITileGroupPresenterConstructor;
 }
 
 const createTiles = (presenter: ITilePresenterConstructor, layout: ITypedGridLayout, rules: Rules): Tile[] => {
@@ -35,6 +39,14 @@ const createTiles = (presenter: ITilePresenterConstructor, layout: ITypedGridLay
     });
   });
   return tiles;
+};
+
+const createTilesGroups = (
+  presenter: ITileGroupPresenterConstructor,
+  groups: TileSpan[],
+  rules: Rules,
+): TileGroup[] => {
+  return groups.map(tileSpan => new TileGroup(tileSpan, new presenter()));
 };
 
 /**
@@ -82,6 +94,8 @@ export default class Interactor {
 
   public startNextLevel(presenters: IPresenters): ILevelData {
     this.level = this.levelManager.nextLevel;
+    // console.log('Class: Interactor, Function: startNextLevel, Line 97 "test"(shoeld ne defgined): '
+    // , "test");
     this.startLevel(presenters);
     return this.level;
   }
@@ -108,6 +122,8 @@ export default class Interactor {
   }
 
   public getOverviewData(): IOverviewData {
+    console.log('Class: Interactor, Function: getOverviewData, Line 125 this.levelManager.overview(): '
+    , this.levelManager.overview);
     return this.levelManager.overview;
   }
 
@@ -143,7 +159,7 @@ export default class Interactor {
   }
 
   public removeSelection(): void {
-    this.grid.deselectTiles();
+    this.grid.deselectElements();
     this.selection.remove();
   }
 
@@ -182,7 +198,8 @@ export default class Interactor {
   private createEnteties(presenters: IPresenters): void {
     const { grid, rules } = this.level;
     const tiles = createTiles(presenters.tile, grid.layout, rules);
-    this.grid = new Grid(tiles, rules);
+    const tileGroups = createTilesGroups(presenters.tileGroup, grid.groups, rules);
+    this.grid = new Grid(tiles, tileGroups, rules);
     this.selection = new Selection(grid.numberOfRows, grid.numberOfCols, new presenters.selection());
   }
 

@@ -2,15 +2,21 @@ import Level from "@domain/Level";
 import Rules, { IGameRules } from "@domain/Rules";
 import { ISelectionPresenter } from "@domain/Selection";
 import { ITilePresenter } from "@domain/Tile";
+import { ITileGroupPresenter } from "@domain/TileGroup";
 import { Board5x5 } from "@shared/interfaces";
 
 export { ITypedGridLayout } from "@domain/Level";
 export { IGameRules } from "@domain/Rules";
 export { ISelectionPresentationData, ISelectionPresenter } from "@domain/Selection";
 export { ITilePresentationData, ITilePresenter, TileType } from "@domain/Tile";
+export { ITileGroupPresentationData, ITileGroupPresenter } from "@domain/TileGroup";
 
 export interface ITilePresenterConstructor {
   new (): ITilePresenter;
+}
+
+export interface ITileGroupPresenterConstructor {
+  new (): ITileGroupPresenter;
 }
 
 export interface ISelectionPresenterConstructor {
@@ -21,9 +27,14 @@ export type ITileRawState = "r" | "f" | "b" | "2" | "3" | "4";
 
 export type IGridLayout = Board5x5<ITileRawState>;
 
+export type IGroup = [[number, number], [number, number]];
+
+export type IGroups = IGroup[];
+
 export interface IGameLevel {
   layout: IGridLayout;
   moves: number;
+  groups?: IGroups;
   rules?: IGameRules;
   id?: string;
 }

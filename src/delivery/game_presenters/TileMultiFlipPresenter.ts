@@ -41,7 +41,7 @@ const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    private styleDefault(tile: ITilePresentationData) {
+    private styleDefault(tile: ITilePresentationData): void {
       this.ctx.fillStyle = this.defaultStyles.fill;
       this.ctx.strokeStyle = this.defaultStyles.stroke;
 
@@ -50,7 +50,7 @@ const getTileMultiFlipPresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    private styleFlipped(tile: ITilePresentationData) {
+    private styleFlipped(tile: ITilePresentationData): void {
       this.ctx.fillStyle = this.fllippedStyles.fill;
       this.ctx.strokeStyle = this.fllippedStyles.stroke;
 

@@ -13,6 +13,7 @@ import {
   getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
+  getTileGroupPresenter,
   getTilePresenter,
   mixedLayout,
 } from "@shared/__tests__/testUtils";
@@ -40,6 +41,7 @@ presenters = {
   tile: getTilePresenter(() => {
     tilesHasRendered = true;
   }),
+  tileGroup: getTileGroupPresenter(),
 };
 
 describe("Interactor", () => {

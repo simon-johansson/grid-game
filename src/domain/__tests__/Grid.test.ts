@@ -1,3 +1,4 @@
+import TileGroup from "@domain/TileGroup";
 import { createTiles, get5x5TypedLayout } from "@shared/__tests__/testUtils";
 import Grid from "../Grid";
 import Rules from "../Rules";
@@ -6,6 +7,7 @@ import TilePosition from "../TilePosition";
 import TileSpan from "../TileSpan";
 
 const rules = new Rules();
+const tileGroups: TileGroup[] = [];
 
 describe("Grid", () => {
   describe("#applySelection", () => {
@@ -14,7 +16,7 @@ describe("Grid", () => {
 
     beforeEach(() => {
       tiles = createTiles(get5x5TypedLayout(TileType.Regular));
-      grid = new Grid(tiles, rules);
+      grid = new Grid(tiles, tileGroups, rules);
     });
 
     test("select one tile", () => {
@@ -65,8 +67,8 @@ describe("Grid", () => {
     let blockerGrid: Grid;
 
     beforeEach(() => {
-      clearableGrid = new Grid(regularTiles, new Rules({ minSelection: 3 }));
-      blockerGrid = new Grid(blockerTiles, rules);
+      clearableGrid = new Grid(regularTiles, tileGroups, new Rules({ minSelection: 3 }));
+      blockerGrid = new Grid(blockerTiles, tileGroups,  rules);
     });
 
     test("true if enough clearable tiles are selected", () => {
@@ -91,13 +93,13 @@ describe("Grid", () => {
 
     beforeEach(() => {
       tiles = createTiles(get5x5TypedLayout(TileType.Regular));
-      grid = new Grid(tiles, rules);
+      grid = new Grid(tiles, tileGroups, rules);
     });
 
     test("deselect all tiles", () => {
       const selection = new TileSpan(new TilePosition(0, 0), new TilePosition(2, 2));
       grid.applySelection(selection);
-      grid.deselectTiles();
+      grid.deselectElements();
       expect(tiles.every(tile => !tile.isSelected)).toEqual(true);
     });
   });
@@ -108,7 +110,7 @@ describe("Grid", () => {
 
     beforeEach(() => {
       tiles = createTiles(get5x5TypedLayout(TileType.Regular));
-      grid = new Grid(tiles, rules);
+      grid = new Grid(tiles, tileGroups, rules);
     });
 
     test("can clear selected", () => {
@@ -133,7 +135,7 @@ describe("Grid", () => {
 
     beforeEach(() => {
       tiles = createTiles(get5x5TypedLayout(TileType.Regular));
-      grid = new Grid(tiles, rules);
+      grid = new Grid(tiles, tileGroups, rules);
     });
 
     test("true if all clearable tiles are cleared", () => {

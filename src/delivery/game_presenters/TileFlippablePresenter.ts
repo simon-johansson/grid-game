@@ -16,7 +16,7 @@ const getTileFlippablePresenter = (ctx: () => CanvasRenderingContext2D, size: nu
       }
     }
 
-    private styleCommon(tile: ITilePresentationData, style: any) {
+    private styleCommon(tile: ITilePresentationData, style: any): void {
       this.ctx.fillStyle = style.fill;
 
       if (tile.isSelected) {

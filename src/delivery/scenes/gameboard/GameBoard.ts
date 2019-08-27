@@ -1,5 +1,5 @@
 import Interactor, { IPresenters } from "@application/Interactor";
-import { getSelectionPresenter, getTilePresenter } from "../../game_presenters/index";
+import { getSelectionPresenter, getTileGroupPresenter, getTilePresenter } from "../../game_presenters/index";
 import CanvasElementHandler, { NextLevelDirection } from "./CanvasElementHandler";
 
 export default abstract class GameBoard {
@@ -8,6 +8,7 @@ export default abstract class GameBoard {
   protected wrapperElement: HTMLElement = document.getElementById(GameBoard.id) as HTMLElement;
   protected innerWrapperClass = "inner-wrapper";
   protected tileCanvasClass = "tile-canvas";
+  protected tileGroupCanvasClass = "tile-group-canvas";
   protected selectionCanvasClass = "selection-canvas";
   protected isTransitioningBetweenLevels: boolean = false;
   private cancelEvents: boolean = false;
@@ -20,6 +21,7 @@ export default abstract class GameBoard {
       this.innerWrapperClass,
       this.tileCanvasClass,
       this.selectionCanvasClass,
+      this.tileGroupCanvasClass,
     );
     this.canvasHandler.createInitialElements();
     this.bindEvents();
@@ -39,6 +41,7 @@ export default abstract class GameBoard {
     return {
       selection: getSelectionPresenter(this.canvasHandler.selectionCanvasContext, tileSize),
       tile: getTilePresenter(this.canvasHandler.tileCanvasContext, tileSize),
+      tileGroup: getTileGroupPresenter(this.canvasHandler.tileGroupCanvasContext, tileSize),
     };
   }
 

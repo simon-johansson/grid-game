@@ -6,6 +6,7 @@ import {
   getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
+  getTileGroupPresenter,
   getTilePresenter,
   ITileStateLayout,
   setSelectionAndProcessHelper,
@@ -15,6 +16,7 @@ const tileStateLayout: ITileStateLayout = [[], [], [], [], []];
 const presenters: IPresenters = {
   selection: getSelectionPresenter(),
   tile: getTilePresenter(() => {}, tileStateLayout),
+  tileGroup: getTileGroupPresenter(),
 };
 const interactor = new Interactor(
   getNetworkGatewayMock(),

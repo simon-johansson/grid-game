@@ -8,6 +8,7 @@ import {
   getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
+  getTileGroupPresenter,
   getTilePresenter,
   ITileStateLayout,
   processedLayout,
@@ -18,6 +19,7 @@ const tileStateLayout: ITileStateLayout = [[], [], [], [], []];
 const presenters: IPresenters = {
   selection: getSelectionPresenter(),
   tile: getTilePresenter(() => {}, tileStateLayout),
+  tileGroup: getTileGroupPresenter(),
 };
 const levels: IGameLevel[] = [
   {

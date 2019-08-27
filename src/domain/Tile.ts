@@ -72,18 +72,18 @@ export default class Tile {
     else this.setSelected(isSelected);
   }
 
-  private isCoveredBySelection(selection: TileSpan): boolean {
-    return selection.isCovering(this.position);
+  public isCoveredBySelection(tileSpan: TileSpan): boolean {
+    return tileSpan.isCovering(this.position);
   }
 
-  private setTileType(tileType: TileType): void {
+  public setTileType(tileType: TileType): void {
     if (this.tileType !== tileType) {
       this.tileType = tileType;
       this.render();
     }
   }
 
-  private setSelected(selected: boolean): void {
+  public setSelected(selected: boolean): void {
     if (this.selected !== selected) {
       this.selected = selected;
       this.render();

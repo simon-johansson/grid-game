@@ -30,7 +30,11 @@
     &.fade-out-right {
       transform: translateX(40px);
     }
-
+    
+    .tile-canvas,
+    .tile-canvas-old,
+    .tile-group-canvas,
+    .tile-group-canvas-old,
     .selection-canvas,
     .selection-canvas-old {
       position: absolute;

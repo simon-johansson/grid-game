@@ -9,6 +9,7 @@ import {
   getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
+  getTileGroupPresenter,
   getTilePresenter,
   ITileStateLayout,
   setSelectionAndProcessHelper,
@@ -18,6 +19,7 @@ const tileStateLayout: ITileStateLayout = [[], [], [], [], []];
 const presenters: IPresenters = {
   selection: getSelectionPresenter(),
   tile: getTilePresenter(() => {}, tileStateLayout),
+  tileGroup: getTileGroupPresenter(),
 };
 const levels: IGameLevel[] = [{ layout: defaultLayout, moves: 2, rules: new Rules() }];
 const interactor = new Interactor(
