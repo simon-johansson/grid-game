@@ -8,6 +8,7 @@ import {
   getQuerystringMock,
   getSelectionPresenter,
   getStorageMock,
+  getTileGroupPresenter,
   getTilePresenter,
   ITileSelectionLayout,
   ITileStateLayout,
@@ -23,6 +24,7 @@ const presenters: IPresenters = {
     selectionData = data;
   }),
   tile: getTilePresenter(() => {}, tileStateLayout, tileSelectionLayout),
+  tileGroup: getTileGroupPresenter(),
 };
 const interactor = new Interactor(
   getNetworkGatewayMock(),

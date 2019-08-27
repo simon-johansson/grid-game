@@ -1,9 +1,12 @@
 import Level, { ILevelOptions } from "@domain/Level";
 import Rules from "@domain/Rules";
 import Tile from "@domain/Tile";
+import TilePosition from "@domain/TilePosition";
+import TileSpan from "@domain/TileSpan";
 import {
   IGameLevel,
   IGridLayout,
+  IGroups,
   IOverviewData,
   IStage,
   ITileRawState,
@@ -19,6 +22,7 @@ const defaultEditorLevel: IGameLevel = {
     ["r", "r", "r", "r", "r"],
     ["r", "r", "r", "r", "r"],
   ],
+  groups: [[[0, 0], [0, 0]]],
   rules: {
     toggleOnOverlap: true,
     minSelection: 1,
@@ -29,6 +33,13 @@ const defaultEditorLevel: IGameLevel = {
 function assertNever(state: never): never {
   throw new Error("Unkown minified tile state supplied: " + state);
 }
+
+const getGroupSpans = (groups: IGroups = []): TileSpan[] => {
+  return groups.map(group => {
+    const [startPosition, endPosition] = group;
+    return new TileSpan(new TilePosition(...startPosition), new TilePosition(...endPosition));
+  });
+};
 
 const getTypedLayout = (layout: IGridLayout): ITypedGridLayout => {
   return layout.map(row => row.map(getTypedTile)) as ITypedGridLayout;
@@ -72,8 +83,8 @@ const cleanLevels = (levels: IGameLevel[]) => {
 
 export default class LevelManager {
   public static newLevel(level: IGameLevel, options?: ILevelOptions): Level {
-    const { layout, moves, rules: rawRules, id } = level;
-    return new Level(getTypedLayout(layout), moves, new Rules(rawRules), id, options);
+    const { layout, moves, rules: rawRules, groups, id } = level;
+    return new Level(getTypedLayout(layout), moves, new Rules(rawRules), getGroupSpans(groups), id, options);
   }
 
   public static newEditorLevel(level?: IGameLevel): Level {

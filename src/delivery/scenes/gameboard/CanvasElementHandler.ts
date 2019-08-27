@@ -1,4 +1,3 @@
-
 export type NextLevelDirection = "prev" | "next" | "restart";
 
 export default class CanvasElementHandler {
@@ -7,6 +6,7 @@ export default class CanvasElementHandler {
     private wrapperClass: string,
     private tileCanvasClass: string,
     private selectionCanvasClass: string,
+    private tileGroupCanvasClass: string,
   ) {}
 
   public get tileCanvas(): HTMLCanvasElement {
@@ -20,6 +20,12 @@ export default class CanvasElementHandler {
   }
   public selectionCanvasContext = (): CanvasRenderingContext2D => {
     return this.selectionCanvas.getContext("2d") as CanvasRenderingContext2D;
+  };
+  public get tileGroupCanvas(): HTMLCanvasElement {
+    return this.parentElement.querySelector("." + this.tileGroupCanvasClass) as HTMLCanvasElement;
+  }
+  public tileGroupCanvasContext = (): CanvasRenderingContext2D => {
+    return this.tileGroupCanvas.getContext("2d") as CanvasRenderingContext2D;
   };
 
   public get canvasSize(): number {
@@ -59,15 +65,19 @@ export default class CanvasElementHandler {
     this.tileCanvas.height = boardSize;
     this.selectionCanvas.width = boardSize;
     this.selectionCanvas.height = boardSize;
+    this.tileGroupCanvas.width = boardSize;
+    this.tileGroupCanvas.height = boardSize;
     this.parentElement.style.width = `${boardSize}px`;
     this.parentElement.style.height = `${boardSize}px`;
   }
 
   private prepareToRemoveCurrentElements(): void {
-    [this.wrapperClass, this.tileCanvasClass, this.selectionCanvasClass].forEach(className => {
-      const el = this.parentElement.querySelector("." + className)!;
-      el.className = `${el.className}-old`;
-    });
+    [this.wrapperClass, this.tileCanvasClass, this.selectionCanvasClass, this.tileGroupCanvasClass].forEach(
+      className => {
+        const el = this.parentElement.querySelector("." + className)!;
+        el.className = `${el.className}-old`;
+      },
+    );
   }
 
   private createCanvasElement(canvasClass: string): HTMLCanvasElement {
@@ -87,6 +97,7 @@ export default class CanvasElementHandler {
     if (direction === "prev") directionInClass += "-left";
     else if (direction === "next") directionInClass += "-right";
     wrapper.classList.add(this.wrapperClass, directionInClass);
+    wrapper.appendChild(this.createCanvasElement(this.tileGroupCanvasClass));
     wrapper.appendChild(this.createCanvasElement(this.tileCanvasClass));
     wrapper.appendChild(this.createCanvasElement(this.selectionCanvasClass));
     return wrapper;

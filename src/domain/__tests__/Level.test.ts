@@ -10,13 +10,14 @@ const defaultRules: Rules = new Rules({
   toggleOnOverlap: true,
   minSelection: 1,
 });
+const defaultTileGroups: TileSpan[] = [];
 
 describe("Level", () => {
   let level: Level;
   const selectionSpan = new TileSpan(new TilePosition(0, 0), new TilePosition(4, 4));
 
   beforeEach(() => {
-    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, undefined);
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, defaultTileGroups, undefined);
   });
 
   test(".grid", () => {
@@ -30,7 +31,7 @@ describe("Level", () => {
   });
 
   test(".isCustom false if id is supplied", () => {
-    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, "id");
+    level = new Level(get5x5TypedLayout(TileType.Regular), defaultMoves, defaultRules, defaultTileGroups, "id");
     expect(level.isCustom).toEqual(false);
   });
 

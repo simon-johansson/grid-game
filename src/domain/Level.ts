@@ -21,12 +21,14 @@ interface ISelections {
 
 interface IGrid {
   layout: ITypedGridLayout;
+  groups: TileSpan[];
   numberOfRows: number;
   numberOfCols: number;
 }
 
-const getGridObject = (layout: ITypedGridLayout): IGrid => ({
+const getGridObject = (layout: ITypedGridLayout, groups: TileSpan[]): IGrid => ({
   layout,
+  groups,
   numberOfRows: layout.length,
   numberOfCols: layout[0].length,
 });
@@ -50,8 +52,16 @@ export default class Level {
   public readonly isFirstLevel?: boolean;
   public readonly isLastLevel?: boolean;
 
-  constructor(layout: ITypedGridLayout, moves: number, rules: Rules, id: string | undefined, options?: ILevelOptions) {
-    this.grid = getGridObject(layout);
+  // TODO: Skicka in object med {layout, moves, rules, groups, id}
+  constructor(
+    layout: ITypedGridLayout,
+    moves: number,
+    rules: Rules,
+    groups: TileSpan[],
+    id: string | undefined,
+    options?: ILevelOptions,
+  ) {
+    this.grid = getGridObject(layout, groups);
     this.selections = getSelectionObject(moves);
     this.rules = rules;
     this.id = id;
