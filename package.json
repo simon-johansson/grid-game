@@ -11,7 +11,7 @@
     "node": "10.12.0"
   },
   "scripts": {
-    "start": "node ./server",
+    "start": "pm2-runtime start ecosystem.config.js",
     "build": "run-s remove-build && run-p build:* && run-s service-worker",
     "serve": "browser-sync start --files \"dist\" --proxy \"localhost:8070\" --logLevel debug",
     "build:assets": "copyfiles -u 2 -e \"**/service-worker.js\" \"src/delivery/**/*.{js,css,html,json,png,jpg,gif,svg,ico,woff2,woff,ttf,txt}\" dist",
@@ -65,6 +65,7 @@
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.17.1",
+    "pm2": "^3.5.1",
     "trello": "^0.9.1"
   }
 }
