@@ -495,6 +495,51 @@
     "id": "5c6b18615f07382a2db6f8d0"
   },
   {
+    "layout": [
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "f",
+        "f"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "id": "5ccb34e832144a6d2f330fa4"
+  },
+  {
     "rules": {
       "toggleOnOverlap": true,
       "minSelection": 1
@@ -1082,6 +1127,51 @@
   {
     "layout": [
       [
+        "f",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "f"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "f",
+        "r",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 3,
+    "id": "5ccb33946ef88978e138cb9c"
+  },
+  {
+    "layout": [
+      [
         "r",
         "f",
         "r",
@@ -1258,6 +1348,96 @@
     },
     "moves": 4,
     "id": "5cae5553f78a0a64048e6276"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "f",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "f",
+        "f",
+        "r",
+        "b"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5ccb2d954478d93656819a83"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "f",
+        "f"
+      ],
+      [
+        "f",
+        "f",
+        "r",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5ccb3715ace5838fb10f6d9c"
   },
   {
     "layout": [
@@ -1753,6 +1933,141 @@
       ]
     ],
     "id": "5c6882936a4c5b08839ab832"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "f",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "f",
+        "r",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "f"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "r",
+        "f"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "f",
+        "r"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5ccb30e6a0bd1a735a59961b"
+  },
+  {
+    "layout": [
+      [
+        "f",
+        "r",
+        "f",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "f",
+        "f",
+        "f"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5ccb2c2e7075c74b371c60e2"
+  },
+  {
+    "layout": [
+      [
+        "b",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "f",
+        "r",
+        "f",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "f",
+        "r",
+        "f",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "f",
+        "b"
+      ]
+    ],
+    "rules": {
+      "toggleOnOverlap": true,
+      "minSelection": 1
+    },
+    "moves": 4,
+    "id": "5ccb2b47ce7aa70153912c46"
   },
   {
     "layout": [
@@ -2608,6 +2923,51 @@
     },
     "moves": 3,
     "id": "5ca3c1d776b7d64177e3e5ce"
+  },
+  {
+    "layout": [
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "b",
+        "r",
+        "b",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ],
+      [
+        "r",
+        "b",
+        "r",
+        "b",
+        "r"
+      ],
+      [
+        "r",
+        "r",
+        "r",
+        "r",
+        "r"
+      ]
+    ],
+    "rules": {
+      "minSelection": 3,
+      "toggleOnOverlap": true
+    },
+    "moves": 9,
+    "id": "5ccb2f2cf5785e80d109135c"
   },
   {
     "layout": [
