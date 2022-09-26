@@ -65,7 +65,7 @@
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.17.1",
-    "pm2": "^3.5.1",
+    "pm2": "^5.2.0",
     "trello": "^0.9.1"
   }
 }
